@@ -1,0 +1,130 @@
+spring:
+  profiles:
+    active: dev
+
+  sql:
+    init:
+      mode: never
+      platform: postgresql
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/picnest
+    username: ENC(nwq/5pkZWyETjOhE8qh2dTzMmQWsX+E8)
+    password: ENC(8qA0tC2gRuAaCeowLt0BNO+JzwWPIFJ9)
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(FupNfUyPCMacs0SoZxwsuAbXDrRk/yInYnu+ZTrixaJquUYXvEu5Iw==)
+    password: ENC(uIGFNShjldNUheHtZq7lxYAyA5I1fNCaajK/XXFhMhs=)
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ENC(ntdKyrZ5OseCDnS9RY1Uc2p2Yq0XumqCaqR+vf1Yyzo=)
+            client-secret: ENC(R6+eqDq3dWATHwuIaLyXR12gHiE5yLbhudaDlhZutRnuJXQZ47uLpRJohzNmDN6+ML3tZFhfxJk=)
+            scope:
+              - email
+          google:
+            client-id: ENC(4uGiklD8FPMPtd2dkh/EufEHKF4QsqY+gvaLw22VsLuzET03A2S6b6GwOhf5RvOfA+qG2/MDRV/FXoWZzoFlHzj5wDPnbYWW2xfwj2J/RIAT2VKYdG+0EQ==)
+            client-secret: ENC(mtSv1DLeHTpA0j5f9/HqJQKcI7Cnf22vfhktwGWrHS2PPyLI81NHANh31DdRhVaJ)
+            scope:
+              - email
+              - profile
+          vk:
+            client-id: ENC(lrQk6wgxUsKeo2JujsrSqt0JZVF+W5TO)
+            client-secret: ENC(jSQamdxRx11qJq4wqP2sYsKdZsJ21AUOc1cudnhtsiA=)
+            client-name: Vkontakte
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            scope: email
+          yandex:
+            client-id: ENC(bTTYp13sMUL2AvBpyYmQthKiD1eyQJSQ007Kn8pbFvJYswoucxbB01giEGzmWmc3)
+            client-secret: ENC(jktn1BuGyIYNYhQYA/Uyl0imbZFj/UOs14ZbCTFLfsE3/vAd/f9mweqF7kbWkrF8)
+            client-name: Yandex
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+          gitlab:
+            client-id: ENC(BQMiAXbH4WmHdaOrrWVUGTA3MhMv53zxcJgrHQCJJJA+QW3iOt+2eY2NtzVF0/TnXNCzQDNNXaYp+9pdb29OU5J+8YEcTMvK4ktG5fQqGLg=)
+            client-secret: ENC(20xuiSnlIN6BlS+7lbqr4b0y2bQ8lbxmLrzH5l/gFy6AkpJUGWjE+3drXg1aal8hee+BKlIWj1+S1yIkKR6n0Angx/wr/kXMRnCvc8V356A=)
+            client-name: GitLab
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+            scope: read_user
+        provider:
+          vk:
+            authorization-uri: https://oauth.vk.com/authorize
+            token-uri: https://oauth.vk.com/access_token
+            user-info-uri: https://api.vk.com/method/users.get?v=8.1
+            user-name-attribute: response
+          yandex:
+            authorization-uri: https://oauth.yandex.ru/authorize
+            token-uri: https://oauth.yandex.ru/token
+            user-info-uri: https://login.yandex.ru/info
+            user-name-attribute: login
+          gitlab:
+            authorization-uri: https://gitlab.com/oauth/authorize
+            token-uri: https://gitlab.com/oauth/token
+            user-info-uri: https://gitlab.com/api/v4/user
+            user-name-attribute: email
+
+server:
+  tomcat:
+    max-http-form-post-size: 50MB
+  servlet:
+    encoding:
+      charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly
+      enabled: true # Enable http encoding support
+      force: true
+
+register:
+  token-expiration-time: 86400000
+  confirm-url: https://javaprojects.ru/picnest/register/confirm
+
+password-reset:
+  token-expiration-time: 86400000
+  confirm-url: https://javaprojects.ru/picnest/profile/reset-password
+
+change-email:
+  token-expiration-time: 86400000
+  confirm-url: https://javaprojects.ru/picnest/profile/change-email/confirm
+
+content-path:
+  photos: ./content/photos/
+  avatars: ./content/avatars/
+
+locale:
+  supported: en,ru
+  default: ru
+
+logging:
+  charset:
+    console: UTF-8
+    file: UTF-8
+  file:
+    name: logs/picnest.log
+  pattern:
+    console: '%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr([%mdc]){yellow} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}'
+    file: '%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} [%mdc] - %msg%n'
+
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+    password:
