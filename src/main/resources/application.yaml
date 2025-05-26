@@ -36,13 +36,13 @@ spring:
       client:
         registration:
           github:
-            client-id: ENC(ntdKyrZ5OseCDnS9RY1Uc2p2Yq0XumqCaqR+vf1Yyzo=)
-            client-secret: ENC(R6+eqDq3dWATHwuIaLyXR12gHiE5yLbhudaDlhZutRnuJXQZ47uLpRJohzNmDN6+ML3tZFhfxJk=)
+            client-id: ENC(Geib8wQUjPkm5MhtrbZSHXrn9lmo3V2WDcN7PRYv5VY=)
+            client-secret: ENC(XQscTo0Gt7EL/m6AI8qfcNlOeEGex2pxtzexOZPtpFqvz2MuJRpfEfs00n9JdGXOhkrENvhrLIM=)
             scope:
               - email
           google:
-            client-id: ENC(4uGiklD8FPMPtd2dkh/EufEHKF4QsqY+gvaLw22VsLuzET03A2S6b6GwOhf5RvOfA+qG2/MDRV/FXoWZzoFlHzj5wDPnbYWW2xfwj2J/RIAT2VKYdG+0EQ==)
-            client-secret: ENC(mtSv1DLeHTpA0j5f9/HqJQKcI7Cnf22vfhktwGWrHS2PPyLI81NHANh31DdRhVaJ)
+            client-id: ENC(DqfWJLE7ms4T7HRZ6GlHAkpFyFjh9QmmpHYPWTQqT8Ch1ZOJbA6Z91JtZjckdSlPyunn88FmVDzquXHL0E/8/W13q2gPr8nMbp6O/yZOG8XmnouRxhQAxw==)
+            client-secret: ENC(1ivx+UPf0OM1Kb01JAWZ8mK9mseqC+PkjC37wdczfOR8361bYTuqHDXFooekFPJ6)
             scope:
               - email
               - profile
@@ -55,14 +55,14 @@ spring:
             authorization-grant-type: authorization_code
             scope: email
           yandex:
-            client-id: ENC(bTTYp13sMUL2AvBpyYmQthKiD1eyQJSQ007Kn8pbFvJYswoucxbB01giEGzmWmc3)
-            client-secret: ENC(jktn1BuGyIYNYhQYA/Uyl0imbZFj/UOs14ZbCTFLfsE3/vAd/f9mweqF7kbWkrF8)
+            client-id: ENC(EUPv/bJ7mqRiRxee279xt1+uvzBj713eEhyKeHI18ptTFILd6RR1fauWSnqrvx3u)
+            client-secret: ENC(IbdZtaCg+uGMhhP72I4+gWwWNGjQ8ousXaAa7u+zIlc0SZtA2p49l09ZzLz/Kiyk)
             client-name: Yandex
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
           gitlab:
-            client-id: ENC(BQMiAXbH4WmHdaOrrWVUGTA3MhMv53zxcJgrHQCJJJA+QW3iOt+2eY2NtzVF0/TnXNCzQDNNXaYp+9pdb29OU5J+8YEcTMvK4ktG5fQqGLg=)
-            client-secret: ENC(20xuiSnlIN6BlS+7lbqr4b0y2bQ8lbxmLrzH5l/gFy6AkpJUGWjE+3drXg1aal8hee+BKlIWj1+S1yIkKR6n0Angx/wr/kXMRnCvc8V356A=)
+            client-id: ENC(Y+4WGd1Brp+b5QlMp8ZMeKGwQVARLR/EXcMA99/IJG+fNm+eXR6nSlq5hCM/OjYRIK8QBC+ElnPxY/l+Br0JFPDSn3GJa14qXmxfdd2HRdQ=)
+            client-secret: ENC(T0sDjx6TjUIQ2p9Y6wMvUKFAZPZwuTayE0PbUusfwOPkqUrjlhS//tGG1vN23/yg89o8qPL3osM6+GcJL7LvjrLsLyDQLpQICsuTgSFgWpg=)
             client-name: GitLab
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
