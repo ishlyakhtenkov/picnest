@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<!--/*@thymesVar id="authUser" type="ru.javaprojects.javaprojects.users.model.User"*/-->
+
+<div th:fragment="header">
+  <header class="fixed-top">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-lg container-fluid">
+        <a class="navbar-brand" th:href="@{/}">
+          <img th:src="@{/images/icon/picnest-logo.png}" alt="Logo" width="32" height="32" class="d-inline-block align-text-bottom">
+          <span class="h4 fw-bold">PicNest</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarToggler">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li sec:authorize="hasRole('ADMIN')" class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                 aria-expanded="false" id="management">
+                <span th:text="#{management}">Management</span>
+              </a>
+              <ul class="dropdown-menu w-50">
+                <li><a class="dropdown-item" th:href="@{/management/users}" id="users" th:text="#{user.users}">Users</a></li>
+              </ul>
+            </li>
+            <li class="nav-item d-lg-none">
+              <a sec:authorize="!isAuthenticated()" class="nav-link" th:href="@{/login}" th:text="#{login}">Login</a>
+              <a sec:authorize="isAuthenticated()" class="nav-link" th:href="@{'/profile/' + ${authUser.id} + '/view'}" th:text="#{profile}">Profile</a>
+            </li>
+          </ul>
+
+          <form class="me-3 mb-2 mb-lg-0" style="max-width: 300px;" role="search" th:action="@{/search}" method="get"
+                th:hidden="${param.keyword == null}" id="searchForm">
+            <div class="input-group">
+              <span class="input-group-text"><i class="fa-solid fa-magnifying-glass fa-fw"></i></span>
+              <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search"
+                     th:placeholder="#{search} + '...'" aria-label="Search">
+            </div>
+          </form>
+
+          <div class="nav-item dropdown me-2 " style="padding-bottom: 4px;">
+            <button type="button" class="btn btn-link link-body-emphasis p-0 me-3 mt-1" th:title="#{search}" id="searchBtn"
+                    th:hidden="${param.keyword != null}">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+            <button type="button" class="btn btn-link link-body-emphasis link-underline-opacity-0 p-0 me-3 mt-1"
+                    onmouseenter="$(this).addClass('opacity-75')" onmouseleave="$(this).removeClass('opacity-75')"
+                    onclick="changeTheme()" id="themeSwitchBtn">
+              <i class="fa-solid fa-circle-half-stroke"></i>
+            </button>
+
+            <button type="button"
+                    class="btn btn-link link-secondary link-underline-opacity-0 p-0 dropdown-toggle"
+                    th:title="#{language}" data-bs-toggle="dropdown" aria-expanded="false"
+                    onmouseenter="$(this).addClass('opacity-75')" onmouseleave="$(this).removeClass('opacity-75')">
+              <img th:src="@{'/images/icon/' + ${#locale.language == 'en' ? 'en-flag.svg' : 'ru-flag.svg'}}" alt="Flag logo"
+                   width="20" height="20" />
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="icon-link dropdown-item" type="button" onclick="changeLocale('ru')">
+                  <img th:src="@{/images/icon/ru-flag.svg}" alt="Ru flag logo" width="20" height="20" />
+                  <span>Русский</span>
+                </a>
+              </li>
+              <li>
+                <a class="icon-link dropdown-item" type="button" onclick="changeLocale('en')">
+                  <img th:src="@{/images/icon/en-flag.svg}" alt="En flag logo" width="20" height="20" />
+                  <span>English</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="d-none d-lg-block">
+            <a sec:authorize="!isAuthenticated()" th:href="@{/login}" type="button"
+               class="btn btn-outline-warning px-3" th:text="#{login}">Login</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{'/profile/' + ${authUser.id} + '/view'}" type="button" id="profileButton"
+               class="rounded-circle" style="width: 40px; height: 40px;"
+               th:classappend="${authUser?.avatar == null ? 'btn btn-success fw-bold border border-light-subtle' : ''}"
+               th:title="${authUser != null ? authUser.name : ''}">
+                <span th:if="${authUser?.avatar == null}"
+                      th:text="${authUser != null ? #strings.substring(authUser.name, 0, 1) : ''}"></span>
+              <img th:if="${authUser?.avatar != null}" class="rounded-circle border border-light-subtle"
+                   th:src="@{${authUser.avatar.getSrc()}}"
+                   width="40" height="40" style="object-fit: cover"
+                   onmouseenter="$(this).addClass('opacity-75')"
+                   onmouseleave="$(this).removeClass('opacity-75')" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+</div>
+</html>

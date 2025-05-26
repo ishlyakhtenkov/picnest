@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<div th:fragment="footer">
+    <footer class="bg-body-tertiary bg-gradient">
+        <div class="container text-center">
+            <div class="pt-3">
+                <div class="mb-2">
+                    <img th:src="@{/images/icon/picnest-logo.png}" alt="Logo" width="32" height="32"
+                         class="d-inline-block align-text-bottom">
+                    <span class="h4 fw-bold">PicNest</span>
+                </div>
+                <div th:text="#{info.app-description}" class="mb-2">
+                    PicNest is software that allows you to securely store your photos in the cloud.
+                </div>
+            </div>
+        </div>
+        <div class="text-center pb-4">
+            <a class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover me-1"
+               href="/about" th:text="#{info.about}">About</a> |
+            <a class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover me-1"
+               href="/contact" th:text="#{info.contact}">Contact</a> |
+            <a class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+               style="cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false"th:text="#{info.share}">Share</a>
+
+            <ul class="dropdown-menu">
+                <li><button type="button" class="dropdown-item" onclick="copyAppLink()">
+                    <i class="fa-solid fa-link fa-fw"></i><span class="ms-2" th:text="#{info.share.copy-link}"></span>
+                </button></li>
+                <li><button type="button" class="dropdown-item" onclick="shareAppOnVk()">
+                    <i class="fa-brands fa-vk fa-fw"></i><span class="ms-2" th:text="#{info.share.vk}"></span>
+                </button></li>
+                <li><button type="button" class="dropdown-item" onclick="shareAppOnTelegram()">
+                    <i class="fa-brands fa-telegram fa-fw"></i><span class="ms-2" th:text="#{info.share.telegram}"></span>
+                </button></li>
+                <li><button type="button" class="dropdown-item" onclick="shareAppOnWhatsApp()">
+                    <i class="fa-brands fa-whatsapp fa-fw"></i><span class="ms-2" th:text="#{info.share.whatsapp}"></span>
+                </button></li>
+            </ul>
+        </div>
+    </footer>
+</div>
+</html>

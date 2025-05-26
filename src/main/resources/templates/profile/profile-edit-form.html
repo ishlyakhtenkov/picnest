@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="profileTo" type="ru.javaprojects.javaprojects.users.to.ProfileTo"*/-->
+
+<th:block th:replace="~{fragments/main::page(title=#{profile},appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb ms-2 flex-nowrap"  style="font-size: 1.5em;">
+                <li class="breadcrumb-item text-truncate">
+                    <a th:href="@{'/profile/' + ${authUser.id} + '/view'}"
+                       class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover">
+                        <i class="fas fa-id-card me-1"></i><span th:text="#{profile}"></span>
+                    </a>
+                </li>
+                <li class="breadcrumb-item text-truncate active" aria-current="page" th:text="#{edit}">Edit</li>
+            </ol>
+        </nav>
+
+        <div class="row d-flex justify-content-center align-items-center mt-3">
+            <div class="col-12 col-sm-11 col-md-9 col-lg-7 col-xl-6">
+                <div class="card shadow rounded-4">
+                    <form th:action="@{/profile}" method="post" th:object="${profileTo}" enctype="multipart/form-data">
+                        <input type="hidden" th:field="*{id}">
+                        <input type="hidden" th:if="${profileTo.avatar?.fileName != null}" th:field="*{avatar.fileName}">
+                        <input type="hidden" th:if="${profileTo.avatar?.fileLink != null}" th:field="*{avatar.fileLink}">
+                        <input type="hidden" th:if="${profileTo.avatar?.inputtedFileBytes != null}"
+                               th:field="*{avatar.inputtedFileBytes}">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 col-sm-5 pe-sm-0 d-flex align-items-start">
+                                    <input type="file" accept="image/*" th:field="*{avatar.inputtedFile}"
+                                           hidden class="element-image-input"
+                                           onchange="previewImage($(this))"/>
+
+                                    <img th:if="${profileTo.avatar != null &&
+                                           (profileTo.avatar.fileLink != null || profileTo.avatar.inputtedFileBytes != null)}"
+                                         th:src="@{${profileTo.avatar.getSrc()}}"
+                                         class="img-fluid" style="width: 165px; height: 165px; border-radius: 10px; object-fit: cover">
+
+                                    <img th:if="${profileTo.avatar == null || (profileTo.avatar.fileLink == null &&
+                                                profileTo.avatar.inputtedFileBytes == null)}"
+                                         th:src="@{/images/no-avatar.svg}"
+                                         class="img-fluid" style="width: 165px; height: 165px; border-radius: 10px;" />
+
+                                    <button type="button" th:title="#{profile.change-avatar}"
+                                            class="ps-1 change-img-btn btn btn-link opacity-75 link-underline-opacity-0
+                                                link-secondary pt-0"
+                                            onclick="$(this).siblings('input').click()"><i class="fa-solid fa-pencil"></i>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-sm-7 ps-sm-0">
+                                    <div class="mb-3 mt-3 mt-sm-0">
+                                        <div class="input-group">
+                                            <span class="input-group-text" style="min-width: 68px;" th:text="#{user.name}">Name</span>
+                                            <input type="text" id="nameInput" th:field="*{name}"
+                                                   th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
+                                                   required th:placeholder="#{user.name}" />
+                                        </div>
+                                        <span th:if="${#fields.hasErrors('name')}">
+                                            <ul>
+                                                <li class="text-danger text-start" th:each="err : ${#fields.errors('name')}"
+                                                    th:text="${err}"/>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text" style="min-width: 68px;" th:text="#{user.email}">Email</span>
+                                            <input type="text" id="emailInput" th:field="*{email}"
+                                                   th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+                                                   required th:placeholder="#{user.email}" />
+                                        </div>
+                                        <span th:if="${#fields.hasErrors('email')}">
+                                            <ul>
+                                                <li class="text-danger text-start" th:each="err : ${#fields.errors('email')}"
+                                                    th:text="${err}"/>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-1">
+                                <ul class="nav nav-underline">
+                                    <li class="nav-item">
+                                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#informationTab"
+                                                type="button" role="tab" aria-controls="nav-general" aria-selected="true"
+                                                th:text="#{profile.information}">Information</button>
+                                    </li>
+<!--                                    <li class="nav-item">-->
+<!--                                        <button class="nav-link disabled" data-bs-toggle="tab" data-bs-target="#qualificationTab"-->
+<!--                                                type="button" role="tab"  aria-controls="nav-changes" aria-selected="false"-->
+<!--                                                aria-disabled="true" th:text="#{profile.qualification}">Qualification</button>-->
+<!--                                    </li>-->
+<!--                                    <li class="nav-item">-->
+<!--                                        <button class="nav-link disabled" data-bs-toggle="tab" data-bs-target="#projectsTab"-->
+<!--                                                type="button" role="tab" aria-controls="nav-changes" aria-selected="false"-->
+<!--                                                 aria-disabled="true" th:text="#{project.projects}">Projects</button>-->
+<!--                                    </li>-->
+                                </ul>
+                                <div class="tab-content pt-1">
+                                    <div class="tab-pane fade show active" id="informationTab" role="tabpanel" aria-labelledby="nav-general-tab" tabindex="0">
+                                        <textarea id="informationInput" th:field="*{information}"
+                                                  th:classappend="${#fields.hasErrors('information')} ? 'form-control lh-base is-invalid' : 'form-control lh-base'"
+                                                  placeholder="Information" style="white-space: pre-wrap;" maxlength="4000"></textarea>
+                                        <span class="float-end text-muted tiny" id="characterCounter"
+                                              th:text="*{(4000 - (information == null ? 0 : information.replaceAll('\r', '').length()))} + ' ' + #{info.characters-left}">Characters left</span>
+                                        <span th:if="${#fields.hasErrors('information')}">
+                                            <ul class="mb-1">
+                                                <li class="text-danger text-start" th:each="err : ${#fields.errors('information')}"
+                                                    th:text="${err}"/>
+                                            </ul>
+                                        </span>
+                                    </div>
+<!--                                    <div class="tab-pane fade" id="qualificationTab" role="tabpanel"-->
+<!--                                         aria-labelledby="nav-general-tab" tabindex="0"></div>-->
+<!--                                    <div class="tab-pane fade" id="projectsTab" role="tabpanel"-->
+<!--                                         aria-labelledby="nav-general-tab" tabindex="0"></div>-->
+                                </div>
+                            </div>
+                            <div class="text-end"
+                                 th:classappend="${#fields.hasErrors('information')} ? 'mt-2' : 'mt-3 pt-3'">
+                                <button class="btn btn btn-secondary" type="button" onclick="cancel()" th:text="#{cancel}">Cancel</button>
+                                <button class="btn btn btn-primary ms-1" type="submit" th:text="#{save}" style="min-width: 72px;">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </appMain>
+
+    <ownScript>
+        <script src="/js/cancel-button.js?v=1"></script>
+        <script>
+            function previewImage(imageInput) {
+                let files = imageInput.prop('files');
+                if (files.length) {
+                    let fileReader = new FileReader();
+                    fileReader.onload = function (event) {
+                        imageInput.siblings('img').attr('src', event.target.result).attr('hidden', false);
+                    }
+                    fileReader.readAsDataURL(files[0]);
+                } else {
+                    imageInput.siblings('img').attr('src', '/images/no-avatar.svg').attr('hidden', false);
+                }
+            }
+
+            const informationInput = $('#informationInput');
+            const characterCounter = $('#characterCounter');
+
+            informationInput.css('height', 'auto');
+            informationInput.css('height', informationInput.prop('scrollHeight') + 2 + 'px');
+
+            informationInput.on('input', (event) => {
+                $(event.target).css('height', 'auto');
+                $(event.target).css('height', $(event.target).prop('scrollHeight') + 2 + 'px');
+                characterCounter.text(`${4000 - informationInput.val().length} ${getMessage('info.characters-left')}`);
+            });
+        </script>
+    </ownScript>
+</th:block>

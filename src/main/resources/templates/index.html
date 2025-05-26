@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title=#{home},appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+
+    </appMain>
+
+    <ownScript>
+        <script>
+            sessionStorage.removeItem('prevUrl');
+            sessionStorage.removeItem('projectDataPagePrevUrl');
+        </script>
+        <script src="/js/common.js?v=1"></script>
+        <script src="/js/index.js?v=1"></script>
+        <script src="/js/share-project-button.js?v=1"></script>
+    </ownScript>
+</th:block>

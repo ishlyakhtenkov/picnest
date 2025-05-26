@@ -1,0 +1,81 @@
+.form-floating>.form-control,
+.form-floating>.form-control-plaintext {
+    padding: 0 0.75rem;
+}
+
+.form-floating>.form-control,
+.form-floating>.form-control-plaintext {
+    height: calc(2.6rem + 2px);
+    min-height: calc(2.6rem + 2px);
+    line-height: 1;
+}
+
+.form-floating>label {
+    padding: 0.5rem 0.75rem;
+}
+
+.form-floating > label::after {
+    background-color: transparent !important;
+}
+
+.modal-md {
+    max-width: 400px;
+}
+
+.dropdown-menu li {
+    position: relative;
+}
+.dropdown-menu .dropdown-submenu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: -7px;
+}
+.dropdown-menu .dropdown-submenu-left {
+    right: 100%;
+    left: auto;
+}
+.dropdown-menu > li:hover > .dropdown-submenu {
+    display: block;
+}
+
+.custom-file-button input[type=file] {
+    margin-left: -2px !important;
+}
+.custom-file-button input[type=file]::-webkit-file-upload-button {
+    display: none;
+}
+.custom-file-button input[type=file]::file-selector-button {
+    display: none;
+}
+.custom-file-button:hover label {
+    cursor: auto;
+}
+
+.mb-10px {
+    margin-bottom: 10px;
+}
+
+.thead-border-top-none {
+    border-top: hidden;
+}
+
+.thead-border-top-none>tr>th {
+    padding-top: 0;
+}
+
+.border-right-none {
+    border-right: hidden;
+}
+
+.tiny {
+    font-size:0.8em;
+}
+
+.album-card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+}
+
+.secondary-nav-link {
+    --bs-nav-link-color: var(--bs-secondary-bg-rgb);
+}

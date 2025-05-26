@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="userTo" type="ru.javaprojects.javaprojects.users.to.UserTo"*/-->
+
+<th:block th:replace="~{fragments/main::page(title=#{user.users},appMain=~{::appMain}, ownScript=~{::ownScript}, activeMenuItem=${ {'users', 'management'} })}">
+    <appMain>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb ms-2 flex-nowrap"  style="font-size: 1.5em;">
+                <li class="breadcrumb-item text-truncate">
+                    <a th:href="@{/management/users}" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover">
+                        <i class="fas fa-people-group me-1"></i><span th:text="#{user.users}"></span>
+                    </a>
+                </li>
+                <li class="breadcrumb-item text-truncate active" aria-current="page" th:text="#{edit}">Edit</li>
+            </ol>
+        </nav>
+
+        <!-- Edit user card -->
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-sm-10 col-md-8 col-xl-6 col-xxl-5">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h3 class="text-center" th:text="${userName == null ? userTo.name : userName}">User name</h3>
+                    </div>
+                    <form th:action="@{/management/users/update}" method="post" th:object="${userTo}">
+                        <div class="card-body p-4 text-center">
+                            <input type="hidden" th:field="*{id}">
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="nameInput" th:field="*{name}"
+                                               th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
+                                               required placeholder="Name" />
+                                        <label for="nameInput" class="text-muted" th:text="#{user.name}">Name</label>
+                                    </div>
+                                </div>
+                                <span th:if="${#fields.hasErrors('name')}">
+                                    <ul>
+                                        <li class="text-danger text-start" th:each="err : ${#fields.errors('name')}"
+                                            th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa-solid fa-envelope fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="emailInput" th:field="*{email}"
+                                               th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+                                               required placeholder="Email" />
+                                        <label for="emailInput" class="text-muted" th:text="#{user.email}">Email</label>
+                                    </div>
+                                </div>
+                                <span th:if="${#fields.hasErrors('email')}">
+									<ul>
+										<li class="text-danger text-start" th:each="err : ${#fields.errors('email')}"
+                                            th:text="${err}"/>
+									</ul>
+								</span>
+                            </div>
+                            <div class="">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa-solid fa-chess fa-fw"></i></span>
+                                    <div class="form-floating floating-select">
+                                        <select class="form-control selectpicker border px-0 py-3" data-style="btn-white"
+                                                id="selector" multiple th:field="*{roles}" th:title="#{user.roles}" required>
+                                            <option th:each="role : ${roles}"
+                                                    th:value="${role.name}"
+                                                    th:text="#{'user.role.' + ${role.name.toLowerCase()}}">
+                                            </option>
+                                        </select>
+                                        <label for="selector" class="selector-label text-muted" th:text="#{user.roles}">Roles</label>
+                                    </div>
+
+                                </div>
+                                <span th:if="${#fields.hasErrors('roles')}">
+									<ul>
+										<li class="text-danger text-start" th:each="err : ${#fields.errors('roles')}"
+                                            th:text="${err}"/>
+									</ul>
+								</span>
+                            </div>
+                        </div>
+                        <div class="card-footer text-end pe-4 py-2">
+                            <button class="btn btn-secondary" type="button" onclick="cancel()" th:text="#{cancel}">Cancel</button>
+                            <button class="btn btn-primary ms-1 px-3" style="min-width: 72px;" type="submit" th:text="#{save}">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </appMain>
+
+    <ownScript>
+        <script src="/js/cancel-button.js?v=1"></script>
+        <script src="/js/bootstrap-selector-style-float.js?v=1"></script>
+    </ownScript>
+</th:block>

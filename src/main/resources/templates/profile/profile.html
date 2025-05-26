@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="user" type="ru.javaprojects.javaprojects.users.model.User"*/-->
+<!--/*@thymesVar id="authUser" type="ru.javaprojects.javaprojects.users.model.User"*/-->
+
+<th:block th:replace="~{fragments/main::page(title=#{profile},appMain=~{::appMain}, ownScript=~{::ownScript}, ownCss='project.css')}">
+    <appMain>
+        <span th:if="${action != null}" th:data-action="${action}" th:id="actionSpan"></span>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb ms-2 flex-nowrap"  style="font-size: 1.5em;">
+                <li class="breadcrumb-item text-truncate">
+                    <a th:if="${authUser != null && authUser.isAdmin()}" th:href="@{/management/users}" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover">
+                        <i class="fas fa-people-group me-1"></i><span th:text="#{user.users}"></span>
+                    </a>
+                    <span th:if="${authUser == null || !authUser.isAdmin()}">
+                        <i class="fas fa-people-group me-1"></i><span th:text="#{user.users}"></span>
+                    </span>
+                </li>
+                <li th:if="${authUser == null || authUser.id != user.id}" class="breadcrumb-item text-truncate active"
+                    aria-current="page" th:text="${user.name}">Name</li>
+                <li th:if="${authUser != null && authUser.id == user.id}" class="breadcrumb-item text-truncate active"
+                    aria-current="page" th:text="#{profile}">Profile</li>
+            </ol>
+        </nav>
+
+        <div class="row d-flex justify-content-center align-items-center mt-3">
+            <div class="col-12 col-sm-11 col-md-9 col-lg-7 col-xl-6">
+                <div class="card shadow rounded-4">
+                    <span id="userId" th:text="${user.id}" hidden></span>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-10 col-sm-11">
+                                <div class="row">
+                                    <div class="col-12 col-sm-5 col-xxl-4">
+                                        <img class="img-fluid" style="width: 165px; height: 165px; border-radius: 10px; object-fit: cover"
+                                             th:src="@{${user.avatar != null ? user.avatar.getSrc() : '/images/no-avatar.svg'}}" />
+                                    </div>
+                                    <div class="col-12 col-sm-7 col-xxl-8 ps-sm-0 mt-3 mt-sm-1">
+                                        <div class="mb-1 position-relative">
+                                            <span class="h4" th:text="${user.name}" id="userName">Name</span>
+                                            <span th:if="${user.isAdmin()}"
+                                                  class="badge rounded-pill bg-danger ms-1"
+                                                  style="position: absolute; margin-top: -5px;" th:text="#{user.role.admin}">Admin</span>
+                                        </div>
+                                        <div class="mb-1" th:title="#{profile.rating}">
+                                            <i class="fa-solid fa-star text-warning"></i>
+                                            <span th:text="${rating}"></span>
+                                        </div>
+                                        <div th:if="${authUser != null && (authUser.id == user.id || authUser.isAdmin())}"
+                                             th:text="${user.email}" class="mb-1">Email</div>
+                                        <div class="small text-secondary-emphasis" th:text="#{user.registered} + ': ' + ${#temporals.format(user.registered, 'dd.MM.yyyy HH:mm')}"
+                                             style="font-style: italic">Registered</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${authUser != null && authUser.id == user.id}"  class="col-2 col-sm-1 ps-0 text-end">
+                                <button type="button"
+                                        class="btn btn-link link-secondary link-underline-opacity-0 p-0 dropdown-toggle"
+                                        th:title="#{edit}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a type="button" class="dropdown-item" th:href="@{/profile/edit}"
+                                           th:text="#{profile.edit-profile}">Edit profile</a></li>
+                                    <li><button class="dropdown-item" data-bs-toggle="modal"
+                                                data-bs-target="#changePasswordModal" th:text="#{profile.change-password}">Change password</button></li>
+                                    <li>
+                                        <form th:action="@{/logout}" method="post">
+                                            <button class="dropdown-item" type="submit" th:text="#{logout}">Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mt-1">
+                            <ul class="nav nav-underline">
+                                <li class="nav-item">
+                                    <button class="nav-link secondary-nav-link active" data-bs-toggle="tab" data-bs-target="#informationTab"
+                                            type="button" role="tab" aria-controls="nav-general" aria-selected="true"
+                                             onclick="showInformation()" th:text="#{profile.information}">Information</button>
+                                </li>
+<!--                                <li class="nav-item">-->
+<!--                                    <button class="nav-link secondary-nav-link" data-bs-toggle="tab" data-bs-target="#qualificationTab"-->
+<!--                                            type="button" role="tab" aria-controls="nav-changes" aria-selected="false"-->
+<!--                                             onclick="showQualification()" id="qualificationTabBtn" th:text="#{profile.qualification}">Qualification</button>-->
+<!--                                </li>-->
+<!--                                <li class="nav-item">-->
+<!--                                    <button class="nav-link secondary-nav-link" data-bs-toggle="tab" data-bs-target="#projectsTab"-->
+<!--                                            type="button" role="tab" aria-controls="nav-changes" aria-selected="false"-->
+<!--                                             onclick="showProjects()" id="projectsTabBtn" th:text="#{project.projects}">Projects</button>-->
+<!--                                </li>-->
+                            </ul>
+                            <div class="tab-content pt-1">
+                                <div class="tab-pane fade show active" id="informationTab" role="tabpanel"
+                                     aria-labelledby="nav-general-tab" tabindex="0">
+                                    <div th:if="${user.information != null && !user.information.isBlank()}"
+                                         th:text="${user.information}" style="white-space: pre-wrap;">Information</div>
+                                    <div th:if="${user.information == null || user.information.isBlank()}"
+                                         class="alert alert-secondary mt-1 mb-0" th:text="#{profile.no-information}">No info</div>
+                                </div>
+<!--                                <div class="tab-pane fade" id="qualificationTab" role="tabpanel"-->
+<!--                                     aria-labelledby="nav-general-tab" tabindex="0"></div>-->
+<!--                                <div class="tab-pane fade" id="projectsTab" role="tabpanel"-->
+<!--                                     aria-labelledby="nav-general-tab" tabindex="0" style="margin-top: -6px;"></div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change password modal -->
+        <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header bg-light-subtle">
+                        <h5 class="modal-title" th:text="#{profile.change-password}">Change password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form onsubmit="return false;">
+                        <div class="modal-body">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="password" required
+                                           placeholder="New password" />
+                                    <label for="password" class="text-muted" th:text="#{user.new-password}">New password</label>
+                                </div>
+                            </div>
+                            <div class="input-group mt-3">
+                                <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="repeatPassword" required
+                                           placeholder="Repeat password" />
+                                    <label for="repeatPassword" class="text-muted" th:text="#{user.repeat-password}">Repeat password</label>
+                                </div>
+                            </div>
+                            <span id="passwordMatchError" class="text-danger text-start"></span>
+                        </div>
+                        <div class="float-end pe-3 pb-3">
+                            <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                            <button type="submit" class="btn btn-primary" onclick="changePassword()" id="confirmBtn" th:text="#{change}">Change</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </appMain>
+
+    <ownScript>
+        <script>
+            sessionStorage.removeItem('prevUrl');
+            sessionStorage.removeItem('projectDataPagePrevUrl');
+        </script>
+        <script src="/js/common.js?v=1"></script>
+        <script src="/js/profile.js?v=1"></script>
+        <script src="/js/check-passwords-match.js?v=1"></script>
+        <script src="/js/share-project-button.js?v=1"></script>
+    </ownScript>
+</th:block>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="user" type="ru.javaprojects.javaprojects.users.model.User"*/-->
+
+<th:block th:replace="~{fragments/main::page(title=#{user.users},appMain=~{::appMain}, ownScript=~{::ownScript}, activeMenuItem=${ {'users', 'management'} })}">
+    <appMain>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb ms-2 flex-nowrap"  style="font-size: 1.5em;">
+                <li class="breadcrumb-item text-truncate">
+                    <a th:href="@{/management/users}" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover">
+                        <i class="fas fa-people-group me-1"></i><span th:text="#{user.users}"></span>
+                    </a>
+                </li>
+                <li class="breadcrumb-item text-truncate active" aria-current="page" th:text="#{add}">Add</li>
+            </ol>
+        </nav>
+
+        <!-- Create user card -->
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-sm-10 col-md-8 col-xl-6 col-xxl-5">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h3 class="text-center" th:text="#{user.new}">New user</h3>
+                    </div>
+                    <form th:action="@{/management/users/create}" method="post" th:object="${user}">
+                        <div class="card-body p-4 pt-4 pb-3 text-center">
+                                <div class="mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fa-solid fa-user fa-fw"></i></span>
+                                        <div class="form-floating">
+                                            <input type="text" id="nameInput" th:field="*{name}"
+                                                   th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
+                                                   required placeholder="Name" />
+                                            <label for="nameInput" class="text-muted" th:text="#{user.name}">Name</label>
+                                        </div>
+                                    </div>
+                                    <span th:if="${#fields.hasErrors('name')}">
+                                        <ul>
+                                            <li class="text-danger text-start" th:each="err : ${#fields.errors('name')}"
+                                                th:text="${err}"/>
+                                        </ul>
+                                    </span>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fa-solid fa-envelope fa-fw"></i></span>
+                                        <div class="form-floating">
+                                            <input type="text" id="emailInput" th:field="*{email}"
+                                                   th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+                                                   required placeholder="Email" />
+                                            <label for="emailInput" class="text-muted" th:text="#{user.email}">Email</label>
+                                        </div>
+                                    </div>
+                                    <span th:if="${#fields.hasErrors('email')}">
+                                        <ul>
+                                            <li class="text-danger text-start" th:each="err : ${#fields.errors('email')}"
+                                                th:text="${err}"/>
+                                        </ul>
+                                    </span>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fa-solid fa-chess fa-fw"></i></span>
+                                        <div class="form-floating">
+                                            <select class="form-control selectpicker border px-0 pt-2" data-style="btn-white"
+                                                     id="selector" multiple th:field="*{roles}" th:title="#{user.roles}" required>
+                                                <option th:each="role : ${roles}"
+                                                        th:value="${role.name}"
+                                                        th:text="#{'user.role.' + ${role.name.toLowerCase()}}">
+                                                </option>
+                                            </select>
+                                            <label hidden for="selector" class="selector-label text-muted" th:text="#{user.roles}">Roles</label>
+                                        </div>
+                                    </div>
+                                    <span th:if="${#fields.hasErrors('roles')}">
+                                        <ul>
+                                            <li class="text-danger text-start" th:each="err : ${#fields.errors('roles')}"
+                                                th:text="${err}"/>
+                                        </ul>
+                                    </span>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fa-solid fa-key fa-fw"></i></span>
+                                        <div class="form-floating">
+                                            <input type="password" id="password" th:field="*{password}"
+                                                   th:class="${#fields.hasErrors('password')} ? 'form-control is-invalid' : 'form-control'"
+                                                   required placeholder="Password" />
+                                            <label for="password" class="text-muted" th:text="#{user.password}">Password</label>
+                                        </div>
+                                    </div>
+                                    <span th:if="${#fields.hasErrors('password')}">
+                                        <ul>
+                                            <li class="text-danger text-start" th:each="err : ${#fields.errors('password')}"
+                                                th:text="${err}"/>
+                                        </ul>
+                                    </span>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fa-solid fa-key fa-fw"></i></span>
+                                        <div class="form-floating">
+                                            <input type="password" id="repeatPassword" class="form-control" required
+                                                   placeholder="Repeat password" />
+                                            <label for="repeatPassword" class="text-muted" th:text="#{user.repeat-password}">Repeat Password</label>
+                                        </div>
+                                    </div>
+                                    <span id="passwordMatchError" class="text-danger text-start"></span>
+                                </div>
+                                <div class="form-check form-switch text-start">
+                                    <input type="checkbox" th:field="*{enabled}" class="form-check-input" style="cursor: pointer;"
+                                           checked id="flexSwitchCheckDefault">
+                                    <label class="form-check-label" for="flexSwitchCheckDefault" th:text="#{user.enabled}">Enabled</label>
+                                </div>
+                        </div>
+                        <div class="card-footer text-end pe-4 py-2">
+                            <button class="btn btn-secondary" type="button" onclick="cancel()" th:text="#{cancel}">Cancel</button>
+                            <button class="btn btn-primary ms-1" type="submit" id="confirmBtn" th:text="#{create}">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </appMain>
+
+    <ownScript>
+        <script src="/js/users.js?v=1"></script>
+        <script src="/js/check-passwords-match.js?v=1"></script>
+        <script src="/js/cancel-button.js?v=1"></script>
+        <script src="/js/bootstrap-selector-style-float.js?v=1"></script>
+    </ownScript>
+</th:block>

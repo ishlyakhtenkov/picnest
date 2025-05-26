@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sd="http://www.thymeleaf.org/spring-data" lang="en">
+<!--/*@thymesVar id="action" type="java.lang.String"*/-->
+<!--/*@thymesVar id="user" type="ru.javaprojects.javaprojects.users.model.User"*/-->
+<!--/*@thymesVar id="users" type="java.util.List"*/-->
+<!--/*@thymesVar id="onlineUsersIds" type="java.util.Set"*/-->
+
+<th:block th:replace="~{fragments/main::page(title=#{user.users},appMain=~{::appMain}, ownScript=~{::ownScript}, activeMenuItem=${ {'users', 'management'} })}">
+    <appMain>
+        <span th:if="${action != null}" th:data-action="${action}" th:id="actionSpan"></span>
+        <!-- Search field, Add button -->
+        <div class="bg-light-subtle px-2 rounded-top-1 border-top border-start border-end border-light-subtle"
+             th:classappend="${users.isEmpty() ? 'rounded-1 border-bottom' : ''}">
+            <div class="row row-cols-1 row-cols-sm-2 align-items-center pb-2 pb-sm-0">
+                <div class="col-sm-5 text-start">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-2 mb-sm-3" style="font-size: 1.5em;">
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <i class="fas fa-people-group me-1"></i><span th:text="#{user.users}"></span>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-sm-7">
+                    <div class="btn-toolbar justify-content-start justify-content-sm-end">
+                        <form class="d-flex" role="search" th:action="@{/management/users}" method="get">
+                            <div class="input-group">
+                                <span class="input-group-text" id="searchUsers"><i class="fa-solid fa-magnifying-glass fa-fw"></i></span>
+                                <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search" th:placeholder="#{user.search} + '...'" aria-label="Search">
+                            </div>
+                        </form>
+                        <a th:href="@{/management/users/add}" type="button" th:title="#{user.add}"
+                           class="btn btn-outline-primary ms-2"><i class="fa-solid fa-plus"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users table -->
+        <span th:if="${users.isEmpty()}">
+            <h5 class="alert alert-warning mt-2" th:text="#{user.no-users-found} + '.'"></h5>
+        </span>
+
+        <div th:if="${!users.isEmpty()}" class="table-responsive text-nowrap">
+            <table class="table table-hover table-bordered">
+                <thead class="thead-border-top-none">
+                <tr>
+                    <th class="col-3 border-right-none bg-light-subtle" th:text="#{user.name}">Name</th>
+                    <th class="col-3 border-right-none bg-light-subtle" th:text="#{user.email}">Email</th>
+                    <th class="col-1 border-right-none bg-light-subtle text-center" th:text="#{user.avatar}">Avatar</th>
+                    <th class="col-1 border-right-none bg-light-subtle" th:text="#{user.roles}">Roles</th>
+                    <th class="col-2 border-right-none bg-light-subtle" th:text="#{user.registered}">Registered</th>
+                    <th class="col-1 text-center border-right-none bg-light-subtle" th:text="#{user.online}">Online</th>
+                    <th class="col-1 text-center bg-light-subtle" th:text="#{actions}">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}" th:id="'row-' + ${user.id}" class="table-row">
+                    <td th:text="${user.name}"></td>
+                    <td class="text-truncate" th:text="${user.email}"></td>
+                    <td class="text-center py-1">
+                        <img th:if="${user.avatar != null}"
+                             th:src="@{${user.avatar.getSrc()}}"
+                             class="rounded-circle border border-light-subtle" width="32" height="32"
+                             style="cursor: zoom-in; object-fit: cover;"
+                             th:data-filename="${user.avatar.fileName}" onclick="zoomImage($(this))" />
+                    </td>
+                    <td th:text="${#strings.listJoin(#messages.setMsg(user.roles.!['user.role.' + name.toLowerCase]), ', ')}"></td>
+                    <td th:text="${#temporals.format(user.registered, 'dd.MM.yyyy HH:mm')}"></td>
+                    <td class="text-center online-circle" th:title="${onlineUsersIds.contains(user.id)} ? #{user.online} : #{user.offline}"
+                        th:classappend="${onlineUsersIds.contains(user.id) ? 'text-success' : 'text-danger'}">
+                        <span><i class="fa-solid fa-circle-dot"></i></span>
+                    </td>
+                    <td class="text-center">
+                        <a th:href="@{'/profile/' + ${user.id} + '/view'}" type="button" th:title="#{user.show-profile}"
+                           class="btn-link link-underline-opacity-0 link-secondary">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </a>
+                        <a th:href="@{'/management/users/edit/' + ${user.id}}" type="button" th:title="#{user.edit}"
+                           class="btn-link link-underline-opacity-0 link-success ms-3">
+                            <i class="fa-solid fa-user-pen"></i>
+                        </a>
+                        <a type="button" class="btn-link link-underline-opacity-0 link-warning ms-3"
+                           th:title="#{user.change-password}" data-bs-toggle="modal" data-bs-target="#changePasswordModal"
+                           th:data-name="${user.name}"
+                           th:data-id="${user.id}">
+                            <i class="fa-solid fa-key"></i>
+                        </a>
+                        <span class="form-switch tiny ms-3">
+                            <input type="checkbox" role="switch" class="form-check-input"
+                                   style="cursor: pointer; margin-top: 6px;" th:checked="${user.enabled}"
+                                   th:data-id="${user.id}" th:data-name="${user.name}"
+                                   th:title="${user.enabled} ? #{user.disable} : #{user.enable}"
+                                   onclick="enableUser($(this))" />
+                        </span>
+                        <a tabindex="0" type="button" class="btn-link link-danger ms-3" th:title="#{user.delete}"
+                           data-bs-toggle="popover" data-bs-trigger="focus"
+                           th:data-bs-title="#{user.delete-this} + '?'"
+                           th:data-bs-content="'<div class=&quot;text-center&quot;><button class=&quot;btn btn-sm btn-secondary me-2&quot;>' + #{cancel} + '</button>' +
+                             '<button class=&quot;btn btn-sm btn-danger&quot;' + 'data-id=&quot;' + ${user.id} + '&quot;' +
+                             'data-name=&quot;' + ${user.name} + '&quot;' + 'data-type=&quot;user&quot;' +
+                             'data-delete-uri=&quot;/management/users&quot;' +
+                             'onclick=&quot;deleteEntity($(this))&quot;>' + #{delete} + '</button></div>'">
+                            <i class="fa-solid fa-user-xmark"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div th:if="${!users.isEmpty()}" class="row">
+            <div class="col-12 col-md-6">
+                <div sd:pagination-summary="" id="paginationSummary">info</div>
+            </div>
+
+            <div class="col-12 col-md-6 mt-3 mt-md-0">
+                <nav>
+                    <ul class="pagination justify-content-md-end" sd:pagination-split="7" sd:pagination="full">
+                        <!-- Pagination created by SpringDataDialect, this content is just for mockup -->
+                        <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div th:if="${!users.isEmpty()}" class="row">
+            <div class="col text-md-end">
+                <span th:text="#{info.show}">Show</span> <span sd:page-size-selector="javascript"></span> <span th:text="#{info.entries}">entries</span>
+            </div>
+        </div>
+
+        <!-- Change password modal -->
+        <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header bg-light-subtle">
+                        <h1 class="modal-title fs-5" id="changePasswordModalLabel">Change password for user</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form onsubmit="return false;">
+                        <div class="modal-body">
+                            <input type="hidden" name="userId" id="changePasswordModalUserId" value=""/>
+                            <input type="hidden" name="userName" id="changePasswordModalUserName" value=""/>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="password" required
+                                           placeholder="New password" />
+                                    <label for="password" class="text-muted" th:text="#{user.new-password}">New password</label>
+                                </div>
+                            </div>
+                            <div class="input-group mt-2">
+                                <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="repeatPassword" required
+                                           placeholder="Repeat password" />
+                                    <label for="repeatPassword" class="text-muted" th:text="#{user.repeat-password}">Repeat password</label>
+                                </div>
+                            </div>
+                            <span id="passwordMatchError" class="text-danger text-start"></span>
+                        </div>
+                        <div class="float-end pe-3 pb-3">
+                            <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                            <button type="submit" class="btn btn-primary" onclick="changePassword()" id="confirmBtn" th:text="#{change}">Change</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image modal -->
+        <div class="modal fade" id="zoomImageModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header border-0 pb-0">
+                        <span id="zoomImageModalHeader"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="" id="zoomImage" class="border" style="max-width: 100%;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+
+    <ownScript>
+        <script>
+            sessionStorage.removeItem('prevUrl');
+        </script>
+        <script src="/js/common.js?v=1"></script>
+        <script src="/js/table-content.js?v=1"></script>
+        <script src="/js/users.js?v=1"></script>
+        <script src="/js/check-passwords-match.js?v=1"></script>
+    </ownScript>
+</th:block>

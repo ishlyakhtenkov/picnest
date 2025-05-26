@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title=#{error},appMain=~{::appMain})}">
+    <appMain>
+        <div class="text-center">
+            <h1 class="display-1 fw-bold">404</h1>
+            <p class="fs-3">
+                <span class="text-danger" th:text="#{error.opps} + '!'">Opps!</span> <span th:text="#{error.not-found} + '.'"></span>
+            </p>
+            <p class="lead" th:text="#{error.page-not-found}">
+                The page was not found
+            </p>
+        </div>
+    </appMain>
+</th:block>
