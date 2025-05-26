@@ -71,7 +71,7 @@ CREATE TABLE albums
     user_id          BIGINT        NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX albums_unique_user_name_idx ON albums (user_id, name);
+CREATE UNIQUE INDEX albums_unique_name_idx ON albums (user_id, name);
 
 CREATE TABLE photos
 (
