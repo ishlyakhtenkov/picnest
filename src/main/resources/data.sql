@@ -8,9 +8,9 @@ DELETE FROM users;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (email, name, information, password, enabled, avatar_file_name, avatar_file_link)
-VALUES ('user@gmail.com','John Doe', 'Some info', '{noop}password', true, 'cool_user.jpg', './content/avatars/100000/cool_user.jpg'),
-       ('admin@gmail.com','Jack', 'Java developer with 10 years of production experience.', '{noop}admin', true, 'admin.jpg', './content/avatars/100001/admin.jpg'),
-       ('user2@gmail.com','Alice Key', null, '{noop}somePassword', true, 'cat.jpg', './content/avatars/100002/cat.jpg'),
+VALUES ('user@gmail.com','John Doe', 'Some info', '{noop}password', true, 'cool_user.jpg', './content/avatars/user@gmail.com/cool_user.jpg'),
+       ('admin@gmail.com','Jack', 'Java developer with 10 years of production experience.', '{noop}admin', true, 'admin.jpg', './content/avatars/admin@gmail.com/admin.jpg'),
+       ('user2@gmail.com','Alice Key', null, '{noop}somePassword', true, 'cat.jpg', './content/avatars/user2@gmail.com/cat.jpg'),
        ('userDisabled@gmail.com','Freeman25', null, '{noop}password', false, null, null);
 
 INSERT INTO user_roles (role, user_id)
@@ -43,6 +43,5 @@ VALUES ('2025-05-22 12:28:03', 'photo 1 user alb 1 desc', 'ph1.jpg', './content/
        ('2025-05-22 12:28:07', 'photo 2 user alb 1 desc', 'ph2.jpg', './content/photos/100000/100011/ph2.jpg', 100011),
        ('2025-05-22 12:28:07', 'photo 3 user alb 1 desc', 'ph3.jpg', './content/photos/100000/100011/ph3.jpg', 100011),
        ('2025-04-19 17:46:15', 'photo 1 user alb 2 desc', 'ph1.jpg', './content/photos/100000/100012/ph1.jpg', 100012),
-       ('2025-04-19 18:12:32', 'photo 2 user alb 2 desc', 'ph2.jpg', './content/photos/100000/100012/ph2.jpg', 100012),
        ('2025-03-17 16:28:14', 'photo 1 admin alb 1 desc', 'ph1.jpg', './content/photos/100001/100013/ph1.jpg', 100013),
        ('2025-03-17 16:34:59', 'photo 2 admin alb 1 desc', 'ph2.jpg', './content/photos/100001/100013/ph2.jpg', 100013);
