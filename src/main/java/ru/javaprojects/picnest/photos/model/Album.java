@@ -48,6 +48,11 @@ public class Album extends BaseEntity implements HasIdAndName {
         this.owner = owner;
     }
 
+    public Album(Long id, String name, LocalDateTime created, User owner) {
+        this(id, name, owner);
+        this.created = created;
+    }
+
     @Override
     public String toString() {
         return String.format("Album[id=%d, name=%s]", id, name);

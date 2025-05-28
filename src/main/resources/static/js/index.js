@@ -81,12 +81,12 @@ function generateAlbumCard(album) {
     let title = $('<h5></h5>').addClass('card-title').attr('id', `albumName-${album.id}`).text(album.name);
     cardBody.append(title);
     let infoRow = $('<div></div>').addClass('row');
-    let photoCountCol = $('<div></div>').addClass('col text-muted  mt-auto').text('15 photos');
+    let photoCountCol = $('<div></div>').addClass('col text-muted  mt-auto').text('?? photos'); //TODO
     let createdCol = $('<div></div>').addClass('col small text-muted fst-italic text-end mt-auto')
         .text(formatDateTime(album.created).split(' ')[0]);
     infoRow.append(photoCountCol).append(createdCol);
     cardBody.append(infoRow);
-    let stretchedLink = $('<a></a>').addClass('stretched-link').attr('href', '#');
+    let stretchedLink = $('<a></a>').addClass('stretched-link').attr('href', '#'); //TODO
     cardBody.append(stretchedLink);
     card.append(cardBody);
     return card;
