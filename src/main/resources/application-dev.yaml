@@ -32,8 +32,8 @@ change-email:
   confirm-url: http://localhost:8080/profile/change-email/confirm
 
 content-path:
-  photos: ./content/photos/
-  avatars: ./content/avatars/
+  photos: ./picnest/content/photos/
+  avatars: ./picnest/content/avatars/
 
 locale:
   supported: en,ru

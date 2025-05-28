@@ -106,8 +106,8 @@ change-email:
   confirm-url: https://javaprojects.ru/picnest/profile/change-email/confirm
 
 content-path:
-  photos: ./content/photos/
-  avatars: ./content/avatars/
+  photos: ./picnest/content/photos/
+  avatars: ./picnest/content/avatars/
 
 locale:
   supported: en,ru
@@ -127,4 +127,4 @@ jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: org.jasypt.iv.NoIvGenerator
-    password:
+    password: 123456Gtx

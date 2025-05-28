@@ -8,9 +8,9 @@ DELETE FROM users;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (email, name, information, password, enabled, avatar_file_name, avatar_file_link)
-VALUES ('user@gmail.com','John Doe', 'Some info', '{noop}password', true, 'cool_user.jpg', './content/avatars/user@gmail.com/cool_user.jpg'),
-       ('admin@gmail.com','Jack', 'Java developer with 10 years of production experience.', '{noop}admin', true, 'admin.jpg', './content/avatars/admin@gmail.com/admin.jpg'),
-       ('user2@gmail.com','Alice Key', null, '{noop}somePassword', true, 'cat.jpg', './content/avatars/user2@gmail.com/cat.jpg'),
+VALUES ('user@gmail.com','John Doe', 'Some info', '{noop}password', true, 'cool_user.jpg', './picnest/content/avatars/user@gmail.com/cool_user.jpg'),
+       ('admin@gmail.com','Jack', 'Java developer with 10 years of production experience.', '{noop}admin', true, 'admin.jpg', './picnest/content/avatars/admin@gmail.com/admin.jpg'),
+       ('user2@gmail.com','Alice Key', null, '{noop}somePassword', true, 'cat.jpg', './picnest/content/avatars/user2@gmail.com/cat.jpg'),
        ('userDisabled@gmail.com','Freeman25', null, '{noop}password', false, null, null);
 
 INSERT INTO user_roles (role, user_id)
@@ -33,15 +33,15 @@ INSERT INTO change_email_tokens (token, expiry_timestamp, new_email, user_id)
 VALUES ('5a49dd09-g23f-44bb-8d41-b6ff44275s56', '2024-08-05 21:49:01', 'some@gmail.com', 100001),
        ('1a43dx02-x23x-42xx-8r42-x6ff44275y67', '2052-01-22 06:17:32', 'someNew@gmail.com', 100002);
 
-INSERT INTO albums(name, created, user_id)
-VALUES ('user album 1', '2025-05-22 12:28:01', 100000),
-       ('user album 2', '2025-04-18 21:13:14', 100000),
-       ('admin album', '2025-03-17 16:22:48', 100001);
+INSERT INTO albums(name, created, updated, user_id)
+VALUES ('user album 1', '2025-05-22 12:28:01', null, 100000),
+       ('user album 2', '2025-04-18 21:13:14', null, 100000),
+       ('admin album', '2025-03-17 16:22:48', null, 100001);
 
 INSERT INTO photos(created, description, file_name, file_link, album_id)
-VALUES ('2025-05-22 12:28:03', 'photo 1 user alb 1 desc', 'ph1.jpg', './content/photos/100000/100011/ph1.jpg', 100011),
-       ('2025-05-22 12:28:07', 'photo 2 user alb 1 desc', 'ph2.jpg', './content/photos/100000/100011/ph2.jpg', 100011),
-       ('2025-05-22 12:28:07', 'photo 3 user alb 1 desc', 'ph3.jpg', './content/photos/100000/100011/ph3.jpg', 100011),
-       ('2025-04-19 17:46:15', 'photo 1 user alb 2 desc', 'ph1.jpg', './content/photos/100000/100012/ph1.jpg', 100012),
-       ('2025-03-17 16:28:14', 'photo 1 admin alb 1 desc', 'ph1.jpg', './content/photos/100001/100013/ph1.jpg', 100013),
-       ('2025-03-17 16:34:59', 'photo 2 admin alb 1 desc', 'ph2.jpg', './content/photos/100001/100013/ph2.jpg', 100013);
+VALUES ('2025-05-22 12:28:03', 'photo 1 user alb 1 desc', 'ph1.jpg', './picnest/content/photos/100000/100011/ph1.jpg', 100011),
+       ('2025-05-22 12:28:07', 'photo 2 user alb 1 desc', 'ph2.jpg', './picnest/content/photos/100000/100011/ph2.jpg', 100011),
+       ('2025-05-22 12:28:07', 'photo 3 user alb 1 desc', 'ph3.jpg', './picnest/content/photos/100000/100011/ph3.jpg', 100011),
+       ('2025-04-19 17:46:15', 'photo 1 user alb 2 desc', 'ph1.jpg', './picnest/content/photos/100000/100012/ph1.jpg', 100012),
+       ('2025-03-17 16:28:14', 'photo 1 admin alb 1 desc', 'ph1.jpg', './picnest/content/photos/100001/100013/ph1.jpg', 100013),
+       ('2025-03-17 16:34:59', 'photo 2 admin alb 1 desc', 'ph2.jpg', './picnest/content/photos/100001/100013/ph2.jpg', 100013);

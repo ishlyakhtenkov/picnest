@@ -71,7 +71,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/content/**").addResourceLocations("file:./content/");
+        registry.addResourceHandler("/picnest/content/**").addResourceLocations("file:./picnest/content/");
         registry.setOrder(Integer.MAX_VALUE);
     }
 }

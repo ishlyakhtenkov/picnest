@@ -90,6 +90,19 @@ enMessages.set('logo', 'Logo');
 enMessages.set('login', 'Login');
 enMessages.set('login', 'Login');
 
+enMessages.set('album.failed-to-create', 'Failed to create album');
+enMessages.set('album.failed-to-update', 'Failed to update album');
+enMessages.set('album.failed-to-delete', 'Failed to update album "{0}"');
+enMessages.set('album.created', 'Album "{0}" has been created');
+enMessages.set('album.updated', 'Album "{0}" has been updated');
+enMessages.set('album.deleted', 'Album "{0}" has been deleted');
+enMessages.set('album.create', 'Create album');
+enMessages.set('album.edit', 'Edit album');
+enMessages.set('create', 'Create');
+enMessages.set('save', 'Save');
+enMessages.set('album.sure-to-delete', 'Do you really want to delete album "{0}"?');
+enMessages.set('album.photos-will-be-delete', 'This action will delete all photos in the album!');
+
 
 ruMessages.set('user.passwords-not-match', 'пароли не совпадают');
 ruMessages.set('user.change-password-for', 'Сменить пароль для "{0}"');
@@ -178,6 +191,19 @@ ruMessages.set('change-image', 'Сменить картинку');
 ruMessages.set('choose-image', 'Выбрать картинку');
 ruMessages.set('logo', 'Логотип');
 ruMessages.set('login', 'Вход');
+
+ruMessages.set('album.failed-to-create', 'Не удалось создать альбом');
+ruMessages.set('album.failed-to-update', 'Не удалось обновить альбом');
+ruMessages.set('album.failed-to-delete', 'Не удалось удалить альбом "{0}"');
+ruMessages.set('album.created', 'Альбом "{0}" создан');
+ruMessages.set('album.updated', 'Альбом "{0}" обновлен');
+ruMessages.set('album.deleted', 'Альбом "{0}" удален');
+ruMessages.set('album.create', 'Создать альбом');
+ruMessages.set('album.edit', 'Редактировать альбом');
+ruMessages.set('create', 'Создать');
+ruMessages.set('save', 'Сохранить');
+ruMessages.set('album.sure-to-delete', 'Вы уверены, что хотите удалить альбом "{0}"?');
+ruMessages.set('album.photos-will-be-delete', 'Это действие приведет к удалению всех фотографий в альбоме!');
 
 
 function getMessage(messageCode, args) {

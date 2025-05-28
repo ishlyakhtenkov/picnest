@@ -88,14 +88,14 @@ public class UserTestData {
     public static final int ADMIN_RATING = -1;
 
     public static final User user = new User(USER_ID, USER_MAIL, "John Doe", "Some info", "password", true,
-            Set.of(USER), new File("cool_user.jpg", "./content/avatars/user@gmail.com/cool_user.jpg"));
+            Set.of(USER), new File("cool_user.jpg", "./picnest/content/avatars/user@gmail.com/cool_user.jpg"));
 
     public static final User admin = new User(ADMIN_ID, ADMIN_MAIL, "Jack",
             "Java developer with 10 years of production experience.", "admin", true, Set.of(USER, Role.ADMIN),
-            new File("admin.jpg", "./content/avatars/admin@gmail.com/admin.jpg"));
+            new File("admin.jpg", "./picnest/content/avatars/admin@gmail.com/admin.jpg"));
 
     public static final User user2 = new User(USER2_ID, USER2_MAIL, "Alice Key", null, "somePassword", true,
-            Set.of(USER), new File("cat.jpg", "./content/avatars/user2@gmail.com/cat.jpg"));
+            Set.of(USER), new File("cat.jpg", "./picnest/content/avatars/user2@gmail.com/cat.jpg"));
 
     public static final User disabledUser = new User(DISABLED_USER_ID, DISABLED_USER_MAIL, "Freeman25", "password",
             false, Set.of(USER));

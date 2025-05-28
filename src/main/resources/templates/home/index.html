@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title=#{home},appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <div class="row">
+            <div class="col-8 h5 fw-bold" th:text="#{album.my-albums}">
+                My albums
+            </div>
+            <div class="col-4 text-end">
+                <button type="button" class="with-popover btn btn-outline-success btn-sm" data-bs-toggle="popover" data-bs-trigger="manual"
+                        th:data-bs-title="'<a type=&quot;button&quot; class=&quot;btn-close ms-2 float-end tiny&quot;></a><div>'+ #{info.only-for-auth-users}+ '</div>'"
+                        th:data-bs-content="'<div class=&quot;text-center&quot;><a href=&quot;/login&quot; type=&quot;button&quot; class=&quot;btn btn-sm btn-warning px-3&quot;>' + #{login} + '</a></div>'"
+                        data-bs-html="true" onclick="showAlbumModalForCreate($(this))">
+                    <i class="fa-solid fa-plus me-1"></i><span th:text="#{project.add-new}"></span>
+                </button>
+            </div>
+        </div>
+        <div th:if="${albums == null || albums.isEmpty()}" class="mt-2">
+            <h5 class="alert alert-warning" th:text="#{album.no-albums-found}">No albums found.</h5>
+        </div>
+        <div th:if="${albums != null}" class="row row-cols-1 row-cols-md-2 row-cols-lg-5 mt-2" id="albumsArea">
+            <div th:each="album : ${albums}" class="col mb-4" th:id="${'albumCardCol-' + album.id}">
+                <div class="card h-100 album-card">
+                    <div class="ratio" style="--bs-aspect-ratio: 50%;">
+                        <img src="/images/album.jpg" class="card-img-top" style="object-fit: cover">
+                    </div>
+                    <div class="card-body">
+                        <span class="float-end px-3 pt-2 pb-1" style="margin-top: -14px; margin-right: -16px; position: relative; z-index: 2">
+                            <button type="button" class="btn btn-link link-secondary p-0" th:title="#{edit}"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a type="button" class="dropdown-item" onclick="showAlbumModalForUpdate($(this))"
+                                       th:data-id="${album.id}" th:text="#{edit}">Edit</a></li>
+                                <li><a type="button" class="dropdown-item" onclick="showDeleteAlbumModal($(this))"
+                                       th:data-id="${album.id}" th:text="#{delete}">Delete</a></li>
+                            </ul>
+                        </span>
+                        <h5 class="card-title" th:id="${'albumName-' + album.id}" th:text="${album.name}">Album name</h5>
+                        <div class="row">
+                            <div class="col text-muted  mt-auto">
+                                15 photos
+                            </div>
+                            <div class="col small text-muted fst-italic text-end mt-auto"
+                                 th:text="${#temporals.format(album.created, 'dd.MM.yyyy')}">
+                                Created date
+                            </div>
+                        </div>
+                        <a href="#" class="stretched-link"></a>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Album modal -->
+        <div class="modal fade" id="albumModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header bg-light-subtle">
+                        <h5 class="modal-title" id="albumModalTitle">Create/edit album</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form onsubmit="return false;">
+                        <div class="modal-body">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-book"></i></span>
+                                <div class="form-floating">
+                                    <input class="form-control" id="albumName" required placeholder="Name" />
+                                    <label for="albumName" class="text-muted" th:text="#{name}">Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="float-end pe-3 pb-3">
+                            <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                            <button type="submit" class="btn btn-primary" onclick="createOrUpdateAlbum()" id="confirmBtn">Create/Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete album modal -->
+        <div class="modal fade" id="deleteAlbumModal" tabindex="-1" aria-labelledby="deleteAlbumModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title" id="deleteAlbumModalLabel"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteAlbum()" th:text="#{delete}">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+
+    <ownScript>
+        <script>
+            sessionStorage.removeItem('prevUrl');
+            sessionStorage.removeItem('projectDataPagePrevUrl');
+        </script>
+        <script src="/js/common.js?v=1"></script>
+        <script src="/js/index.js?v=1"></script>
+        <script src="/js/share-project-button.js?v=1"></script>
+    </ownScript>
+</th:block>

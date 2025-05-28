@@ -68,6 +68,7 @@ CREATE TABLE albums
     id               BIGINT        DEFAULT nextval('global_seq') PRIMARY KEY,
     name             VARCHAR(256)  NOT NULL,
     created          TIMESTAMP     DEFAULT now() NOT NULL,
+    updated          TIMESTAMP,
     user_id          BIGINT        NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );

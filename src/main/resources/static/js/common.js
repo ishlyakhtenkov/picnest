@@ -62,7 +62,11 @@ function handleError(data, title) {
             message += data.responseJSON.detail;
         }
     } else {
-        message += data.responseJSON.detail;
+        if (data.responseJSON) {
+            message += data.responseJSON.detail;
+        } else {
+            message += data.status;
+        }
     }
     failToast(message);
 }
