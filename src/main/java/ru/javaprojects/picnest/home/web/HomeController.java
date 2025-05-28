@@ -25,4 +25,16 @@ public class HomeController {
         }
         return "home/index";
     }
+
+    @GetMapping("/about")
+    public String showAboutPage() {
+        log.info("Show about page");
+        return "home/about";
+    }
+
+    @GetMapping("/contact")
+    public String showContactPage() {
+        log.info("Show contact page");
+        return "home/contact";
+    }
 }

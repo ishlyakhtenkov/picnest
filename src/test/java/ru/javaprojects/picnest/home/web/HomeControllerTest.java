@@ -16,8 +16,14 @@ import static ru.javaprojects.picnest.photos.AlbumTestData.*;
 import static ru.javaprojects.picnest.users.UserTestData.USER_MAIL;
 
 class HomeControllerTest extends AbstractControllerTest {
+    private static final String ABOUT_URL = "/about";
+    private static final String CONTACT_URL = "/contact";
+
     private static final String ALBUMS_ATTRIBUTE = "albums";
+
     private static final String HOME_VIEW = "home/index";
+    private static final String ABOUT_VIEW = "home/about";
+    private static final String CONTACT_VIEW = "home/contact";
 
     @Test
     @WithUserDetails(USER_MAIL)
@@ -38,5 +44,35 @@ class HomeControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist(ALBUMS_ATTRIBUTE))
                 .andExpect(view().name(HOME_VIEW));
+    }
+
+    @Test
+    void showAboutPageUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.get(ABOUT_URL))
+                .andExpect(status().isOk())
+                .andExpect(view().name(ABOUT_VIEW));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void showAboutPageAuthorized() throws Exception {
+        perform(MockMvcRequestBuilders.get(ABOUT_URL))
+                .andExpect(status().isOk())
+                .andExpect(view().name(ABOUT_VIEW));
+    }
+
+    @Test
+    void showContactPageUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.get(CONTACT_URL))
+                .andExpect(status().isOk())
+                .andExpect(view().name(CONTACT_VIEW));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void showContactPageAuthorized() throws Exception {
+        perform(MockMvcRequestBuilders.get(CONTACT_URL))
+                .andExpect(status().isOk())
+                .andExpect(view().name(CONTACT_VIEW));
     }
 }

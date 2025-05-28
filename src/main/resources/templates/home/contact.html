@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title=#{info.contact},appMain=~{::appMain})}">
+  <appMain>
+    <div class="row d-flex justify-content-center mt-3">
+      <div class="col-12 col-sm-11 col-md-9 col-lg-7 col-xl-6">
+        <div class="card shadow">
+          <div class="card-body">
+            <h4 th:text="#{info.contact}">Contact</h4>
+            <div class="mb-1" th:text="#{info.contact.developer}">Developer</div>
+              <div>
+                <div>
+                  <a class="btn-link link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                     href="mailto:ishlyakhtenkov@yandex.ru" th:title="#{user.email}">
+                    <i class="fa-solid fa-envelope fa-fw me-2"></i>ishlyakhtenkov@yandex.ru
+                  </a>
+                </div>
+                <div>
+                  <a class="btn-link link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                     href="https://t.me/ishlyakhtenkov" title="Telegram">
+                    <i class="fa-solid fa-paper-plane fa-fw me-2"></i>@ishlyakhtenkov
+                  </a>
+                </div>
+                <div>
+                  <a class="btn-link link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                     href="https://github.com/ishlyakhtenkov/" title="GitHub">
+                    <i class="fa-brands fa-github fa-fw me-2"></i>ishlyakhtenkov
+                  </a>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </appMain>
+</th:block>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title=#{info.about},appMain=~{::appMain})}">
+    <appMain>
+        <div class="row d-flex justify-content-center mt-3">
+            <div class="col-12 col-sm-11 col-md-9 col-lg-7 col-xl-6">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h4 th:text="#{info.about.header}">A little about JavaProjects</h4>
+                        <p th:text="#{info.about.description}">
+                            Description
+                        </p>
+                        <p th:text="#{info.about.possibilities}">
+                            Possibilities
+                        </p>
+                        <p th:text="#{info.about.cost}">
+                            Cost
+                        </p>
+                        <p>
+                            <span th:text="#{info.about.responsibility}">
+                                Responsibility
+                            </span>
+                            <a class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                               href="/contact" th:text="#{info.about.contact}">contact</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+</th:block>
