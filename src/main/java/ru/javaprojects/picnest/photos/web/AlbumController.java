@@ -25,7 +25,7 @@ public class AlbumController {
     @GetMapping("/{id}")
     public String showAlbum(@PathVariable long id, Model model) {
         log.info("show album with id={}", id);
-        model.addAttribute("album", service.get(id, AuthUser.authId(), Sort.by(DESC, "photos.created")));
+        model.addAttribute("album", service.getAlbum(id, AuthUser.authId(), Sort.by(DESC, "photos.created")));
         return "photos/album";
     }
 }

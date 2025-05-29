@@ -1,6 +1,7 @@
 package ru.javaprojects.picnest.photos.web;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,9 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.javaprojects.picnest.app.AuthUser;
+import ru.javaprojects.picnest.common.error.IllegalRequestDataException;
 import ru.javaprojects.picnest.common.validation.NoHtml;
 import ru.javaprojects.picnest.photos.model.Album;
+import ru.javaprojects.picnest.photos.model.Photo;
 import ru.javaprojects.picnest.photos.service.AlbumService;
 
 @RestController
@@ -44,6 +48,17 @@ public class AlbumRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
         log.info("delete album with id={}", id);
-        service.delete(id, AuthUser.authId());
+        service.deleteAlbum(id, AuthUser.authId());
+    }
+
+    @PostMapping(value = "/{id}/photos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Photo createPhoto(@PathVariable("id") long albumId, @RequestPart MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalRequestDataException("Photo file should not be empty",
+                    "photo.file-not-empty", null);
+        }
+        log.info("create photo for album with id={}", albumId);
+        return service.createPhoto(albumId, file, AuthUser.authId());
     }
 }
