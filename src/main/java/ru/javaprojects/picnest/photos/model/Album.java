@@ -15,6 +15,8 @@ import ru.javaprojects.picnest.common.validation.NoHtml;
 import ru.javaprojects.picnest.users.model.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "albums",
@@ -42,6 +44,9 @@ public class Album extends BaseEntity implements HasIdAndName {
     @JoinColumn(name = "user_id", nullable = false)
     private User owner;
 
+    @OneToMany(mappedBy = "album", fetch = FetchType.LAZY)
+    private List<Photo> photos;
+
     public Album(Long id, String name, User owner) {
         super(id);
         this.name = name;
@@ -51,6 +56,11 @@ public class Album extends BaseEntity implements HasIdAndName {
     public Album(Long id, String name, LocalDateTime created, User owner) {
         this(id, name, owner);
         this.created = created;
+    }
+
+    public Album(Long id, String name, LocalDateTime created, User owner, List<Photo> photos) {
+        this(id, name, created, owner);
+        this.photos = photos;
     }
 
     @Override

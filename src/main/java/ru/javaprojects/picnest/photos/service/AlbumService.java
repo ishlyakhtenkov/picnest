@@ -22,13 +22,18 @@ import java.util.List;
 public class AlbumService {
     private final AlbumRepository repository;
     private final UserService userService;
-    private final AlbumRepository albumRepository;
 
     @Value("${content-path.photos}")
     private String photoFilesPath;
 
-    public List<Album> getAllByOwner(long userId, Sort sort) {
-        return repository.findAllByOwner_Id(userId, sort);
+    public Album get(long id, long userId, Sort s) {
+        return repository.findWithPhotosByIdAndOwner_Id(id, userId, s).orElseThrow(() ->
+                new NotFoundException("Not found album with id=" + id + " and userId=" + userId,
+                        "error.notfound.entity", new Object[]{id}));
+    }
+
+    public List<Album> getAllByOwner(long userId, Sort s) {
+        return repository.findAllByOwner_Id(userId, s);
     }
 
     public Album createAlbum(String name, long userId) {
@@ -40,7 +45,7 @@ public class AlbumService {
     @Transactional
     public void updateAlbum(long id, String name, long userId) {
         Assert.notNull(name, "name must not be null");
-        Album album = albumRepository.findByIdAndOwner_Id(id, userId).orElseThrow(() ->
+        Album album = repository.findByIdAndOwner_Id(id, userId).orElseThrow(() ->
                 new NotFoundException("Not found album with id=" + id + " and userId=" + userId,
                         "error.notfound.entity", new Object[]{id}));
         if (!album.getName().equalsIgnoreCase(name)) {
@@ -58,7 +63,7 @@ public class AlbumService {
 
     @Transactional
     public void delete(long id, long userId) {
-        Album album = albumRepository.findByIdAndOwner_Id(id, userId).orElseThrow(() ->
+        Album album = repository.findByIdAndOwner_Id(id, userId).orElseThrow(() ->
                 new NotFoundException("Not found album with id=" + id + " and userId=" + userId,
                         "error.notfound.entity", new Object[]{id}));
         repository.delete(album);

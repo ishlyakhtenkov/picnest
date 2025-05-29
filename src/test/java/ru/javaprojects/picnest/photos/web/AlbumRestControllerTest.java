@@ -27,12 +27,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javaprojects.picnest.common.CommonTestData.*;
 import static ru.javaprojects.picnest.photos.AlbumTestData.*;
-import static ru.javaprojects.picnest.photos.web.AlbumRestController.ALBUMS_URL;
+import static ru.javaprojects.picnest.photos.web.AlbumController.ALBUMS_URL;
 import static ru.javaprojects.picnest.users.UserTestData.*;
 import static ru.javaprojects.picnest.users.web.LoginController.LOGIN_URL;
 
 class AlbumRestControllerTest extends AbstractControllerTest implements ContentFilesManager {
-    private static final String ALBUMS_URL_SLASH = ALBUMS_URL + "/";
+    static final String ALBUMS_URL_SLASH = ALBUMS_URL + "/";
 
     @Value("${content-path.photos}")
     private String photoFilesPath;
@@ -61,7 +61,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
         Album created = ALBUM_MATCHER.readFromJson(action);
         newAlbum.setId(created.getId());
         ALBUM_MATCHER.assertMatch(created, newAlbum);
-        ALBUM_MATCHER.assertMatch(repository.findWithOwnerById(created.id()).orElseThrow(), newAlbum);
+        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(repository.findWithOwnerById(created.id()).orElseThrow(), newAlbum);
     }
 
     @Test
@@ -109,7 +109,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
                 .andExpect(problemInstance(ALBUMS_URL));
         assertEquals(1, repository.findAllByNameIgnoreCase(userAlbum1.getName()).size());
         ALBUM_MATCHER.assertMatchIgnoreFields(repository.findAllByNameIgnoreCase(userAlbum1.getName()).get(0), userAlbum1,
-                "owner", "updated");
+                "owner", "updated", "photos");
     }
 
     @Test
@@ -124,7 +124,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
         Album created = ALBUM_MATCHER.readFromJson(action);
         newAlbum.setId(created.getId());
         ALBUM_MATCHER.assertMatch(created, newAlbum);
-        ALBUM_MATCHER.assertMatch(repository.findWithOwnerById(created.id()).orElseThrow(), newAlbum);
+        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(repository.findWithOwnerById(created.id()).orElseThrow(), newAlbum);
         assertEquals(2, repository.findAllByNameIgnoreCase(adminAlbum1.getName()).size());
     }
 
@@ -136,7 +136,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
                 .with(csrf()))
                 .andExpect(status().isNoContent());
         Album updated = repository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow();
-        ALBUM_MATCHER.assertMatch(updated, getUpdated());
+        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(updated, getUpdated());
     }
 
     @Test
@@ -148,7 +148,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
         assertNotEquals(getUpdated().getName(), repository.getExisted(USER_ALBUM1_ID).getName());
-        ALBUM_MATCHER.assertMatch(repository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
+        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(repository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
     }
 
     @Test
@@ -184,7 +184,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
                         .value(messageSource.getMessage("validation.album.name.NoHtml", null, getLocale())))
                 .andExpect(problemInstance(ALBUMS_URL_SLASH + USER_ALBUM1_ID));
         assertNotEquals(HTML_TEXT, repository.getExisted(USER_ALBUM1_ID).getName());
-        ALBUM_MATCHER.assertMatch(repository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
+        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(repository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
 
     }
 
@@ -202,7 +202,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
                 .andExpect(problemDetail(messageSource.getMessage("error.duplicate.album-name", null, getLocale())))
                 .andExpect(problemInstance(ALBUMS_URL_SLASH + USER_ALBUM1_ID));
         assertNotEquals(userAlbum2.getName(), repository.getExisted(USER_ALBUM1_ID).getName());
-        ALBUM_MATCHER.assertMatch(repository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
+        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(repository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
     }
 
     @Test
@@ -215,7 +215,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
                 .with(csrf()))
                 .andExpect(status().isNoContent());
         Album updated = repository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow();
-        ALBUM_MATCHER.assertMatch(updated, updatedAlbum);
+        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(updated, updatedAlbum);
         assertEquals(2, repository.findAllByNameIgnoreCase(updatedAlbum.getName()).size());
     }
 
@@ -234,7 +234,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
                         new Object[]{ADMIN_ALBUM1_ID}, getLocale())))
                 .andExpect(problemInstance(ALBUMS_URL_SLASH + ADMIN_ALBUM1_ID));
         assertNotEquals(getUpdated().getName(), repository.getExisted(ADMIN_ALBUM1_ID).getName());
-        ALBUM_MATCHER.assertMatch(repository.findWithOwnerById(ADMIN_ALBUM1_ID).orElseThrow(), adminAlbum1);
+        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(repository.findWithOwnerById(ADMIN_ALBUM1_ID).orElseThrow(), adminAlbum1);
     }
 
     @Test
@@ -252,7 +252,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
                         new Object[]{USER_ALBUM1_ID}, getLocale())))
                 .andExpect(problemInstance(ALBUMS_URL_SLASH + USER_ALBUM1_ID));
         assertNotEquals(getUpdated().getName(), repository.getExisted(USER_ALBUM1_ID).getName());
-        ALBUM_MATCHER.assertMatch(repository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
+        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(repository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
     }
 
     @Test

@@ -14,13 +14,11 @@ import ru.javaprojects.picnest.photos.model.Album;
 import ru.javaprojects.picnest.photos.service.AlbumService;
 
 @RestController
-@RequestMapping(value = AlbumRestController.ALBUMS_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = AlbumController.ALBUMS_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
 @Validated
 public class AlbumRestController {
-    static final String ALBUMS_URL = "/albums";
-
     private final AlbumService service;
 
     @PostMapping

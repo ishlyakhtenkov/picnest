@@ -19,8 +19,6 @@ class HomeControllerTest extends AbstractControllerTest {
     private static final String ABOUT_URL = "/about";
     private static final String CONTACT_URL = "/contact";
 
-    private static final String ALBUMS_ATTRIBUTE = "albums";
-
     private static final String HOME_VIEW = "home/index";
     private static final String ABOUT_VIEW = "home/about";
     private static final String CONTACT_VIEW = "home/contact";

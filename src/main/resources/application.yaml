@@ -107,6 +107,7 @@ change-email:
 
 content-path:
   photos: ./picnest/content/photos/
+  photos-uri: /picnest/content/photos/
   avatars: ./picnest/content/avatars/
 
 locale:

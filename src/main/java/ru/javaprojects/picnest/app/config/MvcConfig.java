@@ -1,17 +1,22 @@
 package ru.javaprojects.picnest.app.config;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.handler.DispatcherServletWebRequest;
 import org.springframework.web.servlet.handler.WebRequestHandlerInterceptorAdapter;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -26,6 +31,9 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Value("${locale.default}")
     private String defaultLocale;
+
+    @Value("${content-path.photos-uri}")
+    private String photosUri;
 
     // Add authUser to view model
     private final HandlerInterceptor authInterceptor = new WebRequestHandlerInterceptorAdapter(new WebRequestInterceptor() {
@@ -48,6 +56,25 @@ public class MvcConfig implements WebMvcConfigurer {
         }
     });
 
+    private final HandlerInterceptor photoInterceptor = new WebRequestHandlerInterceptorAdapter(new WebRequestInterceptor() {
+        @Override
+        public void preHandle(WebRequest request) {
+            String requestURI = ((DispatcherServletWebRequest) request).getRequest().getRequestURI();
+            AuthUser authUser = AuthUser.safeGet();
+            if (authUser == null || !requestURI.startsWith(photosUri + authUser.id() + "/")) {
+                throw new AccessDeniedException("Access for request=" + requestURI + " denied for user=" + authUser);
+            }
+        }
+
+        @Override
+        public void postHandle(WebRequest request, ModelMap model) {
+        }
+
+        @Override
+        public void afterCompletion(WebRequest request, Exception ex) {
+        }
+    });
+
     @Bean
     LocaleResolver localeResolver() {
         var cookieLocaleResolver = new CookieLocaleResolver();
@@ -67,6 +94,7 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor()).excludePathPatterns("/js/**", "/webjars/**", "/css/**", "/images/**");
         registry.addInterceptor(authInterceptor).excludePathPatterns("/js/**", "/webjars/**", "/css/**", "/images/**");
+        registry.addInterceptor(photoInterceptor).addPathPatterns(photosUri +  "**");
     }
 
     @Override

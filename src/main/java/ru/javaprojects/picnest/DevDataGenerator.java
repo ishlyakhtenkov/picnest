@@ -6,8 +6,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javaprojects.picnest.common.model.File;
 import ru.javaprojects.picnest.photos.model.Album;
+import ru.javaprojects.picnest.photos.model.Photo;
 import ru.javaprojects.picnest.photos.repository.AlbumRepository;
+import ru.javaprojects.picnest.photos.repository.PhotoRepository;
 import ru.javaprojects.picnest.users.model.User;
 import ru.javaprojects.picnest.users.repository.UserRepository;
 
@@ -17,13 +20,18 @@ import ru.javaprojects.picnest.users.repository.UserRepository;
 public class DevDataGenerator {
     private final AlbumRepository albumRepository;
     private final UserRepository userRepository;
+    private final PhotoRepository photoRepository;
 
     @EventListener
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         User admin = userRepository.getExisted(100001);
         for (int i = 0; i < 20; i++) {
-            albumRepository.save(new Album(null, "Admin album # " + i, admin));
+            Album created = albumRepository.save(new Album(null, "Admin album # " + i, admin));
+            for (int j = 0; j < 10; j++) {
+                photoRepository.save(new Photo(null, null, null, new File("ph1.jpg", "./picnest/content/photos/100001/100013/ph1.jpg"), created));
+                photoRepository.save(new Photo(null, null, null, new File("ph2.jpg", "./picnest/content/photos/100001/100013/ph2.jpg"), created));
+            }
         }
     }
 }
