@@ -1,7 +1,6 @@
 package ru.javaprojects.picnest.photos.web;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,15 +16,17 @@ import ru.javaprojects.picnest.photos.model.Album;
 import ru.javaprojects.picnest.photos.model.Photo;
 import ru.javaprojects.picnest.photos.service.AlbumService;
 
+import static ru.javaprojects.picnest.photos.web.AlbumController.ALBUMS_URL;
+
 @RestController
-@RequestMapping(value = AlbumController.ALBUMS_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
 @Validated
 public class AlbumRestController {
     private final AlbumService service;
 
-    @PostMapping
+    @PostMapping(ALBUMS_URL)
     @ResponseStatus(HttpStatus.CREATED)
     public Album createAlbum(@NotBlank(message = "{validation.album.name.NotBlank}")
                              @NoHtml(message = "{validation.album.name.NoHtml}")
@@ -34,7 +35,7 @@ public class AlbumRestController {
         return service.createAlbum(name, AuthUser.authId());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(ALBUMS_URL + "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateAlbum(@PathVariable long id,
                             @NotBlank(message = "{validation.album.name.NotBlank}")
@@ -44,21 +45,28 @@ public class AlbumRestController {
         service.updateAlbum(id, name, AuthUser.authId());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(ALBUMS_URL + "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
+    public void deleteAlbum(@PathVariable long id) {
         log.info("delete album with id={}", id);
         service.deleteAlbum(id, AuthUser.authId());
     }
 
-    @PostMapping(value = "/{id}/photos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = ALBUMS_URL + "/{albumId}/photos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Photo createPhoto(@PathVariable("id") long albumId, @RequestPart MultipartFile file) {
+    public Photo createPhoto(@PathVariable long albumId, @RequestPart MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalRequestDataException("Photo file should not be empty",
                     "photo.file-not-empty", null);
         }
         log.info("create photo for album with id={}", albumId);
         return service.createPhoto(albumId, file, AuthUser.authId());
+    }
+
+    @DeleteMapping("/photos/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePhoto(@PathVariable long id) {
+        log.info("delete photo with id={}", id);
+        service.deletePhoto(id, AuthUser.authId());
     }
 }

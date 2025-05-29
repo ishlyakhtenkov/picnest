@@ -109,4 +109,14 @@ public class AlbumService {
         }
         return fileName;
     }
+
+    @Transactional
+    public void deletePhoto(long id, long userId) {
+        Photo photo = photoRepository.findByIdAndOwnerId(id, userId).orElseThrow(() ->
+                new NotFoundException("Not found photo with id=" + id + " and userId=" + userId,
+                        "error.notfound.entity", new Object[]{id}));
+        photoRepository.delete(photo);
+        photoRepository.flush();
+        FileUtil.deleteFile(photo.getFile().getFileLink());
+    }
 }

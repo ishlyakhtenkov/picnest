@@ -37,6 +37,7 @@ import static ru.javaprojects.picnest.users.web.LoginController.LOGIN_URL;
 
 class AlbumRestControllerTest extends AbstractControllerTest implements ContentFilesManager {
     static final String ALBUMS_URL_SLASH = ALBUMS_URL + "/";
+    static final String PHOTOS_URL_SLASH = "/photos/";
 
     @Value("${content-path.photos}")
     private String photoFilesPath;
@@ -269,7 +270,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
                 .with(csrf()))
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class, () -> albumRepository.getExisted(USER_ALBUM1_ID));
-        assertTrue(Files.notExists(Paths.get(photoFilesPath + USER_ID + "/" + USER_ALBUM1_ID)));
+        assertTrue(Files.notExists(Paths.get(photoFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID))));
     }
 
     @Test
@@ -279,7 +280,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
         assertDoesNotThrow(() -> albumRepository.getExisted(USER_ALBUM1_ID));
-        assertTrue(Files.exists(Paths.get(photoFilesPath + USER_ID + "/" + USER_ALBUM1_ID)));
+        assertTrue(Files.exists(Paths.get(photoFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID))));
     }
 
     @Test
@@ -311,8 +312,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
                         new Object[]{ADMIN_ALBUM1_ID}, getLocale())))
                 .andExpect(problemInstance(ALBUMS_URL_SLASH + ADMIN_ALBUM1_ID));
         assertDoesNotThrow(() -> albumRepository.getExisted(ADMIN_ALBUM1_ID));
-        assertTrue(Files.exists(Paths.get(photoFilesPath + ADMIN_ID + "/" + ADMIN_ALBUM1_ID)));
-
+        assertTrue(Files.exists(Paths.get(photoFilesPath, String.valueOf(ADMIN_ID), String.valueOf(ADMIN_ALBUM1_ID))));
     }
 
     @Test
@@ -329,7 +329,7 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
                         new Object[]{USER_ALBUM1_ID}, getLocale())))
                 .andExpect(problemInstance(ALBUMS_URL_SLASH + USER_ALBUM1_ID));
         assertDoesNotThrow(() -> albumRepository.getExisted(USER_ALBUM1_ID));
-        assertTrue(Files.exists(Paths.get(photoFilesPath + USER_ID + "/" + USER_ALBUM1_ID)));
+        assertTrue(Files.exists(Paths.get(photoFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID))));
     }
 
     @Test
@@ -449,5 +449,74 @@ class AlbumRestControllerTest extends AbstractControllerTest implements ContentF
         assertEquals(userAlbum1.getPhotos().size(),
                 albumRepository.findWithPhotosByIdAndOwner_Id(USER_ALBUM1_ID, USER_ID, Sort.unsorted()).orElseThrow().getPhotos().size());
         assertTrue(Files.notExists(Path.of(photoFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), NEW_PHOTO_FILE.getOriginalFilename())));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void deletePhoto() throws Exception {
+        perform(MockMvcRequestBuilders.delete(PHOTOS_URL_SLASH + USER_ALBUM1_PHOTO1_ID)
+                .with(csrf()))
+                .andExpect(status().isNoContent());
+        assertThrows(NotFoundException.class, () -> photoRepository.getExisted(USER_ALBUM1_PHOTO1_ID));
+        assertTrue(Files.notExists(Paths.get(photoFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), userAlbum1Photo1.getFile().getFileName())));
+    }
+
+    @Test
+    void deletePhotoUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.delete(PHOTOS_URL_SLASH + USER_ALBUM1_PHOTO1_ID)
+                .with(csrf()))
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+        assertDoesNotThrow(() -> photoRepository.getExisted(USER_ALBUM1_PHOTO1_ID));
+        assertTrue(Files.exists(Paths.get(photoFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), userAlbum1Photo1.getFile().getFileName())));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void deletePhotoNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(PHOTOS_URL_SLASH + NOT_EXISTING_ID)
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(NotFoundException.class,
+                        Objects.requireNonNull(result.getResolvedException()).getClass()))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(messageSource.getMessage("error.notfound.entity",
+                        new Object[]{NOT_EXISTING_ID}, getLocale())))
+                .andExpect(problemInstance(PHOTOS_URL_SLASH + NOT_EXISTING_ID));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void deletePhotoNotBelongs() throws Exception {
+        perform(MockMvcRequestBuilders.delete(PHOTOS_URL_SLASH + ADMIN_ALBUM1_PHOTO1_ID)
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(NotFoundException.class,
+                        Objects.requireNonNull(result.getResolvedException()).getClass()))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(messageSource.getMessage("error.notfound.entity",
+                        new Object[]{ADMIN_ALBUM1_PHOTO1_ID}, getLocale())))
+                .andExpect(problemInstance(PHOTOS_URL_SLASH + ADMIN_ALBUM1_PHOTO1_ID));
+        assertDoesNotThrow(() -> photoRepository.getExisted(ADMIN_ALBUM1_PHOTO1_ID));
+        assertTrue(Files.exists(Paths.get(photoFilesPath, String.valueOf(ADMIN_ID), String.valueOf(ADMIN_ALBUM1_ID), adminAlbum1Photo1.getFile().getFileName())));
+    }
+
+    @Test
+    @WithUserDetails(ADMIN_MAIL)
+    void deletePhotoNotBelongsByAdmin() throws Exception {
+        perform(MockMvcRequestBuilders.delete(PHOTOS_URL_SLASH + USER_ALBUM1_PHOTO1_ID)
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(NotFoundException.class,
+                        Objects.requireNonNull(result.getResolvedException()).getClass()))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(messageSource.getMessage("error.notfound.entity",
+                        new Object[]{USER_ALBUM1_PHOTO1_ID}, getLocale())))
+                .andExpect(problemInstance(PHOTOS_URL_SLASH + USER_ALBUM1_PHOTO1_ID));
+        assertDoesNotThrow(() -> photoRepository.getExisted(USER_ALBUM1_PHOTO1_ID));
+        assertTrue(Files.exists(Paths.get(photoFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), userAlbum1Photo1.getFile().getFileName())));
     }
 }
