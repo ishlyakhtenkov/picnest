@@ -26,14 +26,20 @@ function upload(file) {
         data: formData,
         processData:false,
         contentType:false
-    }).done((photo) => {
-        let fileReader = new FileReader();
-        fileReader.onload = function (event) {
-            let photo = $('<img />').addClass('img-fluid').attr('src', event.target.result).css('height', '100%');
+    }).done((uploadedPhoto) => {
+        if (file.name.toLowerCase().endsWith('.heic')) {
+            let photo = $('<img />').addClass('img-fluid').attr('src', `/${uploadedPhoto.file.fileLink}`).css('height', '100%');
             photoCardSlot.empty();
             photoCardSlot.append(photo);
+        } else {
+            let fileReader = new FileReader();
+            fileReader.onload = function (event) {
+                let photo = $('<img />').addClass('img-fluid').attr('src', event.target.result).css('height', '100%');
+                photoCardSlot.empty();
+                photoCardSlot.append(photo);
+            }
+            fileReader.readAsDataURL(file);
         }
-        fileReader.readAsDataURL(file);
     }).fail(function (data) {
         photoCardCol.remove();
         if (!$('.photo-col').length) {

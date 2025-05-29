@@ -351,7 +351,7 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
     @WithUserDetails(USER_MAIL)
     void createPhotoWhenDuplicateFileName() throws Exception {
         Photo newPhoto = getNewPhoto();
-        newPhoto.getFile().setFileName(userAlbum1Photo1.getFile().getFileName());
+        newPhoto.getFile().setFileName("ph1(1).jpg");
         newPhoto.getFile().setFileLink(pictureFilesPath + USER_ID + "/" + USER_ALBUM1_ID + "/" + "ph1(1).jpg");
         ResultActions action = perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/photos")
                 .file(DUPLICATE_NAME_NEW_PHOTO_FILE)

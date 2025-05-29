@@ -21,6 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import static ru.javaprojects.picnest.common.util.FileUtil.HEIC_EXTENSION;
+
 @Service
 @RequiredArgsConstructor
 public class PictureService {
@@ -88,7 +90,7 @@ public class PictureService {
         String albumDir = pictureFilesPath + userId + "/" + albumId;
         String fileName = prepareFileName(albumDir, file.getOriginalFilename());
         String fileLink = albumDir + "/" + fileName;
-        Photo photo = new Photo(null, null, null, new File(file.getOriginalFilename(), fileLink),
+        Photo photo = new Photo(null, null, null, new File(fileName, fileLink),
                 userId, album);
         photoRepository.saveAndFlush(photo);
         FileUtil.upload(file, albumDir, fileName);
@@ -96,6 +98,9 @@ public class PictureService {
     }
 
     private String prepareFileName(String albumDir, String fileName) {
+        if (fileName.toLowerCase().endsWith(HEIC_EXTENSION)) {
+            fileName = fileName.substring(0, fileName.lastIndexOf('.')) + ".jpg";
+        }
         if (Files.exists(Path.of(albumDir, fileName))) {
             String fileExtension = fileName.substring(fileName.lastIndexOf('.'));
             int counter = 1;
@@ -118,4 +123,6 @@ public class PictureService {
         photoRepository.flush();
         FileUtil.deleteFile(photo.getFile().getFileLink());
     }
+
+
 }

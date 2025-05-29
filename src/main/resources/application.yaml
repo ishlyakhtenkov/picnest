@@ -128,4 +128,4 @@ jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: org.jasypt.iv.NoIvGenerator
-    password:
+    password: 123456Gtx

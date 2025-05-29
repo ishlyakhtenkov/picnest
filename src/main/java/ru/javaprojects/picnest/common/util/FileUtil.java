@@ -1,14 +1,19 @@
 package ru.javaprojects.picnest.common.util;
 
 import lombok.experimental.UtilityClass;
+import openize.heic.decoder.HeicImage;
+import openize.heic.decoder.PixelFormat;
+import openize.io.IOFileStream;
+import openize.io.IOMode;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 import ru.javaprojects.picnest.common.error.FileException;
 import ru.javaprojects.picnest.common.error.IllegalRequestDataException;
 import ru.javaprojects.picnest.common.to.FileTo;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.stream.Stream;
@@ -25,16 +30,47 @@ public class FileUtil {
     private static final String FILE_PATH_MUST_NOT_BE_NULL = "filePath must not be null";
     private static final String PATH_MUST_NOT_BE_NULL = "path must not be null";
 
+    public static final String HEIC_EXTENSION = ".heic";
+
     public static void upload(MultipartFile multipartFile, String dirPath, String fileName) {
         Assert.notNull(multipartFile, MULTIPART_FILE_MUST_NOT_BE_NULL);
         Assert.notNull(dirPath, DIR_PATH_MUST_NOT_BE_NULL);
         Assert.notNull(fileName, FILE_NAME_MUST_NOT_BE_NULL);
         try {
-            upload(multipartFile.getBytes(), dirPath, fileName);
+            byte[] bytes = convertToJpgIfNecessary(multipartFile);
+            upload(bytes, dirPath, fileName);
         } catch (IOException e) {
             throw new FileException("Failed to upload file: " + fileName +
                     ": " + e.getMessage(), "error.file.failed-to-upload", new Object[]{fileName});
         }
+    }
+
+    private byte[] convertToJpgIfNecessary(MultipartFile multipartFile) throws IOException {
+        byte[] bytes;
+        if (multipartFile.getOriginalFilename().toLowerCase().endsWith(HEIC_EXTENSION)) {
+            Path tempHeicFilePath = Files.createTempFile("image", ".heic");
+            File tempHeicFile = new File(tempHeicFilePath.toString());
+            try (var os = new FileOutputStream(tempHeicFile)) {
+                os.write(multipartFile.getBytes());
+            }
+
+            try (var fs = new IOFileStream(tempHeicFilePath.toString(), IOMode.READ)) {
+                var heicImage = HeicImage.load(fs);
+                int[] pixels = heicImage.getInt32Array(PixelFormat.Argb32);
+                var width = (int) heicImage.getWidth();
+                var height = (int)heicImage.getHeight();
+
+                var bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+                bufferedImage.setRGB(0, 0, width, height, pixels, 0, width);
+                var baos = new ByteArrayOutputStream();
+                ImageIO.write(bufferedImage, "JPEG", baos);
+                bytes = baos.toByteArray();
+            }
+            Files.deleteIfExists(tempHeicFilePath);
+        } else {
+            bytes = multipartFile.getBytes();
+        }
+        return bytes;
     }
 
     public static void upload(byte[] fileBytes, String dirPath, String fileName) {
