@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 
-import static ru.javaprojects.picnest.users.UserTestData.admin;
-import static ru.javaprojects.picnest.users.UserTestData.user;
+import static ru.javaprojects.picnest.users.UserTestData.*;
 
 public class AlbumTestData {
     public static final MatcherFactory.Matcher<Album> ALBUM_MATCHER =
@@ -44,15 +43,15 @@ public class AlbumTestData {
 
     public static final Photo userAlbum1Photo1 = new Photo(USER_ALBUM1_PHOTO1_ID, "photo 1 user alb 1 desc",
             LocalDateTime.of(2025, Month.MAY, 22, 12, 28, 3),
-            new File("ph1.jpg", "./picnest/content/photos/100000/100011/ph1.jpg"));
+            new File("ph1.jpg", "./picnest/content/photos/100000/100011/ph1.jpg"), USER_ID);
 
     public static final Photo userAlbum1Photo2 = new Photo(USER_ALBUM1_PHOTO2_ID, "photo 2 user alb 1 desc",
             LocalDateTime.of(2025, Month.MAY, 22, 12, 28, 7),
-            new File("ph2.jpg", "./picnest/content/photos/100000/100011/ph2.jpg"));
+            new File("ph2.jpg", "./picnest/content/photos/100000/100011/ph2.jpg"), USER_ID);
 
     public static final Photo userAlbum1Photo3 = new Photo(USER_ALBUM1_PHOTO3_ID, "photo 3 user alb 1 desc",
             LocalDateTime.of(2025, Month.MAY, 22, 12, 28, 9),
-            new File("ph3.jpg", "./picnest/content/photos/100000/100011/ph3.jpg"));
+            new File("ph3.jpg", "./picnest/content/photos/100000/100011/ph3.jpg"), USER_ID);
 
     public static final Album userAlbum1 = new Album(USER_ALBUM1_ID, "user album 1",
             LocalDateTime.of(2025, Month.MAY, 22, 12, 28, 1), user,
@@ -63,11 +62,11 @@ public class AlbumTestData {
 
     public static final Photo adminAlbum1Photo1 = new Photo(ADMIN_ALBUM1_PHOTO1_ID, "photo 1 admin alb 1 desc",
             LocalDateTime.of(2025, Month.MARCH, 17, 16, 28, 14),
-            new File("ph1.jpg", "./picnest/content/photos/100001/100013/ph1.jpg"));
+            new File("ph1.jpg", "./picnest/content/photos/100001/100013/ph1.jpg"), ADMIN_ID);
 
     public static final Photo adminAlbum1Photo2 = new Photo(ADMIN_ALBUM1_PHOTO2_ID, "photo 2 admin alb 1 desc",
             LocalDateTime.of(2025, Month.MARCH, 17, 16, 34, 59),
-            new File("ph2.jpg", "./picnest/content/photos/100001/100013/ph2.jpg"));
+            new File("ph2.jpg", "./picnest/content/photos/100001/100013/ph2.jpg"), ADMIN_ID);
 
     public static final Album adminAlbum1 = new Album(ADMIN_ALBUM1_ID, "admin album",
             LocalDateTime.of(2025, Month.MARCH, 17, 16, 22, 48), admin,
@@ -92,6 +91,6 @@ public class AlbumTestData {
 
     public static Photo getNewPhoto() {
         return new Photo(null, null, null,
-                new File("New photo.jpg", "./picnest/content/photos/100000/100011/New photo.jpg"), userAlbum1);
+                new File("New photo.jpg", "./picnest/content/photos/100000/100011/New photo.jpg"), USER_ID, userAlbum1);
     }
 }

@@ -29,8 +29,8 @@ public class DevDataGenerator {
         for (int i = 0; i < 20; i++) {
             Album created = albumRepository.save(new Album(null, "Admin album # " + i, admin));
             for (int j = 0; j < 10; j++) {
-                photoRepository.save(new Photo(null, null, null, new File("ph1.jpg", "./picnest/content/photos/100001/100013/ph1.jpg"), created));
-                photoRepository.save(new Photo(null, null, null, new File("ph2.jpg", "./picnest/content/photos/100001/100013/ph2.jpg"), created));
+                photoRepository.save(new Photo(null, null, null, new File("ph1.jpg", "./picnest/content/photos/100001/100013/ph1.jpg"), admin.getId(), created));
+                photoRepository.save(new Photo(null, null, null, new File("ph2.jpg", "./picnest/content/photos/100001/100013/ph2.jpg"), admin.getId(), created));
             }
         }
     }

@@ -89,7 +89,8 @@ public class AlbumService {
         String albumDir = photoFilesPath + userId + "/" + albumId;
         String fileName = prepareFileName(albumDir, file.getOriginalFilename());
         String fileLink = albumDir + "/" + fileName;
-        Photo photo = new Photo(null, null, null, new File(file.getOriginalFilename(), fileLink), album);
+        Photo photo = new Photo(null, null, null, new File(file.getOriginalFilename(), fileLink),
+                userId, album);
         photoRepository.saveAndFlush(photo);
         FileUtil.upload(file, albumDir, fileName);
         return photo;

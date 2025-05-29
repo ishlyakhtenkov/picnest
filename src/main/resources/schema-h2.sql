@@ -82,5 +82,7 @@ CREATE TABLE photos
     file_name        VARCHAR(128)  NOT NULL,
     file_link        VARCHAR(512)  NOT NULL,
     album_id         BIGINT        NOT NULL,
+    user_id          BIGINT        NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (album_id) REFERENCES albums (id) ON DELETE CASCADE
 );

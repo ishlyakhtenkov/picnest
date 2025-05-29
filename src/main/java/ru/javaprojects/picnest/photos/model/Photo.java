@@ -39,19 +39,24 @@ public class Photo extends BaseEntity implements HasId {
     private File file;
 
     @NotNull
+    @Column(name = "user_id", nullable = false)
+    private Long ownerId;
+
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
-    public Photo(Long id, String description, LocalDateTime created, File file) {
+    public Photo(Long id, String description, LocalDateTime created, File file, Long ownerId) {
         super(id);
         this.description = description;
         this.created = created;
         this.file = file;
+        this.ownerId = ownerId;
     }
 
-    public Photo(Long id, String description, LocalDateTime created, File file, Album album) {
-        this(id, description, created, file);
+    public Photo(Long id, String description, LocalDateTime created, File file, Long ownerId, Album album) {
+        this(id, description, created, file, ownerId);
         this.album = album;
     }
 }
