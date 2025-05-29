@@ -18,11 +18,11 @@
                 </button>
             </div>
         </div>
-        <div th:if="${album.photos == null || album.photos.isEmpty()}" class="mt-2">
+        <div th:hidden="${album.photos != null && !album.photos.isEmpty()}" class="mt-2" id="noPhotosAlert">
             <h5 class="alert alert-warning" th:text="#{album.no-photos-found}">No photos found.</h5>
         </div>
         <div th:if="${album.photos != null}" class="row row-cols-1 row-cols-md-2 row-cols-lg-5 mt-2" id="photosArea">
-            <div th:each="photo : ${album.photos}" class="col mb-4">
+            <div th:each="photo : ${album.photos}" class="col mb-4 photo-col">
                 <div class="border rounded align-content-center text-center" style="height: 150px;">
                     <img th:src="@{'/' + ${photo.file.fileLink}}" class="img-fluid" style="height: 100%;" />
                 </div>

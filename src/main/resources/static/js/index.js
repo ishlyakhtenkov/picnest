@@ -1,5 +1,6 @@
 const albumModal = $('#albumModal');
 const deleteAlbumModal = $('#deleteAlbumModal');
+const noAlbumsAlert = $('#noAlbumsAlert');
 setupToggles();
 
 function showAlbumModalForCreate(newBtn) {
@@ -43,8 +44,9 @@ function createAlbum(name) {
         type: 'POST',
         data: "name=" + name
     }).done((album) => {
+        noAlbumsAlert.attr('hidden', true);
         albumModal.modal('toggle');
-        let albumCardCol = $('<div></div>').addClass('col mb-4').attr('id', `albumCardCol-${album.id}`);
+        let albumCardCol = $('<div></div>').addClass('col mb-4 album-card-col').attr('id', `albumCardCol-${album.id}`);
         $('#albumsArea').prepend(albumCardCol.append(generateAlbumCard(album)));
         successToast(getMessage('album.created', [name]));
     }).fail(function (data) {
@@ -86,7 +88,7 @@ function generateAlbumCard(album) {
         .text(formatDateTime(album.created).split(' ')[0]);
     infoRow.append(photoCountCol).append(createdCol);
     cardBody.append(infoRow);
-    let stretchedLink = $('<a></a>').addClass('stretched-link').attr('href', '#'); //TODO
+    let stretchedLink = $('<a></a>').addClass('stretched-link').attr('href', `/albums/${album.id}`);
     cardBody.append(stretchedLink);
     card.append(cardBody);
     return card;
@@ -125,6 +127,9 @@ function deleteAlbum() {
         type: "DELETE"
     }).done(function() {
         $(`#albumCardCol-${id}`).remove();
+        if (!$('.album-card-col').length) {
+            noAlbumsAlert.attr('hidden', false);
+        }
         successToast(getMessage('album.deleted', [name]));
     }).fail(function(data) {
         handleError(data, getMessage('album.failed-to-delete', [name]));

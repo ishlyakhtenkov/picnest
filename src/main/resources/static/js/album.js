@@ -1,5 +1,6 @@
 const albumId = $('#albumId').text();
 const filesInput = $('#filesInput');
+const noPhotosAlert = $('#noPhotosAlert');
 
 filesInput.on('change', () => {
     $.each(filesInput.prop('files'), (index, file) => {
@@ -9,7 +10,8 @@ filesInput.on('change', () => {
 });
 
 function upload(file) {
-    let photoCardCol = $('<div></div>').addClass('col mb-4');
+    noPhotosAlert.attr('hidden', true);
+    let photoCardCol = $('<div></div>').addClass('col mb-4 photo-col');
     let photoCardSlot = $('<div></div>').addClass('border rounded align-content-center text-center').css('height', '150px');
     let spinner = $('<div></div').addClass('spinner-border');
     photoCardSlot.append(spinner);
@@ -34,6 +36,9 @@ function upload(file) {
         fileReader.readAsDataURL(file);
     }).fail(function (data) {
         photoCardCol.remove();
+        if (!$('.photo-col').length) {
+            noPhotosAlert.attr('hidden', false);
+        }
         handleError(data, getMessage('photo.failed-to-create'));
     });
 }

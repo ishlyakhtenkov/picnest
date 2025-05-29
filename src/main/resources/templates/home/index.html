@@ -17,11 +17,11 @@
                 </button>
             </div>
         </div>
-        <div th:if="${albums == null || albums.isEmpty()}" class="mt-2">
+        <div th:hidden="${albums != null && !albums.isEmpty()}" class="mt-2" id="noAlbumsAlert">
             <h5 class="alert alert-warning" th:text="#{album.no-albums-found}">No albums found.</h5>
         </div>
         <div th:if="${albums != null}" class="row row-cols-1 row-cols-md-2 row-cols-lg-5 mt-2" id="albumsArea">
-            <div th:each="album : ${albums}" class="col mb-4" th:id="${'albumCardCol-' + album.id}">
+            <div th:each="album : ${albums}" class="col mb-4 album-card-col" th:id="${'albumCardCol-' + album.id}">
                 <div class="card h-100 album-card">
                     <div class="ratio" style="--bs-aspect-ratio: 50%;">
                         <img src="/images/album.jpg" class="card-img-top" style="object-fit: cover">

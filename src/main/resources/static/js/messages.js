@@ -74,7 +74,7 @@ enMessages.set('info.only-for-auth-users', 'Only for authenticated users');
 enMessages.set('info.switch-to-light-theme', 'Switch to light theme');
 enMessages.set('info.switch-to-dark-theme', 'Switch to dark theme');
 enMessages.set('info.link-copied', 'Link copied');
-enMessages.set('info.app-description', 'A platform for viewing and discussing projects developed by users.');
+enMessages.set('info.app-description', 'A platform for secure storage of your photos and videos.');
 enMessages.set('info.failed-to-get-tags', 'Failed to get tags');
 
 enMessages.set('profile.no-qualification', 'Qualification not defined as there are no projects');
@@ -178,7 +178,7 @@ ruMessages.set('info.only-for-auth-users', 'Только для авторизо
 ruMessages.set('info.switch-to-light-theme', 'Включить светлую тему');
 ruMessages.set('info.switch-to-dark-theme', 'Включить темную тему');
 ruMessages.set('info.link-copied', 'Ссылка скопирована');
-ruMessages.set('info.app-description', 'Платформа для просмотра и обсуждения проектов, разработанных пользователями.');
+ruMessages.set('info.app-description', 'Платформа для безопасного хранения ваших фотографий и видеозаписей.');
 ruMessages.set('info.failed-to-get-tags', 'Не удалось загрузить тэги');
 
 ruMessages.set('profile.no-qualification', 'Квалификация не определена, так как нет проектов');

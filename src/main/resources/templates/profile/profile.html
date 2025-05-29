@@ -3,7 +3,7 @@
 <!--/*@thymesVar id="user" type="ru.javaprojects.javaprojects.users.model.User"*/-->
 <!--/*@thymesVar id="authUser" type="ru.javaprojects.javaprojects.users.model.User"*/-->
 
-<th:block th:replace="~{fragments/main::page(title=#{profile},appMain=~{::appMain}, ownScript=~{::ownScript}, ownCss='project.css')}">
+<th:block th:replace="~{fragments/main::page(title=#{profile},appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
         <span th:if="${action != null}" th:data-action="${action}" th:id="actionSpan"></span>
         <nav aria-label="breadcrumb">
@@ -155,6 +155,5 @@
         <script src="/js/common.js?v=1"></script>
         <script src="/js/profile.js?v=1"></script>
         <script src="/js/check-passwords-match.js?v=1"></script>
-        <script src="/js/share-project-button.js?v=1"></script>
     </ownScript>
 </th:block>
