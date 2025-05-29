@@ -32,8 +32,8 @@ change-email:
   confirm-url: http://localhost:8080/profile/change-email/confirm
 
 content-path:
-  photos: ./picnest/content/photos/
-  photos-uri: /picnest/content/photos/
+  pictures: ./picnest/content/pictures/
+  pictures-uri: /picnest/content/pictures/
   avatars: ./picnest/content/avatars/
 
 locale:

@@ -30,8 +30,8 @@ class FileUtilTest implements ContentFilesManager {
     private static final byte[] EMPTY_BYTES_ARRAY = new byte[] {};
     private static final String NOT_EXISTING_FILE_PATH = NOT_EXISTING_DIR_NAME + "/" + NOT_EXISTING_FILE_NAME;
 
-    public static final String USER_PHOTO_ALBUMS_TEST_CONTENT_FILES_PATH = "src/test/test-content-files/photos/" + USER_ID;
-    public static final String USER_PHOTO_ALBUMS_FILES_PATH = "./content/photos/" + USER_ID + "/";
+    public static final String USER_PHOTO_ALBUMS_TEST_CONTENT_FILES_PATH = "src/test/test-content-files/pictures/" + USER_ID;
+    public static final String USER_PHOTO_ALBUMS_FILES_PATH = "./picnest/content/pictures/" + USER_ID + "/";
 
     @Override
     public Path getContentPath() {

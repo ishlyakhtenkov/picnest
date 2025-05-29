@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html" lang="en">
 
-<th:block th:replace="~{fragments/main::page(title=#{home},appMain=~{::appMain}, ownScript=~{::ownScript})}">
+<th:block th:replace="~{fragments/main::page(title=${album.name},appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
         <div class="row">
             <div class="col-8 h5 fw-bold" th:text="${album.name}">
@@ -38,6 +38,5 @@
         </script>
         <script src="/js/common.js?v=1"></script>
         <script src="/js/album.js?v=1"></script>
-        <script src="/js/share-project-button.js?v=1"></script>
     </ownScript>
 </th:block>

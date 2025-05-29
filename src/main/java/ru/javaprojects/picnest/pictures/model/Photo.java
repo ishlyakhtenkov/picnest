@@ -1,4 +1,4 @@
-package ru.javaprojects.picnest.photos.model;
+package ru.javaprojects.picnest.pictures.model;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;

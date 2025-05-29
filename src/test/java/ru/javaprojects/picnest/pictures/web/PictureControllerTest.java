@@ -1,13 +1,16 @@
-package ru.javaprojects.picnest.photos.web;
+package ru.javaprojects.picnest.pictures.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaprojects.picnest.AbstractControllerTest;
+import ru.javaprojects.picnest.ContentFilesManager;
 import ru.javaprojects.picnest.common.error.NotFoundException;
-import ru.javaprojects.picnest.photos.model.Album;
+import ru.javaprojects.picnest.pictures.model.Album;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -15,17 +18,27 @@ import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaprojects.picnest.AbstractControllerTest.ExceptionResultMatchers.exception;
 import static ru.javaprojects.picnest.common.CommonTestData.NOT_EXISTING_ID;
-import static ru.javaprojects.picnest.photos.AlbumTestData.*;
-import static ru.javaprojects.picnest.photos.web.AlbumRestControllerTest.ALBUMS_URL_SLASH;
+import static ru.javaprojects.picnest.pictures.PictureTestData.*;
+import static ru.javaprojects.picnest.pictures.web.PictureRestControllerTest.ALBUMS_URL_SLASH;
 import static ru.javaprojects.picnest.users.UserTestData.ADMIN_MAIL;
 import static ru.javaprojects.picnest.users.UserTestData.USER_MAIL;
 import static ru.javaprojects.picnest.users.web.LoginController.LOGIN_URL;
 
-class AlbumControllerTest extends AbstractControllerTest {
+class PictureControllerTest extends AbstractControllerTest implements ContentFilesManager {
     private static final String ALBUM_VIEW = "photos/album";
 
-    @Value("${content-path.photos-uri}")
-    private String photosUri;
+    @Value("${content-path.pictures}")
+    private String pictureFilesPath;
+
+    @Override
+    public Path getContentPath() {
+        return Paths.get(pictureFilesPath);
+    }
+
+    @Override
+    public Path getContentFilesPath() {
+        return Paths.get(PICTURES_TEST_CONTENT_FILES_PATH);
+    }
 
     @Test
     @WithUserDetails(USER_MAIL)

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.javaprojects.picnest.app.AuthUser;
-import ru.javaprojects.picnest.photos.service.AlbumService;
+import ru.javaprojects.picnest.pictures.service.PictureService;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -15,7 +15,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @AllArgsConstructor
 @Slf4j
 public class HomeController {
-    private final AlbumService service;
+    private final PictureService service;
 
     @GetMapping("/")
     public String showHomePage(Model model) {

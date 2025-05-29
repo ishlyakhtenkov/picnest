@@ -4,15 +4,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaprojects.picnest.AbstractControllerTest;
-import ru.javaprojects.picnest.photos.model.Album;
+import ru.javaprojects.picnest.pictures.model.Album;
 
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaprojects.picnest.common.CommonTestData.HOME_URL;
-import static ru.javaprojects.picnest.photos.AlbumTestData.*;
+import static ru.javaprojects.picnest.pictures.PictureTestData.*;
 import static ru.javaprojects.picnest.users.UserTestData.USER_MAIL;
 
 class HomeControllerTest extends AbstractControllerTest {

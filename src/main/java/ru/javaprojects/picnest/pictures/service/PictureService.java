@@ -1,4 +1,4 @@
-package ru.javaprojects.picnest.photos.service;
+package ru.javaprojects.picnest.pictures.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,26 +11,25 @@ import ru.javaprojects.picnest.common.error.IllegalRequestDataException;
 import ru.javaprojects.picnest.common.error.NotFoundException;
 import ru.javaprojects.picnest.common.model.File;
 import ru.javaprojects.picnest.common.util.FileUtil;
-import ru.javaprojects.picnest.photos.model.Album;
-import ru.javaprojects.picnest.photos.model.Photo;
-import ru.javaprojects.picnest.photos.repository.AlbumRepository;
-import ru.javaprojects.picnest.photos.repository.PhotoRepository;
+import ru.javaprojects.picnest.pictures.model.Album;
+import ru.javaprojects.picnest.pictures.model.Photo;
+import ru.javaprojects.picnest.pictures.repository.AlbumRepository;
+import ru.javaprojects.picnest.pictures.repository.PhotoRepository;
 import ru.javaprojects.picnest.users.service.UserService;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AlbumService {
+public class PictureService {
     private final AlbumRepository albumRepository;
     private final PhotoRepository photoRepository;
     private final UserService userService;
 
-    @Value("${content-path.photos}")
-    private String photoFilesPath;
+    @Value("${content-path.pictures}")
+    private String pictureFilesPath;
 
     public Album getAlbum(long id, long userId, Sort s) {
         return albumRepository.findWithPhotosByIdAndOwner_Id(id, userId, s).orElseThrow(() ->
@@ -74,7 +73,7 @@ public class AlbumService {
                         "error.notfound.entity", new Object[]{id}));
         albumRepository.delete(album);
         albumRepository.flush();
-        String albumDir = photoFilesPath + userId + "/" + id;
+        String albumDir = pictureFilesPath + userId + "/" + id;
         if (Files.exists(Path.of(albumDir))) {
             FileUtil.deleteDirectory(albumDir);
         }
@@ -86,7 +85,7 @@ public class AlbumService {
         Album album = albumRepository.findByIdAndOwner_Id(albumId, userId).orElseThrow(() ->
                 new NotFoundException("Not found album with id=" + albumId + " and userId=" + userId,
                         "error.notfound.entity", new Object[]{albumId}));
-        String albumDir = photoFilesPath + userId + "/" + albumId;
+        String albumDir = pictureFilesPath + userId + "/" + albumId;
         String fileName = prepareFileName(albumDir, file.getOriginalFilename());
         String fileLink = albumDir + "/" + fileName;
         Photo photo = new Photo(null, null, null, new File(file.getOriginalFilename(), fileLink),

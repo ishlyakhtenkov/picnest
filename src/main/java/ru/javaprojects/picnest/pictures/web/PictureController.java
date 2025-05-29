@@ -1,4 +1,4 @@
-package ru.javaprojects.picnest.photos.web;
+package ru.javaprojects.picnest.pictures.web;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.javaprojects.picnest.app.AuthUser;
-import ru.javaprojects.picnest.photos.service.AlbumService;
+import ru.javaprojects.picnest.pictures.service.PictureService;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Controller
-@RequestMapping(value = AlbumController.ALBUMS_URL)
+@RequestMapping(value = PictureController.ALBUMS_URL)
 @AllArgsConstructor
 @Slf4j
-public class AlbumController {
+public class PictureController {
     static final String ALBUMS_URL = "/albums";
 
-    private final AlbumService service;
+    private final PictureService service;
 
     @GetMapping("/{id}")
     public String showAlbum(@PathVariable long id, Model model) {

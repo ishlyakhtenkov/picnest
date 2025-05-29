@@ -1,4 +1,4 @@
-package ru.javaprojects.picnest.photos.model;
+package ru.javaprojects.picnest.pictures.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

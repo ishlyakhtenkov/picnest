@@ -1,4 +1,4 @@
-package ru.javaprojects.picnest.photos.web;
+package ru.javaprojects.picnest.pictures.web;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -12,19 +12,19 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.javaprojects.picnest.app.AuthUser;
 import ru.javaprojects.picnest.common.error.IllegalRequestDataException;
 import ru.javaprojects.picnest.common.validation.NoHtml;
-import ru.javaprojects.picnest.photos.model.Album;
-import ru.javaprojects.picnest.photos.model.Photo;
-import ru.javaprojects.picnest.photos.service.AlbumService;
+import ru.javaprojects.picnest.pictures.model.Album;
+import ru.javaprojects.picnest.pictures.model.Photo;
+import ru.javaprojects.picnest.pictures.service.PictureService;
 
-import static ru.javaprojects.picnest.photos.web.AlbumController.ALBUMS_URL;
+import static ru.javaprojects.picnest.pictures.web.PictureController.ALBUMS_URL;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
 @Validated
-public class AlbumRestController {
-    private final AlbumService service;
+public class PictureRestController {
+    private final PictureService service;
 
     @PostMapping(ALBUMS_URL)
     @ResponseStatus(HttpStatus.CREATED)

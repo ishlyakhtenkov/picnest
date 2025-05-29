@@ -1,7 +1,5 @@
 package ru.javaprojects.picnest.app.config;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +10,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -32,8 +29,8 @@ public class MvcConfig implements WebMvcConfigurer {
     @Value("${locale.default}")
     private String defaultLocale;
 
-    @Value("${content-path.photos-uri}")
-    private String photosUri;
+    @Value("${content-path.pictures-uri}")
+    private String picturesUri;
 
     // Add authUser to view model
     private final HandlerInterceptor authInterceptor = new WebRequestHandlerInterceptorAdapter(new WebRequestInterceptor() {
@@ -56,12 +53,13 @@ public class MvcConfig implements WebMvcConfigurer {
         }
     });
 
-    private final HandlerInterceptor photoInterceptor = new WebRequestHandlerInterceptorAdapter(new WebRequestInterceptor() {
+    // Check requested picture belongs to auth user
+    private final HandlerInterceptor pictureInterceptor = new WebRequestHandlerInterceptorAdapter(new WebRequestInterceptor() {
         @Override
         public void preHandle(WebRequest request) {
             String requestURI = ((DispatcherServletWebRequest) request).getRequest().getRequestURI();
             AuthUser authUser = AuthUser.safeGet();
-            if (authUser == null || !requestURI.startsWith(photosUri + authUser.id() + "/")) {
+            if (authUser == null || !requestURI.startsWith(picturesUri + authUser.id() + "/")) {
                 throw new AccessDeniedException("Access for request=" + requestURI + " denied for user=" + authUser);
             }
         }
@@ -94,7 +92,7 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor()).excludePathPatterns("/js/**", "/webjars/**", "/css/**", "/images/**");
         registry.addInterceptor(authInterceptor).excludePathPatterns("/js/**", "/webjars/**", "/css/**", "/images/**");
-        registry.addInterceptor(photoInterceptor).addPathPatterns(photosUri +  "**");
+        registry.addInterceptor(pictureInterceptor).addPathPatterns(picturesUri +  "**");
     }
 
     @Override

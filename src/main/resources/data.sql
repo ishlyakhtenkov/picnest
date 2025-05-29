@@ -39,9 +39,9 @@ VALUES ('user album 1', '2025-05-22 12:28:01', null, 100000),
        ('admin album', '2025-03-17 16:22:48', null, 100001);
 
 INSERT INTO photos(created, description, file_name, file_link, album_id, user_id)
-VALUES ('2025-05-22 12:28:03', 'photo 1 user alb 1 desc', 'ph1.jpg', './picnest/content/photos/100000/100011/ph1.jpg', 100011, 100000),
-       ('2025-05-22 12:28:07', 'photo 2 user alb 1 desc', 'ph2.jpg', './picnest/content/photos/100000/100011/ph2.jpg', 100011, 100000),
-       ('2025-05-22 12:28:09', 'photo 3 user alb 1 desc', 'ph3.jpg', './picnest/content/photos/100000/100011/ph3.jpg', 100011, 100000),
-       ('2025-04-19 17:46:15', 'photo 1 user alb 2 desc', 'ph1.jpg', './picnest/content/photos/100000/100012/ph1.jpg', 100012, 100000),
-       ('2025-03-17 16:28:14', 'photo 1 admin alb 1 desc', 'ph1.jpg', './picnest/content/photos/100001/100013/ph1.jpg', 100013, 100001),
-       ('2025-03-17 16:34:59', 'photo 2 admin alb 1 desc', 'ph2.jpg', './picnest/content/photos/100001/100013/ph2.jpg', 100013, 100001);
+VALUES ('2025-05-22 12:28:03', 'photo 1 user alb 1 desc', 'ph1.jpg', './picnest/content/pictures/100000/100011/ph1.jpg', 100011, 100000),
+       ('2025-05-22 12:28:07', 'photo 2 user alb 1 desc', 'ph2.jpg', './picnest/content/pictures/100000/100011/ph2.jpg', 100011, 100000),
+       ('2025-05-22 12:28:09', 'photo 3 user alb 1 desc', 'ph3.jpg', './picnest/content/pictures/100000/100011/ph3.jpg', 100011, 100000),
+       ('2025-04-19 17:46:15', 'photo 1 user alb 2 desc', 'ph1.jpg', './picnest/content/pictures/100000/100012/ph1.jpg', 100012, 100000),
+       ('2025-03-17 16:28:14', 'photo 1 admin alb 1 desc', 'ph1.jpg', './picnest/content/pictures/100001/100013/ph1.jpg', 100013, 100001),
+       ('2025-03-17 16:34:59', 'photo 2 admin alb 1 desc', 'ph2.jpg', './picnest/content/pictures/100001/100013/ph2.jpg', 100013, 100001);
