@@ -22,12 +22,55 @@
             <h6 class="alert alert-warning p-2" th:text="#{album.no-pictures-found}">No pictures found.</h6>
         </div>
         <div th:if="${album.pictures != null}" class="row row-cols-1 row-cols-md-2 row-cols-lg-5 mt-2" id="picturesArea">
-            <div th:each="picture : ${album.pictures}" class="col mb-4 picture-col">
-                <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" />
+            <div th:each="picture : ${album.pictures}" class="col mb-4 picture-col" th:id="${'picture-col-' + picture.id}">
+                <span class="float-end pt-1" style="margin-bottom: -36px; margin-right: 4px; position: relative; z-index: 2">
+                    <button type="button" class="btn btn-sm btn-outline-light rounded-circle" th:title="#{actions}"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a type="button" class="dropdown-item" onclick="downloadPicture($(this))"
+                                       th:data-id="${picture.id}" th:text="#{download}">Download</a></li>
+                        <li><a type="button" class="dropdown-item" onclick="showDeletePictureModal($(this))"
+                                       th:data-id="${picture.id}" th:text="#{delete}">Delete</a></li>
+                    </ul>
+                </span>
+                <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="cursor: zoom-in;" onclick="zoomImage($(this))" />
+
             </div>
         </div>
 
         <input type="file" accept="image/*" multiple id="filesInput" hidden />
+
+        <!-- Image modal -->
+        <div class="modal fade" id="zoomImageModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen-sm-down modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header border-0 pb-0">
+                        <span id="zoomImageModalHeader"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center align-content-center">
+                        <img src="" id="zoomImage" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete picture modal -->
+        <div class="modal fade" id="deletePictureModal" tabindex="-1" aria-labelledby="deletePictureModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title" id="deletePictureModalLabel" th:text="#{picture.confirm-delete}">Do you really want to delete picture?</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="deletePicture()" th:text="#{delete}">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </appMain>
 
     <ownScript>

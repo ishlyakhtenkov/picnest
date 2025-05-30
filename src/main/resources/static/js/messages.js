@@ -49,10 +49,12 @@ enMessages.set('choose-image', 'Choose image');
 enMessages.set('logo', 'Logo');
 enMessages.set('login', 'Login');
 enMessages.set('login', 'Login');
+enMessages.set('download', 'Download');
+enMessages.set('actions', 'Actions');
 
 enMessages.set('album.failed-to-create', 'Failed to create album');
 enMessages.set('album.failed-to-update', 'Failed to update album');
-enMessages.set('album.failed-to-delete', 'Failed to update album "{0}"');
+enMessages.set('album.failed-to-delete', 'Failed to delete album "{0}"');
 enMessages.set('album.created', 'Album "{0}" has been created');
 enMessages.set('album.updated', 'Album "{0}" has been updated');
 enMessages.set('album.deleted', 'Album "{0}" has been deleted');
@@ -64,6 +66,8 @@ enMessages.set('album.sure-to-delete', 'Do you really want to delete album "{0}"
 enMessages.set('album.pictures-will-be-delete', 'This action will delete all pictures in the album!');
 enMessages.set('picture.failed-to-create', 'Failed to upload picture');
 enMessages.set('picture.pictures', 'pictures');
+enMessages.set('picture.deleted', 'Picture has been deleted');
+enMessages.set('picture.failed-to-delete', 'Failed to delete picture');
 
 
 ruMessages.set('user.passwords-not-match', 'пароли не совпадают');
@@ -113,6 +117,8 @@ ruMessages.set('change-image', 'Сменить картинку');
 ruMessages.set('choose-image', 'Выбрать картинку');
 ruMessages.set('logo', 'Логотип');
 ruMessages.set('login', 'Вход');
+ruMessages.set('download', 'Скачать');
+ruMessages.set('actions', 'Действия');
 
 ruMessages.set('album.failed-to-create', 'Не удалось создать альбом');
 ruMessages.set('album.failed-to-update', 'Не удалось обновить альбом');
@@ -128,6 +134,8 @@ ruMessages.set('album.sure-to-delete', 'Вы уверены, что хотите
 ruMessages.set('album.pictures-will-be-delete', 'Это действие приведет к удалению всех фотографий в альбоме!');
 ruMessages.set('picture.failed-to-create', 'Не удалось загрузить фото');
 ruMessages.set('picture.pictures', 'фото');
+ruMessages.set('picture.deleted', 'Фото удалено');
+ruMessages.set('picture.failed-to-delete', 'Не удалось удалить фото');
 
 
 function getMessage(messageCode, args) {
