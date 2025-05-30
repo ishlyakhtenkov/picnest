@@ -11,12 +11,12 @@ filesInput.on('change', () => {
 
 function upload(file) {
     noPicturesAlert.attr('hidden', true);
-    let pictureCardCol = $('<div></div>').addClass('col mb-4 picture-col');
-    let pictureCardSlot = $('<div></div>').addClass('border rounded align-content-center text-center').css('height', '150px');
+    let pictureCol = $('<div></div>').addClass('col mb-4 picture-col');
+    let emptySlot = $('<div></div>').addClass('border align-content-center text-center').css('height', '150px');
     let spinner = $('<div></div').addClass('spinner-border');
-    pictureCardSlot.append(spinner);
-    pictureCardCol.append(pictureCardSlot);
-    $('#picturesArea').prepend(pictureCardCol);
+    emptySlot.append(spinner);
+    pictureCol.append(emptySlot);
+    $('#picturesArea').prepend(pictureCol);
 
     let formData = new FormData();
     formData.append('file', file);
@@ -28,20 +28,20 @@ function upload(file) {
         contentType:false
     }).done((uploadedPicture) => {
         if (file.name.toLowerCase().endsWith('.heic')) {
-            let picture = $('<img />').addClass('img-fluid').attr('src', `/${uploadedPicture.file.fileLink}`).css('height', '100%');
-            pictureCardSlot.empty();
-            pictureCardSlot.append(picture);
+            let picture = $('<img />').addClass('img-fluid').attr('src', `/${uploadedPicture.file.fileLink}`);
+            pictureCol.empty();
+            pictureCol.append(picture);
         } else {
             let fileReader = new FileReader();
             fileReader.onload = function (event) {
-                let picture = $('<img />').addClass('img-fluid').attr('src', event.target.result).css('height', '100%');
-                pictureCardSlot.empty();
-                pictureCardSlot.append(picture);
+                let picture = $('<img />').addClass('img-fluid').attr('src', event.target.result);
+                pictureCol.empty();
+                pictureCol.append(picture);
             }
             fileReader.readAsDataURL(file);
         }
     }).fail(function (data) {
-        pictureCardCol.remove();
+        pictureCol.remove();
         if (!$('.picture-col').length) {
             noPicturesAlert.attr('hidden', false);
         }

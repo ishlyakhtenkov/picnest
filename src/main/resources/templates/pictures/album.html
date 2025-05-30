@@ -23,9 +23,7 @@
         </div>
         <div th:if="${album.pictures != null}" class="row row-cols-1 row-cols-md-2 row-cols-lg-5 mt-2" id="picturesArea">
             <div th:each="picture : ${album.pictures}" class="col mb-4 picture-col">
-                <div class="border rounded align-content-center text-center" style="height: 150px;">
-                    <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="height: 100%;" />
-                </div>
+                <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" />
             </div>
         </div>
 
