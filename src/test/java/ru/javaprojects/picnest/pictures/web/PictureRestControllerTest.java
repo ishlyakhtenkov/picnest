@@ -15,9 +15,9 @@ import ru.javaprojects.picnest.ContentFilesManager;
 import ru.javaprojects.picnest.common.error.IllegalRequestDataException;
 import ru.javaprojects.picnest.common.error.NotFoundException;
 import ru.javaprojects.picnest.pictures.model.Album;
-import ru.javaprojects.picnest.pictures.model.Photo;
+import ru.javaprojects.picnest.pictures.model.Picture;
 import ru.javaprojects.picnest.pictures.repository.AlbumRepository;
-import ru.javaprojects.picnest.pictures.repository.PhotoRepository;
+import ru.javaprojects.picnest.pictures.repository.PictureRepository;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,7 +37,7 @@ import static ru.javaprojects.picnest.users.web.LoginController.LOGIN_URL;
 
 class PictureRestControllerTest extends AbstractControllerTest implements ContentFilesManager {
     static final String ALBUMS_URL_SLASH = ALBUMS_URL + "/";
-    static final String PHOTOS_URL_SLASH = "/photos/";
+    static final String PICTURES_URL_SLASH = "/pictures/";
 
     @Value("${content-path.pictures}")
     private String pictureFilesPath;
@@ -46,7 +46,7 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
     private AlbumRepository albumRepository;
 
     @Autowired
-    private PhotoRepository photoRepository;
+    private PictureRepository pictureRepository;
 
     @Override
     public Path getContentPath() {
@@ -69,7 +69,7 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
         Album created = ALBUM_MATCHER.readFromJson(action);
         newAlbum.setId(created.getId());
         ALBUM_MATCHER.assertMatch(created, newAlbum);
-        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(albumRepository.findWithOwnerById(created.id()).orElseThrow(), newAlbum);
+        ALBUM_MATCHER_EXCLUDE_PICTURES.assertMatch(albumRepository.findWithOwnerById(created.id()).orElseThrow(), newAlbum);
     }
 
     @Test
@@ -117,7 +117,7 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                 .andExpect(problemInstance(ALBUMS_URL));
         assertEquals(1, albumRepository.findAllByNameIgnoreCase(userAlbum1.getName()).size());
         ALBUM_MATCHER.assertMatchIgnoreFields(albumRepository.findAllByNameIgnoreCase(userAlbum1.getName()).get(0), userAlbum1,
-                "owner", "updated", "photos");
+                "owner", "updated", "pictures");
     }
 
     @Test
@@ -132,7 +132,7 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
         Album created = ALBUM_MATCHER.readFromJson(action);
         newAlbum.setId(created.getId());
         ALBUM_MATCHER.assertMatch(created, newAlbum);
-        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(albumRepository.findWithOwnerById(created.id()).orElseThrow(), newAlbum);
+        ALBUM_MATCHER_EXCLUDE_PICTURES.assertMatch(albumRepository.findWithOwnerById(created.id()).orElseThrow(), newAlbum);
         assertEquals(2, albumRepository.findAllByNameIgnoreCase(adminAlbum1.getName()).size());
     }
 
@@ -144,7 +144,7 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                 .with(csrf()))
                 .andExpect(status().isNoContent());
         Album updated = albumRepository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow();
-        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(updated, getUpdated());
+        ALBUM_MATCHER_EXCLUDE_PICTURES.assertMatch(updated, getUpdated());
     }
 
     @Test
@@ -156,7 +156,7 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
         assertNotEquals(getUpdated().getName(), albumRepository.getExisted(USER_ALBUM1_ID).getName());
-        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(albumRepository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
+        ALBUM_MATCHER_EXCLUDE_PICTURES.assertMatch(albumRepository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
     }
 
     @Test
@@ -192,7 +192,7 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                         .value(messageSource.getMessage("validation.album.name.NoHtml", null, getLocale())))
                 .andExpect(problemInstance(ALBUMS_URL_SLASH + USER_ALBUM1_ID));
         assertNotEquals(HTML_TEXT, albumRepository.getExisted(USER_ALBUM1_ID).getName());
-        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(albumRepository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
+        ALBUM_MATCHER_EXCLUDE_PICTURES.assertMatch(albumRepository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
 
     }
 
@@ -210,7 +210,7 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                 .andExpect(problemDetail(messageSource.getMessage("error.duplicate.album-name", null, getLocale())))
                 .andExpect(problemInstance(ALBUMS_URL_SLASH + USER_ALBUM1_ID));
         assertNotEquals(userAlbum2.getName(), albumRepository.getExisted(USER_ALBUM1_ID).getName());
-        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(albumRepository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
+        ALBUM_MATCHER_EXCLUDE_PICTURES.assertMatch(albumRepository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
     }
 
     @Test
@@ -223,7 +223,7 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                 .with(csrf()))
                 .andExpect(status().isNoContent());
         Album updated = albumRepository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow();
-        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(updated, updatedAlbum);
+        ALBUM_MATCHER_EXCLUDE_PICTURES.assertMatch(updated, updatedAlbum);
         assertEquals(2, albumRepository.findAllByNameIgnoreCase(updatedAlbum.getName()).size());
     }
 
@@ -242,7 +242,7 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                         new Object[]{ADMIN_ALBUM1_ID}, getLocale())))
                 .andExpect(problemInstance(ALBUMS_URL_SLASH + ADMIN_ALBUM1_ID));
         assertNotEquals(getUpdated().getName(), albumRepository.getExisted(ADMIN_ALBUM1_ID).getName());
-        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(albumRepository.findWithOwnerById(ADMIN_ALBUM1_ID).orElseThrow(), adminAlbum1);
+        ALBUM_MATCHER_EXCLUDE_PICTURES.assertMatch(albumRepository.findWithOwnerById(ADMIN_ALBUM1_ID).orElseThrow(), adminAlbum1);
     }
 
     @Test
@@ -260,7 +260,7 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                         new Object[]{USER_ALBUM1_ID}, getLocale())))
                 .andExpect(problemInstance(ALBUMS_URL_SLASH + USER_ALBUM1_ID));
         assertNotEquals(getUpdated().getName(), albumRepository.getExisted(USER_ALBUM1_ID).getName());
-        ALBUM_MATCHER_EXCLUDE_PHOTOS.assertMatch(albumRepository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
+        ALBUM_MATCHER_EXCLUDE_PICTURES.assertMatch(albumRepository.findWithOwnerById(USER_ALBUM1_ID).orElseThrow(), userAlbum1);
     }
 
     @Test
@@ -334,41 +334,41 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void createPhoto() throws Exception {
-        Photo newPhoto = getNewPhoto();
-        ResultActions action = perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/photos")
+    void createPicture() throws Exception {
+        Picture newPicture = getNewPhoto();
+        ResultActions action = perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/pictures")
                 .file(NEW_PHOTO_FILE)
                 .with(csrf()))
                 .andExpect(status().isCreated());
-        Photo created = PHOTO_MATCHER.readFromJson(action);
-        newPhoto.setId(created.getId());
-        PHOTO_MATCHER.assertMatchIgnoreFields(created, newPhoto, "created", "album.photos", "album.owner");
-        PHOTO_MATCHER.assertMatchIgnoreFields(photoRepository.getExisted(created.id()), newPhoto, "created", "album");
+        Picture created = PICTURE_MATCHER.readFromJson(action);
+        newPicture.setId(created.getId());
+        PICTURE_MATCHER.assertMatchIgnoreFields(created, newPicture, "created", "album.pictures", "album.owner");
+        PICTURE_MATCHER.assertMatchIgnoreFields(pictureRepository.getExisted(created.id()), newPicture, "created", "album");
         assertTrue(Files.exists(Path.of(pictureFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), NEW_PHOTO_FILE.getOriginalFilename())));
     }
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void createPhotoWhenDuplicateFileName() throws Exception {
-        Photo newPhoto = getNewPhoto();
-        newPhoto.getFile().setFileName("ph1(1).jpg");
-        newPhoto.getFile().setFileLink(pictureFilesPath + USER_ID + "/" + USER_ALBUM1_ID + "/" + "ph1(1).jpg");
-        ResultActions action = perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/photos")
+    void createPictureWhenDuplicateFileName() throws Exception {
+        Picture newPicture = getNewPhoto();
+        newPicture.getFile().setFileName("ph1(1).jpg");
+        newPicture.getFile().setFileLink(pictureFilesPath + USER_ID + "/" + USER_ALBUM1_ID + "/" + "ph1(1).jpg");
+        ResultActions action = perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/pictures")
                 .file(DUPLICATE_NAME_NEW_PHOTO_FILE)
                 .with(csrf()))
                 .andExpect(status().isCreated());
-        Photo created = PHOTO_MATCHER.readFromJson(action);
-        newPhoto.setId(created.getId());
-        PHOTO_MATCHER.assertMatchIgnoreFields(created, newPhoto, "created", "album.photos", "album.owner");
-        PHOTO_MATCHER.assertMatchIgnoreFields(photoRepository.getExisted(created.id()), newPhoto, "created", "album");
+        Picture created = PICTURE_MATCHER.readFromJson(action);
+        newPicture.setId(created.getId());
+        PICTURE_MATCHER.assertMatchIgnoreFields(created, newPicture, "created", "album.pictures", "album.owner");
+        PICTURE_MATCHER.assertMatchIgnoreFields(pictureRepository.getExisted(created.id()), newPicture, "created", "album");
         assertTrue(Files.exists(Path.of(pictureFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), "ph1(1).jpg")));
-        assertTrue(Files.exists(Path.of(userAlbum1Photo1.getFile().getFileLink())));
+        assertTrue(Files.exists(Path.of(USER_ALBUM_1_PICTURE_1.getFile().getFileLink())));
     }
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void createPhotoWhenEmptyFile() throws Exception {
-        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/photos")
+    void createPictureWhenEmptyFile() throws Exception {
+        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/pictures")
                 .file(EMPTY_PHOTO_FILE)
                 .with(csrf()))
                 .andExpect(status().isUnprocessableEntity())
@@ -376,30 +376,30 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                         Objects.requireNonNull(result.getResolvedException()).getClass()))
                 .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
                 .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
-                .andExpect(problemDetail(messageSource.getMessage("photo.file-not-empty", null, getLocale())))
-                .andExpect(problemInstance(ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/photos"));
-        assertEquals(userAlbum1.getPhotos().size(),
-                albumRepository.findWithPhotosByIdAndOwner_Id(USER_ALBUM1_ID, USER_ID, Sort.unsorted()).orElseThrow().getPhotos().size());
+                .andExpect(problemDetail(messageSource.getMessage("picture.file-not-empty", null, getLocale())))
+                .andExpect(problemInstance(ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/pictures"));
+        assertEquals(userAlbum1.getPictures().size(),
+                albumRepository.findWithPicturesByIdAndOwner_Id(USER_ALBUM1_ID, USER_ID, Sort.unsorted()).orElseThrow().getPictures().size());
         assertTrue(Files.notExists(Path.of(pictureFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), EMPTY_PHOTO_FILE.getOriginalFilename())));
     }
 
     @Test
-    void createPhotoUnauthorized() throws Exception {
-        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/photos")
+    void createPictureUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/pictures")
                 .file(NEW_PHOTO_FILE)
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertEquals(userAlbum1.getPhotos().size(),
-                albumRepository.findWithPhotosByIdAndOwner_Id(USER_ALBUM1_ID, USER_ID, Sort.unsorted()).orElseThrow().getPhotos().size());
+        assertEquals(userAlbum1.getPictures().size(),
+                albumRepository.findWithPicturesByIdAndOwner_Id(USER_ALBUM1_ID, USER_ID, Sort.unsorted()).orElseThrow().getPictures().size());
         assertTrue(Files.notExists(Path.of(pictureFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), NEW_PHOTO_FILE.getOriginalFilename())));
     }
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void createPhotoWhenAlbumNotExists() throws Exception {
-        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + NOT_EXISTING_ID + "/photos")
+    void createPictureWhenAlbumNotExists() throws Exception {
+        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + NOT_EXISTING_ID + "/pictures")
                 .file(NEW_PHOTO_FILE)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
@@ -409,14 +409,14 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                 .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
                 .andExpect(problemDetail(messageSource.getMessage("error.notfound.entity",
                         new Object[]{NOT_EXISTING_ID}, getLocale())))
-                .andExpect(problemInstance(ALBUMS_URL_SLASH + NOT_EXISTING_ID + "/photos"));
+                .andExpect(problemInstance(ALBUMS_URL_SLASH + NOT_EXISTING_ID + "/pictures"));
         assertTrue(Files.notExists(Path.of(pictureFilesPath, String.valueOf(USER_ID), String.valueOf(NOT_EXISTING_ID), NEW_PHOTO_FILE.getOriginalFilename())));
     }
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void createPhotoWhenAlbumNotBelongs() throws Exception {
-        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + ADMIN_ALBUM1_ID + "/photos")
+    void createPictureWhenAlbumNotBelongs() throws Exception {
+        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + ADMIN_ALBUM1_ID + "/pictures")
                 .file(NEW_PHOTO_FILE)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
@@ -426,16 +426,16 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                 .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
                 .andExpect(problemDetail(messageSource.getMessage("error.notfound.entity",
                         new Object[]{ADMIN_ALBUM1_ID}, getLocale())))
-                .andExpect(problemInstance(ALBUMS_URL_SLASH + ADMIN_ALBUM1_ID + "/photos"));
-        assertEquals(adminAlbum1.getPhotos().size(),
-                albumRepository.findWithPhotosByIdAndOwner_Id(ADMIN_ALBUM1_ID, ADMIN_ID, Sort.unsorted()).orElseThrow().getPhotos().size());
+                .andExpect(problemInstance(ALBUMS_URL_SLASH + ADMIN_ALBUM1_ID + "/pictures"));
+        assertEquals(adminAlbum1.getPictures().size(),
+                albumRepository.findWithPicturesByIdAndOwner_Id(ADMIN_ALBUM1_ID, ADMIN_ID, Sort.unsorted()).orElseThrow().getPictures().size());
         assertTrue(Files.notExists(Path.of(pictureFilesPath, String.valueOf(ADMIN_ID), String.valueOf(ADMIN_ALBUM1_ID), NEW_PHOTO_FILE.getOriginalFilename())));
     }
 
     @Test
     @WithUserDetails(ADMIN_MAIL)
-    void createPhotoWhenAlbumNotBelongsByAdmin() throws Exception {
-        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/photos")
+    void createPictureWhenAlbumNotBelongsByAdmin() throws Exception {
+        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/pictures")
                 .file(NEW_PHOTO_FILE)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
@@ -445,36 +445,36 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                 .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
                 .andExpect(problemDetail(messageSource.getMessage("error.notfound.entity",
                         new Object[]{USER_ALBUM1_ID}, getLocale())))
-                .andExpect(problemInstance(ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/photos"));
-        assertEquals(userAlbum1.getPhotos().size(),
-                albumRepository.findWithPhotosByIdAndOwner_Id(USER_ALBUM1_ID, USER_ID, Sort.unsorted()).orElseThrow().getPhotos().size());
+                .andExpect(problemInstance(ALBUMS_URL_SLASH + USER_ALBUM1_ID + "/pictures"));
+        assertEquals(userAlbum1.getPictures().size(),
+                albumRepository.findWithPicturesByIdAndOwner_Id(USER_ALBUM1_ID, USER_ID, Sort.unsorted()).orElseThrow().getPictures().size());
         assertTrue(Files.notExists(Path.of(pictureFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), NEW_PHOTO_FILE.getOriginalFilename())));
     }
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void deletePhoto() throws Exception {
-        perform(MockMvcRequestBuilders.delete(PHOTOS_URL_SLASH + USER_ALBUM1_PHOTO1_ID)
+    void deletePicture() throws Exception {
+        perform(MockMvcRequestBuilders.delete(PICTURES_URL_SLASH + USER_ALBUM1_PHOTO1_ID)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> photoRepository.getExisted(USER_ALBUM1_PHOTO1_ID));
-        assertTrue(Files.notExists(Paths.get(pictureFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), userAlbum1Photo1.getFile().getFileName())));
+        assertThrows(NotFoundException.class, () -> pictureRepository.getExisted(USER_ALBUM1_PHOTO1_ID));
+        assertTrue(Files.notExists(Paths.get(pictureFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), USER_ALBUM_1_PICTURE_1.getFile().getFileName())));
     }
 
     @Test
-    void deletePhotoUnauthorized() throws Exception {
-        perform(MockMvcRequestBuilders.delete(PHOTOS_URL_SLASH + USER_ALBUM1_PHOTO1_ID)
+    void deletePictureUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.delete(PICTURES_URL_SLASH + USER_ALBUM1_PHOTO1_ID)
                 .with(csrf()))
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertDoesNotThrow(() -> photoRepository.getExisted(USER_ALBUM1_PHOTO1_ID));
-        assertTrue(Files.exists(Paths.get(pictureFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), userAlbum1Photo1.getFile().getFileName())));
+        assertDoesNotThrow(() -> pictureRepository.getExisted(USER_ALBUM1_PHOTO1_ID));
+        assertTrue(Files.exists(Paths.get(pictureFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), USER_ALBUM_1_PICTURE_1.getFile().getFileName())));
     }
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void deletePhotoNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.delete(PHOTOS_URL_SLASH + NOT_EXISTING_ID)
+    void deletePictureNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(PICTURES_URL_SLASH + NOT_EXISTING_ID)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertEquals(NotFoundException.class,
@@ -483,13 +483,13 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                 .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
                 .andExpect(problemDetail(messageSource.getMessage("error.notfound.entity",
                         new Object[]{NOT_EXISTING_ID}, getLocale())))
-                .andExpect(problemInstance(PHOTOS_URL_SLASH + NOT_EXISTING_ID));
+                .andExpect(problemInstance(PICTURES_URL_SLASH + NOT_EXISTING_ID));
     }
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void deletePhotoNotBelongs() throws Exception {
-        perform(MockMvcRequestBuilders.delete(PHOTOS_URL_SLASH + ADMIN_ALBUM1_PHOTO1_ID)
+    void deletePictureNotBelongs() throws Exception {
+        perform(MockMvcRequestBuilders.delete(PICTURES_URL_SLASH + ADMIN_ALBUM1_PHOTO1_ID)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertEquals(NotFoundException.class,
@@ -498,15 +498,15 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                 .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
                 .andExpect(problemDetail(messageSource.getMessage("error.notfound.entity",
                         new Object[]{ADMIN_ALBUM1_PHOTO1_ID}, getLocale())))
-                .andExpect(problemInstance(PHOTOS_URL_SLASH + ADMIN_ALBUM1_PHOTO1_ID));
-        assertDoesNotThrow(() -> photoRepository.getExisted(ADMIN_ALBUM1_PHOTO1_ID));
-        assertTrue(Files.exists(Paths.get(pictureFilesPath, String.valueOf(ADMIN_ID), String.valueOf(ADMIN_ALBUM1_ID), adminAlbum1Photo1.getFile().getFileName())));
+                .andExpect(problemInstance(PICTURES_URL_SLASH + ADMIN_ALBUM1_PHOTO1_ID));
+        assertDoesNotThrow(() -> pictureRepository.getExisted(ADMIN_ALBUM1_PHOTO1_ID));
+        assertTrue(Files.exists(Paths.get(pictureFilesPath, String.valueOf(ADMIN_ID), String.valueOf(ADMIN_ALBUM1_ID), ADMIN_ALBUM_1_PICTURE_1.getFile().getFileName())));
     }
 
     @Test
     @WithUserDetails(ADMIN_MAIL)
-    void deletePhotoNotBelongsByAdmin() throws Exception {
-        perform(MockMvcRequestBuilders.delete(PHOTOS_URL_SLASH + USER_ALBUM1_PHOTO1_ID)
+    void deletePictureNotBelongsByAdmin() throws Exception {
+        perform(MockMvcRequestBuilders.delete(PICTURES_URL_SLASH + USER_ALBUM1_PHOTO1_ID)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertEquals(NotFoundException.class,
@@ -515,8 +515,8 @@ class PictureRestControllerTest extends AbstractControllerTest implements Conten
                 .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
                 .andExpect(problemDetail(messageSource.getMessage("error.notfound.entity",
                         new Object[]{USER_ALBUM1_PHOTO1_ID}, getLocale())))
-                .andExpect(problemInstance(PHOTOS_URL_SLASH + USER_ALBUM1_PHOTO1_ID));
-        assertDoesNotThrow(() -> photoRepository.getExisted(USER_ALBUM1_PHOTO1_ID));
-        assertTrue(Files.exists(Paths.get(pictureFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), userAlbum1Photo1.getFile().getFileName())));
+                .andExpect(problemInstance(PICTURES_URL_SLASH + USER_ALBUM1_PHOTO1_ID));
+        assertDoesNotThrow(() -> pictureRepository.getExisted(USER_ALBUM1_PHOTO1_ID));
+        assertTrue(Files.exists(Paths.get(pictureFilesPath, String.valueOf(USER_ID), String.valueOf(USER_ALBUM1_ID), USER_ALBUM_1_PICTURE_1.getFile().getFileName())));
     }
 }

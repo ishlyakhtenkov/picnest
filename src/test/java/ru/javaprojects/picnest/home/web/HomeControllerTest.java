@@ -32,7 +32,7 @@ class HomeControllerTest extends AbstractControllerTest {
                 .andExpect(view().name(HOME_VIEW))
                 .andExpect(result -> ALBUM_MATCHER
                         .assertMatchIgnoreFields((List<Album>) Objects.requireNonNull(result.getModelAndView())
-                                .getModel().get(ALBUMS_ATTRIBUTE), List.of(userAlbum1, userAlbum2), "owner", "photos"));
+                                .getModel().get(ALBUMS_ATTRIBUTE), List.of(userAlbum1, userAlbum2), "owner", "pictures"));
     }
 
     @Test

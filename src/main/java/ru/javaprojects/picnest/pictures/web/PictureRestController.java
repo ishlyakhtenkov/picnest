@@ -13,7 +13,8 @@ import ru.javaprojects.picnest.app.AuthUser;
 import ru.javaprojects.picnest.common.error.IllegalRequestDataException;
 import ru.javaprojects.picnest.common.validation.NoHtml;
 import ru.javaprojects.picnest.pictures.model.Album;
-import ru.javaprojects.picnest.pictures.model.Photo;
+import ru.javaprojects.picnest.pictures.model.Picture;
+import ru.javaprojects.picnest.pictures.model.Picture;
 import ru.javaprojects.picnest.pictures.service.PictureService;
 
 import static ru.javaprojects.picnest.pictures.web.PictureController.ALBUMS_URL;
@@ -52,21 +53,21 @@ public class PictureRestController {
         service.deleteAlbum(id, AuthUser.authId());
     }
 
-    @PostMapping(value = ALBUMS_URL + "/{albumId}/photos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = ALBUMS_URL + "/{albumId}/pictures", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Photo createPhoto(@PathVariable long albumId, @RequestPart MultipartFile file) {
+    public Picture createPicture(@PathVariable long albumId, @RequestPart MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new IllegalRequestDataException("Photo file should not be empty",
-                    "photo.file-not-empty", null);
+            throw new IllegalRequestDataException("Picture file should not be empty",
+                    "picture.file-not-empty", null);
         }
-        log.info("create photo for album with id={}", albumId);
-        return service.createPhoto(albumId, file, AuthUser.authId());
+        log.info("create picture for album with id={}", albumId);
+        return service.createPicture(albumId, file, AuthUser.authId());
     }
 
-    @DeleteMapping("/photos/{id}")
+    @DeleteMapping("/pictures/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePhoto(@PathVariable long id) {
-        log.info("delete photo with id={}", id);
-        service.deletePhoto(id, AuthUser.authId());
+    public void deletePicture(@PathVariable long id) {
+        log.info("delete picture with id={}", id);
+        service.deletePicture(id, AuthUser.authId());
     }
 }

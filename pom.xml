@@ -13,7 +13,7 @@
 	<artifactId>picnest</artifactId>
 	<version>1.0</version>
 	<name>picnest</name>
-	<description>Web app for storing photos</description>
+	<description>Web app for storing pictures</description>
 
 	<properties>
 		<java.version>23</java.version>

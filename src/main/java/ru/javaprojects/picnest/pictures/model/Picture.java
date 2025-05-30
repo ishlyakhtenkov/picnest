@@ -17,11 +17,11 @@ import ru.javaprojects.picnest.common.validation.NoHtml;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "photos")
+@Table(name = "pictures")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Photo extends BaseEntity implements HasId {
+public class Picture extends BaseEntity implements HasId {
 
     @Nullable
     @NoHtml
@@ -47,7 +47,7 @@ public class Photo extends BaseEntity implements HasId {
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
-    public Photo(Long id, String description, LocalDateTime created, File file, Long ownerId) {
+    public Picture(Long id, String description, LocalDateTime created, File file, Long ownerId) {
         super(id);
         this.description = description;
         this.created = created;
@@ -55,7 +55,7 @@ public class Photo extends BaseEntity implements HasId {
         this.ownerId = ownerId;
     }
 
-    public Photo(Long id, String description, LocalDateTime created, File file, Long ownerId, Album album) {
+    public Picture(Long id, String description, LocalDateTime created, File file, Long ownerId, Album album) {
         this(id, description, created, file, ownerId);
         this.album = album;
     }

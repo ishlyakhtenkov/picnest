@@ -45,7 +45,7 @@ public class Album extends BaseEntity implements HasIdAndName {
     private User owner;
 
     @OneToMany(mappedBy = "album", fetch = FetchType.LAZY)
-    private List<Photo> photos;
+    private List<Picture> pictures;
 
     public Album(Long id, String name, User owner) {
         super(id);
@@ -58,9 +58,9 @@ public class Album extends BaseEntity implements HasIdAndName {
         this.created = created;
     }
 
-    public Album(Long id, String name, LocalDateTime created, User owner, List<Photo> photos) {
+    public Album(Long id, String name, LocalDateTime created, User owner, List<Picture> pictures) {
         this(id, name, created, owner);
-        this.photos = photos;
+        this.pictures = pictures;
     }
 
     @Override

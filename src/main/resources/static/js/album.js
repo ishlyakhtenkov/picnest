@@ -1,6 +1,6 @@
 const albumId = $('#albumId').text();
 const filesInput = $('#filesInput');
-const noPhotosAlert = $('#noPhotosAlert');
+const noPicturesAlert = $('#noPicturesAlert');
 
 filesInput.on('change', () => {
     $.each(filesInput.prop('files'), (index, file) => {
@@ -10,42 +10,42 @@ filesInput.on('change', () => {
 });
 
 function upload(file) {
-    noPhotosAlert.attr('hidden', true);
-    let photoCardCol = $('<div></div>').addClass('col mb-4 photo-col');
-    let photoCardSlot = $('<div></div>').addClass('border rounded align-content-center text-center').css('height', '150px');
+    noPicturesAlert.attr('hidden', true);
+    let pictureCardCol = $('<div></div>').addClass('col mb-4 picture-col');
+    let pictureCardSlot = $('<div></div>').addClass('border rounded align-content-center text-center').css('height', '150px');
     let spinner = $('<div></div').addClass('spinner-border');
-    photoCardSlot.append(spinner);
-    photoCardCol.append(photoCardSlot);
-    $('#photosArea').prepend(photoCardCol);
+    pictureCardSlot.append(spinner);
+    pictureCardCol.append(pictureCardSlot);
+    $('#picturesArea').prepend(pictureCardCol);
 
     let formData = new FormData();
     formData.append('file', file);
     $.ajax({
-        url: `/albums/${albumId}/photos`,
+        url: `/albums/${albumId}/pictures`,
         type: 'POST',
         data: formData,
         processData:false,
         contentType:false
-    }).done((uploadedPhoto) => {
+    }).done((uploadedPicture) => {
         if (file.name.toLowerCase().endsWith('.heic')) {
-            let photo = $('<img />').addClass('img-fluid').attr('src', `/${uploadedPhoto.file.fileLink}`).css('height', '100%');
-            photoCardSlot.empty();
-            photoCardSlot.append(photo);
+            let picture = $('<img />').addClass('img-fluid').attr('src', `/${uploadedPicture.file.fileLink}`).css('height', '100%');
+            pictureCardSlot.empty();
+            pictureCardSlot.append(picture);
         } else {
             let fileReader = new FileReader();
             fileReader.onload = function (event) {
-                let photo = $('<img />').addClass('img-fluid').attr('src', event.target.result).css('height', '100%');
-                photoCardSlot.empty();
-                photoCardSlot.append(photo);
+                let picture = $('<img />').addClass('img-fluid').attr('src', event.target.result).css('height', '100%');
+                pictureCardSlot.empty();
+                pictureCardSlot.append(picture);
             }
             fileReader.readAsDataURL(file);
         }
     }).fail(function (data) {
-        photoCardCol.remove();
-        if (!$('.photo-col').length) {
-            noPhotosAlert.attr('hidden', false);
+        pictureCardCol.remove();
+        if (!$('.picture-col').length) {
+            noPicturesAlert.attr('hidden', false);
         }
-        handleError(data, getMessage('photo.failed-to-create'));
+        handleError(data, getMessage('picture.failed-to-create'));
     });
 }
 

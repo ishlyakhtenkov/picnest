@@ -1,4 +1,4 @@
-DELETE FROM photos;
+DELETE FROM pictures;
 DELETE FROM albums;
 DELETE FROM change_email_tokens;
 DELETE FROM password_reset_tokens;
@@ -38,7 +38,7 @@ VALUES ('user album 1', '2025-05-22 12:28:01', null, 100000),
        ('user album 2', '2025-04-18 21:13:14', null, 100000),
        ('admin album', '2025-03-17 16:22:48', null, 100001);
 
-INSERT INTO photos(created, description, file_name, file_link, album_id, user_id)
+INSERT INTO pictures(created, description, file_name, file_link, album_id, user_id)
 VALUES ('2025-05-22 12:28:03', 'photo 1 user alb 1 desc', 'ph1.jpg', './picnest/content/pictures/100000/100011/ph1.jpg', 100011, 100000),
        ('2025-05-22 12:28:07', 'photo 2 user alb 1 desc', 'ph2.jpg', './picnest/content/pictures/100000/100011/ph2.jpg', 100011, 100000),
        ('2025-05-22 12:28:09', 'photo 3 user alb 1 desc', 'ph3.jpg', './picnest/content/pictures/100000/100011/ph3.jpg', 100011, 100000),

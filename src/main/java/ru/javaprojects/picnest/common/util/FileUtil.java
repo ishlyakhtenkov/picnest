@@ -16,6 +16,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -30,7 +32,10 @@ public class FileUtil {
     private static final String FILE_PATH_MUST_NOT_BE_NULL = "filePath must not be null";
     private static final String PATH_MUST_NOT_BE_NULL = "path must not be null";
 
-    public static final String HEIC_EXTENSION = ".heic";
+    private static final String HEIC_EXTENSION = ".heic";
+    private static final String JPEG_EXTENSION = ".jpg";
+
+    private static final Map<String, String> currentlyUploadingFilesPaths = new ConcurrentHashMap<>();
 
     public static void upload(MultipartFile multipartFile, String dirPath, String fileName) {
         Assert.notNull(multipartFile, MULTIPART_FILE_MUST_NOT_BE_NULL);
@@ -77,6 +82,9 @@ public class FileUtil {
         Assert.notNull(fileBytes, FILE_BYTES_MUST_NOT_BE_NULL);
         Assert.notNull(dirPath, DIR_PATH_MUST_NOT_BE_NULL);
         Assert.notNull(fileName, FILE_NAME_MUST_NOT_BE_NULL);
+        if (!dirPath.endsWith("/")) {
+            dirPath += "/";
+        }
         if (fileBytes.length == 0) {
             throw new IllegalRequestDataException("File must not be empty: " + fileName, "error.file.must-not-be-empty",
                     new Object[]{fileName});
@@ -86,6 +94,8 @@ public class FileUtil {
         } catch (IOException e) {
             throw new FileException("Failed to upload file: " + fileName +
                     ": " + e.getMessage(), "error.file.failed-to-upload", new Object[]{fileName});
+        } finally {
+            currentlyUploadingFilesPaths.remove(dirPath + fileName);
         }
     }
 
@@ -106,6 +116,27 @@ public class FileUtil {
     public static String normalizePath(String path) {
         Assert.notNull(path, PATH_MUST_NOT_BE_NULL);
         return path.toLowerCase().replace(' ', '_');
+    }
+
+    public static String prepareFileNameToAvoidDuplicate(String dir, String fileName) {
+        if (!dir.endsWith("/")) {
+            dir += "/";
+        }
+        if (fileName.toLowerCase().endsWith(HEIC_EXTENSION)) {
+            fileName = fileName.substring(0, fileName.lastIndexOf('.')) + JPEG_EXTENSION;
+        }
+        if (Files.exists(Path.of(dir, fileName)) || currentlyUploadingFilesPaths.containsKey(dir + fileName)) {
+            String fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+            int counter = 1;
+            String newFileName;
+            do {
+                newFileName = fileName.substring(0, fileName.lastIndexOf('.')) + "(" + counter + ")" + fileExtension;
+                counter++;
+            } while (Files.exists(Path.of(dir, newFileName)) || currentlyUploadingFilesPaths.containsKey(dir + newFileName));
+            fileName = newFileName;
+        }
+        currentlyUploadingFilesPaths.put(dir + fileName, "");
+        return fileName;
     }
 
     public static void moveFile(String filePath, String dirPath) {

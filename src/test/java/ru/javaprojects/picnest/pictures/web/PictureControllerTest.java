@@ -25,7 +25,7 @@ import static ru.javaprojects.picnest.users.UserTestData.USER_MAIL;
 import static ru.javaprojects.picnest.users.web.LoginController.LOGIN_URL;
 
 class PictureControllerTest extends AbstractControllerTest implements ContentFilesManager {
-    private static final String ALBUM_VIEW = "photos/album";
+    private static final String ALBUM_VIEW = "pictures/album";
 
     @Value("${content-path.pictures}")
     private String pictureFilesPath;
@@ -50,7 +50,7 @@ class PictureControllerTest extends AbstractControllerTest implements ContentFil
                 .andExpect(view().name(ALBUM_VIEW))
                 .andExpect(result -> ALBUM_MATCHER
                         .assertMatchIgnoreFields((Album) Objects.requireNonNull(result.getModelAndView())
-                                .getModel().get(ALBUM_ATTRIBUTE), userAlbum1, "owner", "photos.album"));
+                                .getModel().get(ALBUM_ATTRIBUTE), userAlbum1, "owner", "pictures.album"));
     }
 
     @Test
@@ -90,28 +90,28 @@ class PictureControllerTest extends AbstractControllerTest implements ContentFil
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void showPhotoByUrl() throws Exception {
-        perform(MockMvcRequestBuilders.get(userAlbum1Photo1.getFile().getFileLink().substring(1)))
+    void showPictureByUrl() throws Exception {
+        perform(MockMvcRequestBuilders.get(USER_ALBUM_1_PICTURE_1.getFile().getFileLink().substring(1)))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void showPhotoByUrlUnauthorized() throws Exception {
-        perform(MockMvcRequestBuilders.get(userAlbum1Photo1.getFile().getFileLink().substring(1)))
+    void showPictureByUrlUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.get(USER_ALBUM_1_PICTURE_1.getFile().getFileLink().substring(1)))
                 .andExpect(status().isInternalServerError());
     }
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void showPhotoByUrlNotBelongs() throws Exception {
-        perform(MockMvcRequestBuilders.get(adminAlbum1Photo1.getFile().getFileLink().substring(1)))
+    void showPictureByUrlNotBelongs() throws Exception {
+        perform(MockMvcRequestBuilders.get(ADMIN_ALBUM_1_PICTURE_1.getFile().getFileLink().substring(1)))
                 .andExpect(status().isInternalServerError());
     }
 
     @Test
     @WithUserDetails(ADMIN_MAIL)
-    void showPhotoByUrlNotBelongsByAdmin() throws Exception {
-        perform(MockMvcRequestBuilders.get(userAlbum1Photo1.getFile().getFileLink().substring(1)))
+    void showPictureByUrlNotBelongsByAdmin() throws Exception {
+        perform(MockMvcRequestBuilders.get(USER_ALBUM_1_PICTURE_1.getFile().getFileLink().substring(1)))
                 .andExpect(status().isInternalServerError());
     }
 }

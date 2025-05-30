@@ -18,13 +18,13 @@
                 </button>
             </div>
         </div>
-        <div th:hidden="${album.photos != null && !album.photos.isEmpty()}" class="mt-2" id="noPhotosAlert">
-            <h5 class="alert alert-warning" th:text="#{album.no-photos-found}">No photos found.</h5>
+        <div th:hidden="${album.pictures != null && !album.pictures.isEmpty()}" class="mt-2" id="noPicturesAlert">
+            <h5 class="alert alert-warning" th:text="#{album.no-pictures-found}">No pictures found.</h5>
         </div>
-        <div th:if="${album.photos != null}" class="row row-cols-1 row-cols-md-2 row-cols-lg-5 mt-2" id="photosArea">
-            <div th:each="photo : ${album.photos}" class="col mb-4 photo-col">
+        <div th:if="${album.pictures != null}" class="row row-cols-1 row-cols-md-2 row-cols-lg-5 mt-2" id="picturesArea">
+            <div th:each="picture : ${album.pictures}" class="col mb-4 picture-col">
                 <div class="border rounded align-content-center text-center" style="height: 150px;">
-                    <img th:src="@{'/' + ${photo.file.fileLink}}" class="img-fluid" style="height: 100%;" />
+                    <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="height: 100%;" />
                 </div>
             </div>
         </div>

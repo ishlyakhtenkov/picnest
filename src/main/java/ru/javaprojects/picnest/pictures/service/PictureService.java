@@ -12,29 +12,30 @@ import ru.javaprojects.picnest.common.error.NotFoundException;
 import ru.javaprojects.picnest.common.model.File;
 import ru.javaprojects.picnest.common.util.FileUtil;
 import ru.javaprojects.picnest.pictures.model.Album;
-import ru.javaprojects.picnest.pictures.model.Photo;
+import ru.javaprojects.picnest.pictures.model.Picture;
+import ru.javaprojects.picnest.pictures.model.Picture;
 import ru.javaprojects.picnest.pictures.repository.AlbumRepository;
-import ru.javaprojects.picnest.pictures.repository.PhotoRepository;
+import ru.javaprojects.picnest.pictures.repository.PictureRepository;
 import ru.javaprojects.picnest.users.service.UserService;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static ru.javaprojects.picnest.common.util.FileUtil.HEIC_EXTENSION;
+import static ru.javaprojects.picnest.common.util.FileUtil.prepareFileNameToAvoidDuplicate;
 
 @Service
 @RequiredArgsConstructor
 public class PictureService {
     private final AlbumRepository albumRepository;
-    private final PhotoRepository photoRepository;
+    private final PictureRepository pictureRepository;
     private final UserService userService;
 
     @Value("${content-path.pictures}")
     private String pictureFilesPath;
 
     public Album getAlbum(long id, long userId, Sort s) {
-        return albumRepository.findWithPhotosByIdAndOwner_Id(id, userId, s).orElseThrow(() ->
+        return albumRepository.findWithPicturesByIdAndOwner_Id(id, userId, s).orElseThrow(() ->
                 new NotFoundException("Not found album with id=" + id + " and userId=" + userId,
                         "error.notfound.entity", new Object[]{id}));
     }
@@ -82,46 +83,29 @@ public class PictureService {
     }
 
     @Transactional
-    public Photo createPhoto(long albumId, MultipartFile file, long userId) {
+    public Picture createPicture(long albumId, MultipartFile file, long userId) {
         Assert.notNull(file, "file must not be null");
         Album album = albumRepository.findByIdAndOwner_Id(albumId, userId).orElseThrow(() ->
                 new NotFoundException("Not found album with id=" + albumId + " and userId=" + userId,
                         "error.notfound.entity", new Object[]{albumId}));
-        String albumDir = pictureFilesPath + userId + "/" + albumId;
-        String fileName = prepareFileName(albumDir, file.getOriginalFilename());
-        String fileLink = albumDir + "/" + fileName;
-        Photo photo = new Photo(null, null, null, new File(fileName, fileLink),
+        String albumDir = pictureFilesPath + userId + "/" + albumId + "/";
+        String fileName = prepareFileNameToAvoidDuplicate(albumDir, file.getOriginalFilename());
+        String fileLink = albumDir + fileName;
+        Picture picture = new Picture(null, null, null, new File(fileName, fileLink),
                 userId, album);
-        photoRepository.saveAndFlush(photo);
+        pictureRepository.saveAndFlush(picture);
         FileUtil.upload(file, albumDir, fileName);
-        return photo;
-    }
-
-    private String prepareFileName(String albumDir, String fileName) {
-        if (fileName.toLowerCase().endsWith(HEIC_EXTENSION)) {
-            fileName = fileName.substring(0, fileName.lastIndexOf('.')) + ".jpg";
-        }
-        if (Files.exists(Path.of(albumDir, fileName))) {
-            String fileExtension = fileName.substring(fileName.lastIndexOf('.'));
-            int counter = 1;
-            String newFileName;
-            do {
-                newFileName = fileName.substring(0, fileName.lastIndexOf('.')) + "(" + counter + ")" + fileExtension;
-                counter++;
-            } while (Files.exists(Path.of(albumDir, newFileName)));
-            return newFileName;
-        }
-        return fileName;
+        return picture;
     }
 
     @Transactional
-    public void deletePhoto(long id, long userId) {
-        Photo photo = photoRepository.findByIdAndOwnerId(id, userId).orElseThrow(() ->
-                new NotFoundException("Not found photo with id=" + id + " and userId=" + userId,
+    public void deletePicture(long id, long userId) {
+        Picture picture = pictureRepository.findByIdAndOwnerId(id, userId).orElseThrow(() ->
+                new NotFoundException("Not found picture with id=" + id + " and userId=" + userId,
                         "error.notfound.entity", new Object[]{id}));
-        photoRepository.delete(photo);
-        photoRepository.flush();
-        FileUtil.deleteFile(photo.getFile().getFileLink());
+        pictureRepository.delete(picture);
+        pictureRepository.flush();
+        FileUtil.deleteFile(picture.getFile().getFileLink());
     }
 
 

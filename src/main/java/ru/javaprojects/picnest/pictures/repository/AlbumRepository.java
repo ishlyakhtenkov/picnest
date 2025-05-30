@@ -23,6 +23,6 @@ public interface AlbumRepository extends BaseRepository<Album> {
 
     List<Album> findAllByNameIgnoreCase(String name);
 
-    @EntityGraph(attributePaths = "photos")
-    Optional<Album> findWithPhotosByIdAndOwner_Id(long id, long userId, Sort s);
+    @EntityGraph(attributePaths = "pictures")
+    Optional<Album> findWithPicturesByIdAndOwner_Id(long id, long userId, Sort s);
 }

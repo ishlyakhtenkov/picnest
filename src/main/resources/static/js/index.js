@@ -83,10 +83,10 @@ function generateAlbumCard(album) {
     let title = $('<h5></h5>').addClass('card-title').attr('id', `albumName-${album.id}`).text(album.name);
     cardBody.append(title);
     let infoRow = $('<div></div>').addClass('row');
-    let photoCountCol = $('<div></div>').addClass('col text-muted  mt-auto').text('?? photos'); //TODO
+    let pictureCountCol = $('<div></div>').addClass('col text-muted  mt-auto').text('?? pictures'); //TODO
     let createdCol = $('<div></div>').addClass('col small text-muted fst-italic text-end mt-auto')
         .text(formatDateTime(album.created).split(' ')[0]);
-    infoRow.append(photoCountCol).append(createdCol);
+    infoRow.append(pictureCountCol).append(createdCol);
     cardBody.append(infoRow);
     let stretchedLink = $('<a></a>').addClass('stretched-link').attr('href', `/albums/${album.id}`);
     cardBody.append(stretchedLink);
@@ -113,7 +113,7 @@ function showDeleteAlbumModal(deleteBtn) {
     let albumName = $(`#albumName-${albumId}`).text();
     deleteAlbumModal.find('#deleteAlbumModalLabel')
         .html(`<div class="fw-bold">${getMessage('album.sure-to-delete', [albumName])}</div>
-               <div class="text-danger">${getMessage('album.photos-will-be-delete')}</div>`);
+               <div class="text-danger">${getMessage('album.pictures-will-be-delete')}</div>`);
     deleteAlbumModal.data('albumId', albumId).data('albumName', albumName);
     deleteAlbumModal.modal('toggle');
 }

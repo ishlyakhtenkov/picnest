@@ -74,7 +74,7 @@ enMessages.set('info.only-for-auth-users', 'Only for authenticated users');
 enMessages.set('info.switch-to-light-theme', 'Switch to light theme');
 enMessages.set('info.switch-to-dark-theme', 'Switch to dark theme');
 enMessages.set('info.link-copied', 'Link copied');
-enMessages.set('info.app-description', 'A platform for secure storage of your photos and videos.');
+enMessages.set('info.app-description', 'A platform for secure storage of your pictures and videos.');
 enMessages.set('info.failed-to-get-tags', 'Failed to get tags');
 
 enMessages.set('profile.no-qualification', 'Qualification not defined as there are no projects');
@@ -101,8 +101,8 @@ enMessages.set('album.edit', 'Edit album');
 enMessages.set('create', 'Create');
 enMessages.set('save', 'Save');
 enMessages.set('album.sure-to-delete', 'Do you really want to delete album "{0}"?');
-enMessages.set('album.photos-will-be-delete', 'This action will delete all photos in the album!');
-enMessages.set('photo.failed-to-create', 'Failed to upload photo');
+enMessages.set('album.pictures-will-be-delete', 'This action will delete all pictures in the album!');
+enMessages.set('picture.failed-to-create', 'Failed to upload picture');
 
 
 ruMessages.set('user.passwords-not-match', 'пароли не совпадают');
@@ -204,8 +204,8 @@ ruMessages.set('album.edit', 'Редактировать альбом');
 ruMessages.set('create', 'Создать');
 ruMessages.set('save', 'Сохранить');
 ruMessages.set('album.sure-to-delete', 'Вы уверены, что хотите удалить альбом "{0}"?');
-ruMessages.set('album.photos-will-be-delete', 'Это действие приведет к удалению всех фотографий в альбоме!');
-ruMessages.set('photo.failed-to-create', 'Не удалось загрузить фото');
+ruMessages.set('album.pictures-will-be-delete', 'Это действие приведет к удалению всех фотографий и видео в альбоме!');
+ruMessages.set('picture.failed-to-create', 'Не удалось загрузить фото/видео');
 
 
 function getMessage(messageCode, args) {

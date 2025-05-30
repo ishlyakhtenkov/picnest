@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS photos;
+DROP TABLE IF EXISTS pictures;
 DROP TABLE IF EXISTS albums;
 DROP TABLE IF EXISTS change_email_tokens;
 DROP TABLE IF EXISTS password_reset_tokens;
@@ -74,7 +74,7 @@ CREATE TABLE albums
 );
 CREATE UNIQUE INDEX albums_unique_name_idx ON albums (user_id, name);
 
-CREATE TABLE photos
+CREATE TABLE pictures
 (
     id               BIGINT        DEFAULT nextval('global_seq') PRIMARY KEY,
     created          TIMESTAMP     DEFAULT now() NOT NULL,
