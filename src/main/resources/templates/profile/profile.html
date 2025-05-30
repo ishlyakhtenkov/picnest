@@ -42,10 +42,10 @@
                                                   class="badge rounded-pill bg-danger ms-1"
                                                   style="position: absolute; margin-top: -5px;" th:text="#{user.role.admin}">Admin</span>
                                         </div>
-                                        <div class="mb-1" th:title="#{profile.rating}">
-                                            <i class="fa-solid fa-star text-warning"></i>
-                                            <span th:text="${rating}"></span>
-                                        </div>
+<!--                                        <div class="mb-1" th:title="#{profile.rating}">-->
+<!--                                            <i class="fa-solid fa-star text-warning"></i>-->
+<!--                                            <span th:text="${rating}"></span>-->
+<!--                                        </div>-->
                                         <div th:if="${authUser != null && (authUser.id == user.id || authUser.isAdmin())}"
                                              th:text="${user.email}" class="mb-1">Email</div>
                                         <div class="small text-secondary-emphasis" th:text="#{user.registered} + ': ' + ${#temporals.format(user.registered, 'dd.MM.yyyy HH:mm')}"
