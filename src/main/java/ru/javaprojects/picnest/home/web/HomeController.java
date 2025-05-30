@@ -21,7 +21,9 @@ public class HomeController {
     public String showHomePage(Model model) {
         log.info("Show home page");
         if (AuthUser.safeGet() != null) {
-            model.addAttribute("albums", service.getAllAlbumsByOwner(AuthUser.authId(), Sort.by(DESC, "created")));
+            var albums = service.getAllAlbumsByOwner(AuthUser.authId(), Sort.by(DESC, "created"));
+            model.addAttribute("albums", albums);
+            model.addAttribute("countPicturesByAlbums", service.countPicturesByAlbums(albums));
         }
         return "home/index";
     }

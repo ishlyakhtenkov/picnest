@@ -9,10 +9,13 @@ import ru.javaprojects.picnest.pictures.model.Album;
 import java.util.List;
 import java.util.Objects;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaprojects.picnest.common.CommonTestData.HOME_URL;
 import static ru.javaprojects.picnest.pictures.PictureTestData.*;
 import static ru.javaprojects.picnest.users.UserTestData.USER_MAIL;
+import static ru.javaprojects.picnest.users.web.LoginController.LOGIN_URL;
 
 class HomeControllerTest extends AbstractControllerTest {
     private static final String ABOUT_URL = "/about";
@@ -29,10 +32,13 @@ class HomeControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(HOME_URL))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(ALBUMS_ATTRIBUTE))
+                .andExpect(model().attributeExists(COUNT_PICTURES_BY_ALBUMS_ATTRIBUTE))
                 .andExpect(view().name(HOME_VIEW))
                 .andExpect(result -> ALBUM_MATCHER
                         .assertMatchIgnoreFields((List<Album>) Objects.requireNonNull(result.getModelAndView())
-                                .getModel().get(ALBUMS_ATTRIBUTE), List.of(userAlbum1, userAlbum2), "owner", "pictures"));
+                                .getModel().get(ALBUMS_ATTRIBUTE), List.of(userAlbum1, userAlbum2), "owner", "pictures"))
+                .andExpect(result ->
+                        assertEquals(userCountPicturesByAlbums, Objects.requireNonNull(result.getModelAndView()).getModel().get(COUNT_PICTURES_BY_ALBUMS_ATTRIBUTE)));
     }
 
     @Test
@@ -40,6 +46,7 @@ class HomeControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(HOME_URL))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist(ALBUMS_ATTRIBUTE))
+                .andExpect(model().attributeDoesNotExist(COUNT_PICTURES_BY_ALBUMS_ATTRIBUTE))
                 .andExpect(view().name(HOME_VIEW));
     }
 

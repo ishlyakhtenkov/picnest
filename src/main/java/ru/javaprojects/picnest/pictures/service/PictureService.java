@@ -9,18 +9,21 @@ import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 import ru.javaprojects.picnest.common.error.IllegalRequestDataException;
 import ru.javaprojects.picnest.common.error.NotFoundException;
+import ru.javaprojects.picnest.common.model.BaseEntity;
 import ru.javaprojects.picnest.common.model.File;
 import ru.javaprojects.picnest.common.util.FileUtil;
 import ru.javaprojects.picnest.pictures.model.Album;
 import ru.javaprojects.picnest.pictures.model.Picture;
-import ru.javaprojects.picnest.pictures.model.Picture;
 import ru.javaprojects.picnest.pictures.repository.AlbumRepository;
+import ru.javaprojects.picnest.pictures.repository.PictureCount;
 import ru.javaprojects.picnest.pictures.repository.PictureRepository;
 import ru.javaprojects.picnest.users.service.UserService;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static ru.javaprojects.picnest.common.util.FileUtil.prepareFileNameToAvoidDuplicate;
 
@@ -106,6 +109,16 @@ public class PictureService {
         pictureRepository.delete(picture);
         pictureRepository.flush();
         FileUtil.deleteFile(picture.getFile().getFileLink());
+    }
+
+    public Map<Long, Integer> countPicturesByAlbums(List<Album> albums) {
+        List<Long> albumsIds = albums.stream()
+                .map(BaseEntity::getId)
+                .toList();
+        Map<Long, Integer> picturesCountByAlbums = pictureRepository.countPicturesByAlbums(albumsIds).stream()
+                .collect(Collectors.toMap(PictureCount::getAlbumId, PictureCount::getPicturesCount));
+        albumsIds.forEach(albumId -> picturesCountByAlbums.computeIfAbsent(albumId, k -> 0));
+        return picturesCountByAlbums;
     }
 
 

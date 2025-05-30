@@ -10,6 +10,7 @@ import ru.javaprojects.picnest.pictures.model.Picture;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
+import java.util.Map;
 
 import static ru.javaprojects.picnest.users.UserTestData.*;
 
@@ -33,10 +34,12 @@ public class PictureTestData {
 
     public static final String ALBUM_ATTRIBUTE = "album";
     public static final String ALBUMS_ATTRIBUTE = "albums";
+    public static final String COUNT_PICTURES_BY_ALBUMS_ATTRIBUTE = "countPicturesByAlbums";
 
     public static final long USER_ALBUM1_PHOTO1_ID = 100014;
     public static final long USER_ALBUM1_PHOTO2_ID = 100015;
     public static final long USER_ALBUM1_PHOTO3_ID = 100016;
+    public static final long USER_ALBUM2_PHOTO1_ID = 100017;
 
     public static final long ADMIN_ALBUM1_PHOTO1_ID = 100018;
     public static final long ADMIN_ALBUM1_PHOTO2_ID = 100019;
@@ -57,8 +60,13 @@ public class PictureTestData {
             LocalDateTime.of(2025, Month.MAY, 22, 12, 28, 1), user,
             List.of(USER_ALBUM_1_PICTURE_3, USER_ALBUM_1_PICTURE_2, USER_ALBUM_1_PICTURE_1));
 
+    public static final Picture USER_ALBUM_2_PICTURE_1 = new Picture(USER_ALBUM2_PHOTO1_ID, "photo 1 user alb 2 desc",
+            LocalDateTime.of(2025, Month.APRIL, 19, 17, 46, 15),
+            new File("ph1.jpg", "./picnest/content/pictures/100000/100012/ph1.jpg"), USER_ID);
+
     public static final Album userAlbum2 = new Album(USER_ALBUM2_ID, "user album 2",
-            LocalDateTime.of(2025, Month.APRIL, 18, 21, 13, 14), user);
+            LocalDateTime.of(2025, Month.APRIL, 18, 21, 13, 14), user,
+            List.of(USER_ALBUM_2_PICTURE_1));
 
     public static final Picture ADMIN_ALBUM_1_PICTURE_1 = new Picture(ADMIN_ALBUM1_PHOTO1_ID, "photo 1 admin alb 1 desc",
             LocalDateTime.of(2025, Month.MARCH, 17, 16, 28, 14),
@@ -93,4 +101,7 @@ public class PictureTestData {
         return new Picture(null, null, null,
                 new File("New photo.jpg", "./picnest/content/pictures/100000/100011/New photo.jpg"), USER_ID, userAlbum1);
     }
+
+    public static final Map<Long, Integer> userCountPicturesByAlbums =
+            Map.of(USER_ALBUM1_ID, userAlbum1.getPictures().size(), USER_ALBUM2_ID, userAlbum2.getPictures().size());
 }

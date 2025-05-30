@@ -83,7 +83,7 @@ function generateAlbumCard(album) {
     let title = $('<h5></h5>').addClass('card-title').attr('id', `albumName-${album.id}`).text(album.name);
     cardBody.append(title);
     let infoRow = $('<div></div>').addClass('row');
-    let pictureCountCol = $('<div></div>').addClass('col text-muted  mt-auto').text('?? pictures'); //TODO
+    let pictureCountCol = $('<div></div>').addClass('col text-muted  mt-auto').text(`0 ${getMessage('picture.pictures')}`);
     let createdCol = $('<div></div>').addClass('col small text-muted fst-italic text-end mt-auto')
         .text(formatDateTime(album.created).split(' ')[0]);
     infoRow.append(pictureCountCol).append(createdCol);

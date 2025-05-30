@@ -63,6 +63,7 @@ enMessages.set('save', 'Save');
 enMessages.set('album.sure-to-delete', 'Do you really want to delete album "{0}"?');
 enMessages.set('album.pictures-will-be-delete', 'This action will delete all pictures in the album!');
 enMessages.set('picture.failed-to-create', 'Failed to upload picture');
+enMessages.set('picture.pictures', 'pictures');
 
 
 ruMessages.set('user.passwords-not-match', 'пароли не совпадают');
@@ -126,6 +127,7 @@ ruMessages.set('save', 'Сохранить');
 ruMessages.set('album.sure-to-delete', 'Вы уверены, что хотите удалить альбом "{0}"?');
 ruMessages.set('album.pictures-will-be-delete', 'Это действие приведет к удалению всех фотографий в альбоме!');
 ruMessages.set('picture.failed-to-create', 'Не удалось загрузить фото');
+ruMessages.set('picture.pictures', 'фото');
 
 
 function getMessage(messageCode, args) {
