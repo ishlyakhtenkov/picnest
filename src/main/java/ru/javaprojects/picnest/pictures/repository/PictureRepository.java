@@ -19,4 +19,13 @@ public interface PictureRepository extends BaseRepository<Picture> {
             SELECT p.album.id AS albumId, COUNT(p.album.id) AS picturesCount FROM Picture p
             WHERE p.album.id IN :albumsIds GROUP BY p.album.id""")
     List<PictureCount> countPicturesByAlbums(List<Long> albumsIds);
+
+
+    @Query("""
+             SELECT p1.album.id AS albumId, p1 AS pictures FROM Picture p1
+             WHERE p1.album.id IN :albumsIds AND p1.created =
+            (SELECT MAX(p2.created) FROM Picture p2 WHERE p2.album.id = p1.album.id)""")
+    List<AlbumLastPicture> findLastPictureByAlbums(List<Long> albumsIds);
+
+
 }

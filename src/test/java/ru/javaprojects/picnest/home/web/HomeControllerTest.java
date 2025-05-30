@@ -33,12 +33,15 @@ class HomeControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(ALBUMS_ATTRIBUTE))
                 .andExpect(model().attributeExists(COUNT_PICTURES_BY_ALBUMS_ATTRIBUTE))
+                .andExpect(model().attributeExists(LAST_PICTURE_FILE_LINK_BY_ALBUMS_ATTRIBUTE))
                 .andExpect(view().name(HOME_VIEW))
                 .andExpect(result -> ALBUM_MATCHER
                         .assertMatchIgnoreFields((List<Album>) Objects.requireNonNull(result.getModelAndView())
                                 .getModel().get(ALBUMS_ATTRIBUTE), List.of(userAlbum1, userAlbum2), "owner", "pictures"))
                 .andExpect(result ->
-                        assertEquals(userCountPicturesByAlbums, Objects.requireNonNull(result.getModelAndView()).getModel().get(COUNT_PICTURES_BY_ALBUMS_ATTRIBUTE)));
+                        assertEquals(userCountPicturesByAlbums, Objects.requireNonNull(result.getModelAndView()).getModel().get(COUNT_PICTURES_BY_ALBUMS_ATTRIBUTE)))
+                .andExpect(result ->
+                        assertEquals(userLastPictureFileLinkByAlbums, Objects.requireNonNull(result.getModelAndView()).getModel().get(LAST_PICTURE_FILE_LINK_BY_ALBUMS_ATTRIBUTE)));
     }
 
     @Test
@@ -47,6 +50,7 @@ class HomeControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist(ALBUMS_ATTRIBUTE))
                 .andExpect(model().attributeDoesNotExist(COUNT_PICTURES_BY_ALBUMS_ATTRIBUTE))
+                .andExpect(model().attributeDoesNotExist(LAST_PICTURE_FILE_LINK_BY_ALBUMS_ATTRIBUTE))
                 .andExpect(view().name(HOME_VIEW));
     }
 

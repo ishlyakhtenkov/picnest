@@ -14,6 +14,7 @@ import ru.javaprojects.picnest.common.model.File;
 import ru.javaprojects.picnest.common.util.FileUtil;
 import ru.javaprojects.picnest.pictures.model.Album;
 import ru.javaprojects.picnest.pictures.model.Picture;
+import ru.javaprojects.picnest.pictures.repository.AlbumLastPicture;
 import ru.javaprojects.picnest.pictures.repository.AlbumRepository;
 import ru.javaprojects.picnest.pictures.repository.PictureCount;
 import ru.javaprojects.picnest.pictures.repository.PictureRepository;
@@ -21,6 +22,7 @@ import ru.javaprojects.picnest.users.service.UserService;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -121,5 +123,15 @@ public class PictureService {
         return picturesCountByAlbums;
     }
 
-
+    public Map<Long, String> getLastPictureFileLinkByAlbums(List<Album> albums) {
+        List<Long> albumsIds = albums.stream()
+                .map(BaseEntity::getId)
+                .toList();
+        List<AlbumLastPicture> lastPictureByAlbums = pictureRepository.findLastPictureByAlbums(albumsIds);
+        Map<Long, String> lastPictureByAlbumsMap = new HashMap<>();
+        lastPictureByAlbums.forEach(lastPictureByAlbum ->
+                lastPictureByAlbumsMap.computeIfAbsent(lastPictureByAlbum.getAlbumId(),
+                        _ -> lastPictureByAlbum.getPictures().get(0).getFile().getFileLink()));
+        return lastPictureByAlbumsMap;
+    }
 }

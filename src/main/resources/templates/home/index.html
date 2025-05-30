@@ -24,7 +24,8 @@
             <div th:each="album : ${albums}" class="col mb-4 album-card-col" th:id="${'albumCardCol-' + album.id}">
                 <div class="card h-100 album-card">
                     <div class="ratio" style="--bs-aspect-ratio: 50%;">
-                        <img src="/images/album.jpg" class="card-img-top" style="object-fit: cover">
+                        <img th:src="@{'/' + ${lastPictureFileLinkByAlbums.getOrDefault(album.id, 'images/album.jpg')}}"
+                             class="card-img-top" style="object-fit: cover">
                     </div>
                     <div class="card-body">
                         <span class="float-end px-3 pt-2 pb-1" style="margin-top: -14px; margin-right: -16px; position: relative; z-index: 2">
