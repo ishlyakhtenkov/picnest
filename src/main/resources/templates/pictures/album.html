@@ -12,7 +12,7 @@
             <div class="col-4 text-end">
                 <button type="button" class="with-popover btn btn-outline-success btn-sm" data-bs-toggle="popover" data-bs-trigger="manual"
                         th:data-bs-title="'<a type=&quot;button&quot; class=&quot;btn-close ms-2 float-end tiny&quot;></a><div>'+ #{info.only-for-auth-users}+ '</div>'"
-                        th:data-bs-content="'<div class=&quot;text-center&quot;><a href=&quot;/login&quot; type=&quot;button&quot; class=&quot;btn btn-sm btn-warning px-3&quot;>' + #{login} + '</a></div>'"
+                        th:data-bs-content="'<div class=&quot;text-center&quot;><a href=&quot;' + @{'/login'} + '&quot; type=&quot;button&quot; class=&quot;btn btn-sm btn-warning px-3&quot;>' + #{login} + '</a></div>'"
                         data-bs-html="true" onclick="openFilesInput()">
                     <i class="fa-solid fa-plus me-1"></i><span th:text="#{add}"></span>
                 </button>
@@ -77,7 +77,7 @@
         <script>
             sessionStorage.removeItem('prevUrl');
         </script>
-        <script src="/js/common.js?v=1"></script>
-        <script src="/js/album.js?v=1"></script>
+        <script th:src="@{/js/common.js?v=1}"></script>
+        <script th:src="@{/js/album.js?v=1}"></script>
     </ownScript>
 </th:block>
