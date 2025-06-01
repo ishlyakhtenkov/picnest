@@ -84,6 +84,10 @@ spring:
             user-info-uri: https://gitlab.com/api/v4/user
             user-name-attribute: email
 
+remember-me:
+  key: remember-me-key
+  cookie-name: picnest-remember-me
+
 server:
   tomcat:
     max-http-form-post-size: 50MB

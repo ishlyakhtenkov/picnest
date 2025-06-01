@@ -1,6 +1,8 @@
 package ru.javaprojects.picnest.app.config;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -31,6 +33,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 import ru.javaprojects.picnest.app.AuthUser;
 import ru.javaprojects.picnest.app.sociallogin.AppOAuth2UserService;
+import ru.javaprojects.picnest.app.sociallogin.OAuth2AuthenticationSuccessHandler;
 import ru.javaprojects.picnest.common.error.NotFoundException;
 import ru.javaprojects.picnest.users.model.Role;
 import ru.javaprojects.picnest.users.model.User;
@@ -42,7 +45,7 @@ import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
     public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
@@ -50,6 +53,12 @@ public class SecurityConfig {
     private final SessionRegistry sessionRegistry;
     private final UserMdcLoggingFilter userMdcLoggingFilter;
     private final AppOAuth2UserService appOAuth2UserService;
+
+    @Value("${remember-me.key}")
+    private String rememberMeKey;
+
+    @Value("${remember-me.cookie-name}")
+    private String rememberMeCookieName;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -83,6 +92,13 @@ public class SecurityConfig {
     }
 
     @Bean
+    public OAuth2AuthenticationSuccessHandler oAuth2AuthSuccessHandler() {
+        return new OAuth2AuthenticationSuccessHandler("/", rememberMeKey, rememberMeCookieName);
+    }
+
+
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .addFilterAfter(userMdcLoggingFilter, AuthorizationFilter.class)
@@ -106,7 +122,7 @@ public class SecurityConfig {
                 .oauth2Login((oauth2Login) ->
                         oauth2Login
                                 .loginPage("/login")
-                                .defaultSuccessUrl("/", true)
+                                .successHandler(oAuth2AuthSuccessHandler())
                                 .tokenEndpoint((tokenEndpoint) ->
                                         tokenEndpoint.accessTokenResponseClient(accessTokenResponseClient()))
                                 .userInfoEndpoint((userInfoEndpoint) ->
@@ -123,8 +139,8 @@ public class SecurityConfig {
                 )
                 .rememberMe((rememberMe) ->
                         rememberMe
-                                .key("remember-me-key")
-                                .rememberMeCookieName("javaprojects-remember-me"))
+                                .key(rememberMeKey)
+                                .rememberMeCookieName(rememberMeCookieName))
                 .sessionManagement((sessionManagement) ->
                         sessionManagement
                                 .maximumSessions(5)
