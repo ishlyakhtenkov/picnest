@@ -29,10 +29,10 @@
                         <i class="fa-solid fa-ellipsis"></i>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a type="button" class="dropdown-item" onclick="downloadPicture($(this))"
-                                       th:data-id="${picture.id}" th:text="#{download}">Download</a></li>
+                        <li><a type="button" class="dropdown-item" th:href="@{'/' + ${picture.file.fileLink}}" download
+                               th:data-id="${picture.id}" th:text="#{download}">Download</a></li>
                         <li><a type="button" class="dropdown-item" onclick="showDeletePictureModal($(this))"
-                                       th:data-id="${picture.id}" th:text="#{delete}">Delete</a></li>
+                               th:data-id="${picture.id}" th:text="#{delete}">Delete</a></li>
                     </ul>
                 </span>
                 <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="cursor: zoom-in;" onclick="zoomImage($(this))" />

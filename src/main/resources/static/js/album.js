@@ -30,12 +30,12 @@ function upload(file) {
     }).done((uploadedPicture) => {
         if (file.name.toLowerCase().endsWith('.heic')) {
             let picture = $('<img />').addClass('img-fluid').attr('src', `/${uploadedPicture.file.fileLink}`).css('cursor', 'zoom-in');
-            showUploadedPicture(picture, pictureCol, uploadedPicture.id);
+            showUploadedPicture(picture, pictureCol, uploadedPicture);
         } else {
             let fileReader = new FileReader();
             fileReader.onload = function (event) {
                 let picture = $('<img />').addClass('img-fluid').attr('src', event.target.result).css('cursor', 'zoom-in');
-                showUploadedPicture(picture, pictureCol, uploadedPicture.id);
+                showUploadedPicture(picture, pictureCol, uploadedPicture);
             }
             fileReader.readAsDataURL(file);
         }
@@ -48,31 +48,28 @@ function upload(file) {
     });
 }
 
-function showUploadedPicture(picture, pictureCol, pictureId) {
+function showUploadedPicture(picture, pictureCol, uploadedPicture) {
     picture.on('click', () => {
         zoomImage(picture);
     })
     pictureCol.empty();
-    pictureCol.attr('id', `picture-col-${pictureId}`);
-    let editBtnSpan = $('<span></span>').addClass('float-end pt-1').css('margin-bottom', '-36px')
+    pictureCol.attr('id', `picture-col-${uploadedPicture.id}`);
+    let actionsBtnSpan = $('<span></span>').addClass('float-end pt-1').css('margin-bottom', '-36px')
         .css('margin-right', '4px').css('position', 'relative').css('z-index', '2');
-    let editBtn = $('<button></button>').attr('type', 'button').addClass('btn btn-sm btn-outline-light rounded-circle')
+    let actionsBtn = $('<button></button>').attr('type', 'button').addClass('btn btn-sm btn-outline-light rounded-circle')
         .attr('title', getMessage('actions')).attr('data-bs-toggle', 'dropdown')
         .attr('aria-expanded', 'false').append($('<i></i>').addClass('fa-solid fa-ellipsis'));
     let dropdownList = $('<ul></ul>').addClass('dropdown-menu');
-    let dropdownDownloadItem = $('<a></a>').attr('type', 'button').addClass('dropdown-item').attr('data-id', pictureId)
-        .text(getMessage('download'));
-    dropdownDownloadItem.on('click', () => {
-        downloadPicture(dropdownDownloadItem);
-    })
-    let dropdownDeleteItem = $('<a></a>').attr('type', 'button').addClass('dropdown-item').attr('data-id',pictureId)
+    let dropdownDownloadItem = $('<a download></a>').attr('type', 'button').addClass('dropdown-item')
+        .attr('data-id', uploadedPicture.id).attr('href', `/${uploadedPicture.file.fileLink}`).text(getMessage('download'));
+    let dropdownDeleteItem = $('<a></a>').attr('type', 'button').addClass('dropdown-item').attr('data-id',uploadedPicture.id)
         .text(getMessage('delete'));
     dropdownDeleteItem.on('click', () => {
         showDeletePictureModal(dropdownDeleteItem);
-    })
+    });
     dropdownList.append($('<li></li>').append(dropdownDownloadItem)).append($('<li></li>').append(dropdownDeleteItem));
-    editBtnSpan.append(editBtn).append(dropdownList);
-    pictureCol.append(editBtnSpan);
+    actionsBtnSpan.append(actionsBtn).append(dropdownList);
+    pictureCol.append(actionsBtnSpan);
     pictureCol.append(picture);
 }
 
