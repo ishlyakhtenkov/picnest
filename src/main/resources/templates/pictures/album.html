@@ -16,7 +16,7 @@
                         data-bs-html="true" onclick="openFilesInput()">
                     <i class="fa-solid fa-plus me-1"></i><span th:text="#{add}"></span>
                 </button>
-            </div>
+           </div>
         </div>
         <div th:hidden="${album.pictures != null && !album.pictures.isEmpty()}" class="mt-2" id="noPicturesAlert">
             <h6 class="alert alert-warning p-2" th:text="#{album.no-pictures-found}">No pictures found.</h6>
@@ -35,23 +35,37 @@
                                th:data-id="${picture.id}" th:text="#{delete}">Delete</a></li>
                     </ul>
                 </span>
-                <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="cursor: zoom-in;" onclick="zoomImage($(this))" />
-
+                <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="cursor: zoom-in;"
+                     th:id="${'img-' + picture.id}" onclick="zoomImageInCarousel($(this))" />
             </div>
         </div>
 
         <input type="file" accept="image/*" multiple id="filesInput" hidden />
 
-        <!-- Image modal -->
-        <div class="modal fade" id="zoomImageModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-fullscreen-sm-down modal-xl">
+        <!-- Carousel modal -->
+        <div class="modal fade" id="carouselModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
                 <div class="modal-content">
                     <div class="modal-header border-0 pb-0">
-                        <span id="zoomImageModalHeader"></span>
+                        <span id="carouselModalHeader"></span>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-center align-content-center">
-                        <img src="" id="zoomImage" class="img-fluid" />
+                        <div id="pictureCarousel" class="carousel slide">
+                            <div class="carousel-inner" id="pictureCarouselInner">
+                                <div class="carousel-item" th:each="picture : ${album.pictures}" th:id="${'carousel-item-' + picture.id}">
+                                    <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="max-height: 90vh;" />
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#pictureCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#pictureCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

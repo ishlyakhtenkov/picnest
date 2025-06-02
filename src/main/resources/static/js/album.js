@@ -3,6 +3,13 @@ const filesInput = $('#filesInput');
 const noPicturesAlert = $('#noPicturesAlert');
 const deletePictureModal = $('#deletePictureModal');
 
+function zoomImageInCarousel(image) {
+    let id = image.attr('id').split('-')[1];
+    $('.carousel-item').removeClass('active');
+    $(`#carousel-item-${id}`).addClass('active');
+    $('#carouselModal').modal('toggle');
+}
+
 filesInput.on('change', () => {
     $.each(filesInput.prop('files'), (index, file) => {
         upload(file);
@@ -29,12 +36,12 @@ function upload(file) {
         contentType:false
     }).done((uploadedPicture) => {
         if (file.name.toLowerCase().endsWith('.heic')) {
-            let picture = $('<img />').addClass('img-fluid').attr('src', `/${uploadedPicture.file.fileLink}`).css('cursor', 'zoom-in');
+            let picture = $('<img />').addClass('img-fluid').attr('id', `img-${uploadedPicture.id}`).attr('src', `/${uploadedPicture.file.fileLink}`).css('cursor', 'zoom-in');
             showUploadedPicture(picture, pictureCol, uploadedPicture);
         } else {
             let fileReader = new FileReader();
             fileReader.onload = function (event) {
-                let picture = $('<img />').addClass('img-fluid').attr('src', event.target.result).css('cursor', 'zoom-in');
+                let picture = $('<img />').addClass('img-fluid').attr('id', `img-${uploadedPicture.id}`).attr('src', event.target.result).css('cursor', 'zoom-in');
                 showUploadedPicture(picture, pictureCol, uploadedPicture);
             }
             fileReader.readAsDataURL(file);
@@ -50,7 +57,7 @@ function upload(file) {
 
 function showUploadedPicture(picture, pictureCol, uploadedPicture) {
     picture.on('click', () => {
-        zoomImage(picture);
+        zoomImageInCarousel(picture);
     })
     pictureCol.empty();
     pictureCol.attr('id', `picture-col-${uploadedPicture.id}`);
@@ -71,6 +78,12 @@ function showUploadedPicture(picture, pictureCol, uploadedPicture) {
     actionsBtnSpan.append(actionsBtn).append(dropdownList);
     pictureCol.append(actionsBtnSpan);
     pictureCol.append(picture);
+
+    //TODO carousel item order and picture col order should be the same
+    let carouselItem = $('<div></div>').addClass('carousel-item').attr('id', `carousel-item-${uploadedPicture.id}`);
+    let carouselItemImg = $('<img />').addClass('img-fluid').attr('src', picture.attr('src')).css('max-height', '90vh');
+    carouselItem.append(carouselItemImg);
+    $('#pictureCarouselInner').prepend(carouselItem);
 }
 
 function openFilesInput() {
@@ -93,6 +106,7 @@ function deletePicture() {
         if (!$('.picture-col').length) {
             noPicturesAlert.attr('hidden', false);
         }
+        $(`#carousel-item-${id}`).remove();
         successToast(getMessage('picture.deleted'));
     }).fail(function(data) {
         handleError(data, getMessage('picture.failed-to-delete'));
