@@ -51,10 +51,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-center align-content-center">
-                        <div id="pictureCarousel" class="carousel slide">
+                        <div id="pictureCarousel" class="carousel slide" data-bs-interval="500000" data-bs-touch="true" data-bs-ride="carousel">
                             <div class="carousel-inner" id="pictureCarouselInner">
                                 <div class="carousel-item" th:each="picture : ${album.pictures}" th:id="${'carousel-item-' + picture.id}">
-                                    <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="max-height: 90vh;" />
+                                    <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="max-height: 80vh;" />
                                 </div>
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#pictureCarousel" data-bs-slide="prev">

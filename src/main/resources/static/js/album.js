@@ -19,12 +19,12 @@ filesInput.on('change', () => {
 
 function upload(file) {
     noPicturesAlert.attr('hidden', true);
-    let pictureCol = $('<div></div>').addClass('col mb-4 picture-col');
+    let emptyCol = $('<div></div>').addClass('col mb-4');
     let emptySlot = $('<div></div>').addClass('border align-content-center text-center').css('height', '150px');
     let spinner = $('<div></div').addClass('spinner-border');
     emptySlot.append(spinner);
-    pictureCol.append(emptySlot);
-    $('#picturesArea').prepend(pictureCol);
+    emptyCol.append(emptySlot);
+    $('#picturesArea').prepend(emptyCol);
 
     let formData = new FormData();
     formData.append('file', file);
@@ -32,22 +32,22 @@ function upload(file) {
         url: `/albums/${albumId}/pictures`,
         type: 'POST',
         data: formData,
-        processData:false,
-        contentType:false
-    }).done((uploadedPicture) => {
+        processData: false,
+        contentType: false
+    }).done((picture) => {
         if (file.name.toLowerCase().endsWith('.heic')) {
-            let picture = $('<img />').addClass('img-fluid').attr('id', `img-${uploadedPicture.id}`).attr('src', `/${uploadedPicture.file.fileLink}`).css('cursor', 'zoom-in');
-            showUploadedPicture(picture, pictureCol, uploadedPicture);
+            let image = $('<img />').addClass('img-fluid').attr('id', `img-${picture.id}`).attr('src', `/${picture.file.fileLink}`).css('cursor', 'zoom-in');
+            showPictureOnPage(image, emptyCol, picture);
         } else {
             let fileReader = new FileReader();
             fileReader.onload = function (event) {
-                let picture = $('<img />').addClass('img-fluid').attr('id', `img-${uploadedPicture.id}`).attr('src', event.target.result).css('cursor', 'zoom-in');
-                showUploadedPicture(picture, pictureCol, uploadedPicture);
+                let image = $('<img />').addClass('img-fluid').attr('id', `img-${picture.id}`).attr('src', event.target.result).css('cursor', 'zoom-in');
+                showPictureOnPage(image, emptyCol, picture);
             }
             fileReader.readAsDataURL(file);
         }
     }).fail(function (data) {
-        pictureCol.remove();
+        emptyCol.remove();
         if (!$('.picture-col').length) {
             noPicturesAlert.attr('hidden', false);
         }
@@ -55,12 +55,12 @@ function upload(file) {
     });
 }
 
-function showUploadedPicture(picture, pictureCol, uploadedPicture) {
-    picture.on('click', () => {
-        zoomImageInCarousel(picture);
-    })
-    pictureCol.empty();
-    pictureCol.attr('id', `picture-col-${uploadedPicture.id}`);
+function showPictureOnPage(image, emptyCol, picture) {
+    image.on('click', () => {
+        zoomImageInCarousel(image);
+    });
+    let pictureCol = $('<div></div>').addClass('col mb-4 picture-col');
+    pictureCol.attr('id', `picture-col-${picture.id}`);
     let actionsBtnSpan = $('<span></span>').addClass('float-end pt-1').css('margin-bottom', '-36px')
         .css('margin-right', '4px').css('position', 'relative').css('z-index', '2');
     let actionsBtn = $('<button></button>').attr('type', 'button').addClass('btn btn-sm btn-outline-light rounded-circle')
@@ -68,8 +68,8 @@ function showUploadedPicture(picture, pictureCol, uploadedPicture) {
         .attr('aria-expanded', 'false').append($('<i></i>').addClass('fa-solid fa-ellipsis'));
     let dropdownList = $('<ul></ul>').addClass('dropdown-menu');
     let dropdownDownloadItem = $('<a download></a>').attr('type', 'button').addClass('dropdown-item')
-        .attr('data-id', uploadedPicture.id).attr('href', `/${uploadedPicture.file.fileLink}`).text(getMessage('download'));
-    let dropdownDeleteItem = $('<a></a>').attr('type', 'button').addClass('dropdown-item').attr('data-id',uploadedPicture.id)
+        .attr('data-id', picture.id).attr('href', `/${picture.file.fileLink}`).text(getMessage('download'));
+    let dropdownDeleteItem = $('<a></a>').attr('type', 'button').addClass('dropdown-item').attr('data-id', picture.id)
         .text(getMessage('delete'));
     dropdownDeleteItem.on('click', () => {
         showDeletePictureModal(dropdownDeleteItem);
@@ -77,11 +77,12 @@ function showUploadedPicture(picture, pictureCol, uploadedPicture) {
     dropdownList.append($('<li></li>').append(dropdownDownloadItem)).append($('<li></li>').append(dropdownDeleteItem));
     actionsBtnSpan.append(actionsBtn).append(dropdownList);
     pictureCol.append(actionsBtnSpan);
-    pictureCol.append(picture);
+    pictureCol.append(image);
+    emptyCol.remove();
+    $('.picture-col').first().before(pictureCol);
 
-    //TODO carousel item order and picture col order should be the same
-    let carouselItem = $('<div></div>').addClass('carousel-item').attr('id', `carousel-item-${uploadedPicture.id}`);
-    let carouselItemImg = $('<img />').addClass('img-fluid').attr('src', picture.attr('src')).css('max-height', '90vh');
+    let carouselItem = $('<div></div>').addClass('carousel-item').attr('id', `carousel-item-${picture.id}`);
+    let carouselItemImg = $('<img />').addClass('img-fluid').attr('src', image.attr('src')).css('max-height', '80vh');
     carouselItem.append(carouselItemImg);
     $('#pictureCarouselInner').prepend(carouselItem);
 }
@@ -101,14 +102,14 @@ function deletePicture() {
     $.ajax({
         url: `/pictures/${id}`,
         type: "DELETE"
-    }).done(function() {
+    }).done(function () {
         $(`#picture-col-${id}`).remove();
         if (!$('.picture-col').length) {
             noPicturesAlert.attr('hidden', false);
         }
         $(`#carousel-item-${id}`).remove();
         successToast(getMessage('picture.deleted'));
-    }).fail(function(data) {
+    }).fail(function (data) {
         handleError(data, getMessage('picture.failed-to-delete'));
     });
 }

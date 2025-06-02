@@ -66,3 +66,7 @@
 .secondary-nav-link {
     --bs-nav-link-color: var(--bs-secondary-bg-rgb);
 }
+
+.carousel.pointer-event {
+    touch-action: pan-y pinch-zoom;
+}
