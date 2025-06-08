@@ -111,7 +111,8 @@ public class PictureService {
         String fileType = file.getContentType();
         Type type;
         if (fileType != null) {
-            type = fileType.startsWith("image/") ? IMAGE : fileType.startsWith("video/") ? VIDEO : null;
+            type = (fileType.startsWith("image/") || file.getOriginalFilename().toLowerCase().endsWith(".heic")) ? IMAGE :
+                    fileType.startsWith("video/") ? VIDEO : null;
         } else {
             throw new IllegalRequestDataException("File type is not defined",
                     "picture.file-type-not-defined", null);

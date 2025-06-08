@@ -35,22 +35,13 @@ function upload(file) {
         processData: false,
         contentType: false
     }).done((picture) => {
-        if (file.name.toLowerCase().endsWith('.heic')) {
-            let image = $('<img />').addClass('img-fluid').attr('id', `img-${picture.id}`).attr('src', `/${picture.file.fileLink}`).css('cursor', 'zoom-in');
-            showPictureOnPage(image, emptyCol, picture);
-        } else {
-            let fileReader = new FileReader();
-            fileReader.onload = function (event) {
-                let image = null;
-                if (picture.type === 'IMAGE') {
-                    image = $('<img />').addClass('img-fluid').attr('id', `img-${picture.id}`).attr('src', event.target.result).css('cursor', 'zoom-in');
-                } else if (picture.type === 'VIDEO') {
-                    image = $('<video controls></video>').addClass('img-fluid').attr('id', `img-${picture.id}`).attr('src', event.target.result);
-                }
-                showPictureOnPage(image, emptyCol, picture);
-            }
-            fileReader.readAsDataURL(file);
+        let image = null;
+        if (picture.type === 'IMAGE') {
+            image = $('<img />').addClass('img-fluid').attr('id', `img-${picture.id}`).attr('src', `/${picture.file.fileLink}`).css('cursor', 'zoom-in');
+        } else if (picture.type === 'VIDEO') {
+            image = $('<video controls></video>').addClass('img-fluid').attr('id', `img-${picture.id}`).attr('src', `/${picture.file.fileLink}`);
         }
+        showPictureOnPage(image, emptyCol, picture);
     }).fail(function (data) {
         emptyCol.remove();
         if (!$('.picture-col').length) {
