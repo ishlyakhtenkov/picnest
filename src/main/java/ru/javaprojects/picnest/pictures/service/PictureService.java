@@ -134,6 +134,12 @@ public class PictureService {
         FileUtil.deleteFile(picture.getFile().getFileLink());
     }
 
+    public Picture getPicture(long id, long userId) {
+        return pictureRepository.findByIdAndOwnerId(id, userId).orElseThrow(() ->
+                new NotFoundException("Not found picture with id=" + id + " and userId=" + userId,
+                        "error.notfound.entity", new Object[]{id}));
+    }
+
     public Map<Long, Integer> countPicturesByAlbums(List<Album> albums) {
         List<Long> albumsIds = albums.stream()
                 .map(BaseEntity::getId)

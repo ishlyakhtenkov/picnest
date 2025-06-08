@@ -38,7 +38,8 @@
                 <img th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).IMAGE}"
                      th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="cursor: zoom-in;"
                      th:id="${'img-' + picture.id}" onclick="zoomImageInCarousel($(this))" />
-                <video th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).VIDEO}" controls class="img-fluid" th:id="${'img-' + picture.id}">
+                <video th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).VIDEO}" controls class="img-fluid"
+                       th:id="${'img-' + picture.id}" th:poster="@{'/pictures/' + ${picture.id} + '/preview'}">
                     <source th:src="@{'/' + ${picture.file.fileLink}}" />
                 </video>
             </div>
@@ -60,7 +61,9 @@
                                 <div class="carousel-item" th:each="picture : ${album.pictures}" th:id="${'carousel-item-' + picture.id}">
                                     <img th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).IMAGE}"
                                          th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="max-height: 80vh;" />
-                                    <video th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).VIDEO}" controls class="img-fluid" style="max-height: 80vh;">
+                                    <video th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).VIDEO}"
+                                           controls class="img-fluid" style="max-height: 80vh;"
+                                           th:poster="@{'/pictures/' + ${picture.id} + '/preview'}">
                                         <source th:src="@{'/' + ${picture.file.fileLink}}" />
                                     </video>
                                 </div>

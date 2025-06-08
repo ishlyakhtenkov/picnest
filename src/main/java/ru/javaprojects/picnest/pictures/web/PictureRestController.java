@@ -4,18 +4,28 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.Java2DFrameConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.javaprojects.picnest.app.AuthUser;
+import ru.javaprojects.picnest.common.error.FileException;
 import ru.javaprojects.picnest.common.error.IllegalRequestDataException;
 import ru.javaprojects.picnest.common.validation.NoHtml;
 import ru.javaprojects.picnest.pictures.model.Album;
 import ru.javaprojects.picnest.pictures.model.Picture;
-import ru.javaprojects.picnest.pictures.model.Picture;
 import ru.javaprojects.picnest.pictures.service.PictureService;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.file.Path;
 
 import static ru.javaprojects.picnest.pictures.web.PictureController.ALBUMS_URL;
 
@@ -69,5 +79,24 @@ public class PictureRestController {
     public void deletePicture(@PathVariable long id) {
         log.info("delete picture with id={}", id);
         service.deletePicture(id, AuthUser.authId());
+    }
+
+    @GetMapping(value = "/pictures/{id}/preview", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> getPreview(@PathVariable long id) {
+        log.info("get preview for picture with id={}", id);
+        Picture picture = service.getPicture(id, AuthUser.authId());
+        Path filePath = Path.of(picture.getFile().getFileLink());
+        var baos = new ByteArrayOutputStream();
+        try (var grabber = new FFmpegFrameGrabber(filePath.toString()); var converter = new Java2DFrameConverter()) {
+            grabber.start();
+            BufferedImage image = converter.convert(grabber.grabImage());
+            if (image != null) {
+                ImageIO.write(image, "jpeg", baos);
+            }
+            grabber.stop();
+        } catch (IOException e) {
+            throw new FileException("Failed to get preview for picture with id=" + id, "picture.preview-failed", null);
+        }
+        return ResponseEntity.ok(baos.toByteArray());
     }
 }
