@@ -14,6 +14,7 @@ import ru.javaprojects.picnest.common.model.File;
 import ru.javaprojects.picnest.common.util.FileUtil;
 import ru.javaprojects.picnest.pictures.model.Album;
 import ru.javaprojects.picnest.pictures.model.Picture;
+import ru.javaprojects.picnest.pictures.model.Type;
 import ru.javaprojects.picnest.pictures.repository.AlbumLastPicture;
 import ru.javaprojects.picnest.pictures.repository.AlbumRepository;
 import ru.javaprojects.picnest.pictures.repository.PictureCount;
@@ -28,6 +29,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ru.javaprojects.picnest.common.util.FileUtil.prepareFileNameToAvoidDuplicate;
+import static ru.javaprojects.picnest.pictures.model.Type.IMAGE;
+import static ru.javaprojects.picnest.pictures.model.Type.VIDEO;
 
 @Service
 @RequiredArgsConstructor
@@ -96,11 +99,28 @@ public class PictureService {
         String albumDir = pictureFilesPath + userId + "/" + albumId + "/";
         String fileName = prepareFileNameToAvoidDuplicate(albumDir, file.getOriginalFilename());
         String fileLink = albumDir + fileName;
-        Picture picture = new Picture(null, null, null, new File(fileName, fileLink),
+        Type type = determineFileType(file);
+        Picture picture = new Picture(null, type, null, null, new File(fileName, fileLink),
                 userId, album);
         pictureRepository.saveAndFlush(picture);
         FileUtil.upload(file, albumDir, fileName);
         return picture;
+    }
+
+    private Type determineFileType(MultipartFile file) {
+        String fileType = file.getContentType();
+        Type type;
+        if (fileType != null) {
+            type = fileType.startsWith("image/") ? IMAGE : fileType.startsWith("video/") ? VIDEO : null;
+        } else {
+            throw new IllegalRequestDataException("File type is not defined",
+                    "picture.file-type-not-defined", null);
+        }
+        if (type == null) {
+            throw new IllegalRequestDataException("Unsupported file type, type=" + fileType,
+                    "picture.file-type-not-supported", new Object[]{fileType});
+        }
+        return type;
     }
 
     @Transactional

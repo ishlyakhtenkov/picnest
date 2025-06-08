@@ -10,10 +10,13 @@ import ru.javaprojects.picnest.common.model.File;
 import ru.javaprojects.picnest.pictures.model.Album;
 import ru.javaprojects.picnest.pictures.model.Picture;
 import ru.javaprojects.picnest.pictures.model.Picture;
+import ru.javaprojects.picnest.pictures.model.Type;
 import ru.javaprojects.picnest.pictures.repository.AlbumRepository;
 import ru.javaprojects.picnest.pictures.repository.PictureRepository;
 import ru.javaprojects.picnest.users.model.User;
 import ru.javaprojects.picnest.users.repository.UserRepository;
+
+import static ru.javaprojects.picnest.pictures.model.Type.IMAGE;
 
 @Component
 @Profile({"dev", "!test & !default"})
@@ -30,8 +33,8 @@ public class DevDataGenerator {
         for (int i = 0; i < 20; i++) {
             Album created = albumRepository.save(new Album(null, "Admin album # " + i, admin));
             for (int j = 0; j < 10; j++) {
-                pictureRepository.save(new Picture(null, null, null, new File("ph1.jpg", "./picnest/content/pictures/100001/100013/ph1.jpg"), admin.getId(), created));
-                pictureRepository.save(new Picture(null, null, null, new File("ph2.jpg", "./picnest/content/pictures/100001/100013/ph2.jpg"), admin.getId(), created));
+                pictureRepository.save(new Picture(null, IMAGE, null, null, new File("ph1.jpg", "./picnest/content/pictures/100001/100013/ph1.jpg"), admin.getId(), created));
+                pictureRepository.save(new Picture(null, IMAGE, null, null, new File("ph2.jpg", "./picnest/content/pictures/100001/100013/ph2.jpg"), admin.getId(), created));
             }
         }
     }

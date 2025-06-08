@@ -28,8 +28,8 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 50MB
-      max-request-size: 50MB
+      max-file-size: 1500MB
+      max-request-size: 1500MB
 
   security:
     oauth2:
@@ -90,7 +90,7 @@ remember-me:
 
 server:
   tomcat:
-    max-http-form-post-size: 50MB
+    max-http-form-post-size: 1500MB
   servlet:
     encoding:
       charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly

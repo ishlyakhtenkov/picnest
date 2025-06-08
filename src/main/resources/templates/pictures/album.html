@@ -35,12 +35,16 @@
                                th:data-id="${picture.id}" th:text="#{delete}">Delete</a></li>
                     </ul>
                 </span>
-                <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="cursor: zoom-in;"
+                <img th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).IMAGE}"
+                     th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="cursor: zoom-in;"
                      th:id="${'img-' + picture.id}" onclick="zoomImageInCarousel($(this))" />
+                <video th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).VIDEO}" controls class="img-fluid" th:id="${'img-' + picture.id}">
+                    <source th:src="@{'/' + ${picture.file.fileLink}}" />
+                </video>
             </div>
         </div>
 
-        <input type="file" accept="image/*" multiple id="filesInput" hidden />
+        <input type="file" accept="image/*, video/*" multiple id="filesInput" hidden />
 
         <!-- Carousel modal -->
         <div class="modal fade" id="carouselModal" tabindex="-1" aria-hidden="true">
@@ -54,7 +58,11 @@
                         <div id="pictureCarousel" class="carousel slide" data-bs-interval="500000" data-bs-touch="true" data-bs-ride="carousel">
                             <div class="carousel-inner" id="pictureCarouselInner">
                                 <div class="carousel-item" th:each="picture : ${album.pictures}" th:id="${'carousel-item-' + picture.id}">
-                                    <img th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="max-height: 80vh;" />
+                                    <img th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).IMAGE}"
+                                         th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="max-height: 80vh;" />
+                                    <video th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).VIDEO}" controls class="img-fluid">
+                                        <source th:src="@{'/' + ${picture.file.fileLink}}" />
+                                    </video>
                                 </div>
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#pictureCarousel" data-bs-slide="prev">

@@ -41,7 +41,12 @@ function upload(file) {
         } else {
             let fileReader = new FileReader();
             fileReader.onload = function (event) {
-                let image = $('<img />').addClass('img-fluid').attr('id', `img-${picture.id}`).attr('src', event.target.result).css('cursor', 'zoom-in');
+                let image = null;
+                if (picture.type === 'IMAGE') {
+                    image = $('<img />').addClass('img-fluid').attr('id', `img-${picture.id}`).attr('src', event.target.result).css('cursor', 'zoom-in');
+                } else if (picture.type === 'VIDEO') {
+                    image = $('<video controls></video>').addClass('img-fluid').attr('id', `img-${picture.id}`).attr('src', event.target.result);
+                }
                 showPictureOnPage(image, emptyCol, picture);
             }
             fileReader.readAsDataURL(file);
@@ -56,9 +61,11 @@ function upload(file) {
 }
 
 function showPictureOnPage(image, emptyCol, picture) {
-    image.on('click', () => {
-        zoomImageInCarousel(image);
-    });
+    if (picture.type === 'IMAGE') {
+        image.on('click', () => {
+            zoomImageInCarousel(image);
+        });
+    }
     let pictureCol = $('<div></div>').addClass('col mb-4 picture-col');
     pictureCol.attr('id', `picture-col-${picture.id}`);
     let actionsBtnSpan = $('<span></span>').addClass('float-end pt-1').css('margin-bottom', '-36px')
@@ -82,7 +89,12 @@ function showPictureOnPage(image, emptyCol, picture) {
     $('.picture-col').first().before(pictureCol);
 
     let carouselItem = $('<div></div>').addClass('carousel-item').attr('id', `carousel-item-${picture.id}`);
-    let carouselItemImg = $('<img />').addClass('img-fluid').attr('src', image.attr('src')).css('max-height', '80vh');
+    let carouselItemImg = null;
+    if (picture.type === 'IMAGE') {
+        carouselItemImg = $('<img />').addClass('img-fluid').attr('src', image.attr('src')).css('max-height', '80vh');
+    } else if (picture.type === 'VIDEO') {
+        carouselItemImg = $('<video controls></video>').addClass('img-fluid').attr('src', image.attr('src')).css('max-height', '80vh');
+    }
     carouselItem.append(carouselItemImg);
     $('#pictureCarouselInner').prepend(carouselItem);
 }

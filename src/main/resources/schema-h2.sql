@@ -78,6 +78,7 @@ CREATE TABLE pictures
 (
     id               BIGINT        DEFAULT nextval('global_seq') PRIMARY KEY,
     created          TIMESTAMP     DEFAULT now() NOT NULL,
+    type             VARCHAR(5)    NOT NULL,
     description      VARCHAR(1024),
     file_name        VARCHAR(128)  NOT NULL,
     file_link        VARCHAR(512)  NOT NULL,

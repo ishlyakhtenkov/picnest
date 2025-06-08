@@ -6,12 +6,14 @@ import ru.javaprojects.picnest.MatcherFactory;
 import ru.javaprojects.picnest.common.model.File;
 import ru.javaprojects.picnest.pictures.model.Album;
 import ru.javaprojects.picnest.pictures.model.Picture;
+import ru.javaprojects.picnest.pictures.model.Type;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 import java.util.Map;
 
+import static ru.javaprojects.picnest.pictures.model.Type.IMAGE;
 import static ru.javaprojects.picnest.users.UserTestData.*;
 
 public class PictureTestData {
@@ -45,15 +47,15 @@ public class PictureTestData {
     public static final long ADMIN_ALBUM1_PHOTO1_ID = 100018;
     public static final long ADMIN_ALBUM1_PHOTO2_ID = 100019;
 
-    public static final Picture USER_ALBUM_1_PICTURE_1 = new Picture(USER_ALBUM1_PHOTO1_ID, "photo 1 user alb 1 desc",
+    public static final Picture USER_ALBUM_1_PICTURE_1 = new Picture(USER_ALBUM1_PHOTO1_ID, IMAGE, "photo 1 user alb 1 desc",
             LocalDateTime.of(2025, Month.MAY, 22, 12, 28, 3),
             new File("ph1.jpg", "./picnest/content/pictures/100000/100011/ph1.jpg"), USER_ID);
 
-    public static final Picture USER_ALBUM_1_PICTURE_2 = new Picture(USER_ALBUM1_PHOTO2_ID, "photo 2 user alb 1 desc",
+    public static final Picture USER_ALBUM_1_PICTURE_2 = new Picture(USER_ALBUM1_PHOTO2_ID, IMAGE, "photo 2 user alb 1 desc",
             LocalDateTime.of(2025, Month.MAY, 22, 12, 28, 7),
             new File("ph2.jpg", "./picnest/content/pictures/100000/100011/ph2.jpg"), USER_ID);
 
-    public static final Picture USER_ALBUM_1_PICTURE_3 = new Picture(USER_ALBUM1_PHOTO3_ID, "photo 3 user alb 1 desc",
+    public static final Picture USER_ALBUM_1_PICTURE_3 = new Picture(USER_ALBUM1_PHOTO3_ID, IMAGE, "photo 3 user alb 1 desc",
             LocalDateTime.of(2025, Month.MAY, 22, 12, 28, 9),
             new File("ph3.jpg", "./picnest/content/pictures/100000/100011/ph3.jpg"), USER_ID);
 
@@ -61,7 +63,7 @@ public class PictureTestData {
             LocalDateTime.of(2025, Month.MAY, 22, 12, 28, 1), user,
             List.of(USER_ALBUM_1_PICTURE_3, USER_ALBUM_1_PICTURE_2, USER_ALBUM_1_PICTURE_1));
 
-    public static final Picture USER_ALBUM_2_PICTURE_1 = new Picture(USER_ALBUM2_PHOTO1_ID, "photo 1 user alb 2 desc",
+    public static final Picture USER_ALBUM_2_PICTURE_1 = new Picture(USER_ALBUM2_PHOTO1_ID, IMAGE, "photo 1 user alb 2 desc",
             LocalDateTime.of(2025, Month.APRIL, 19, 17, 46, 15),
             new File("ph1.jpg", "./picnest/content/pictures/100000/100012/ph1.jpg"), USER_ID);
 
@@ -69,11 +71,11 @@ public class PictureTestData {
             LocalDateTime.of(2025, Month.APRIL, 18, 21, 13, 14), user,
             List.of(USER_ALBUM_2_PICTURE_1));
 
-    public static final Picture ADMIN_ALBUM_1_PICTURE_1 = new Picture(ADMIN_ALBUM1_PHOTO1_ID, "photo 1 admin alb 1 desc",
+    public static final Picture ADMIN_ALBUM_1_PICTURE_1 = new Picture(ADMIN_ALBUM1_PHOTO1_ID, IMAGE, "photo 1 admin alb 1 desc",
             LocalDateTime.of(2025, Month.MARCH, 17, 16, 28, 14),
             new File("ph1.jpg", "./picnest/content/pictures/100001/100013/ph1.jpg"), ADMIN_ID);
 
-    public static final Picture ADMIN_ALBUM_1_PICTURE_2 = new Picture(ADMIN_ALBUM1_PHOTO2_ID, "photo 2 admin alb 1 desc",
+    public static final Picture ADMIN_ALBUM_1_PICTURE_2 = new Picture(ADMIN_ALBUM1_PHOTO2_ID, IMAGE, "photo 2 admin alb 1 desc",
             LocalDateTime.of(2025, Month.MARCH, 17, 16, 34, 59),
             new File("ph2.jpg", "./picnest/content/pictures/100001/100013/ph2.jpg"), ADMIN_ID);
 
@@ -99,7 +101,7 @@ public class PictureTestData {
             "New photo.jpg",  MediaType.IMAGE_JPEG_VALUE, new byte[]{});
 
     public static Picture getNewPhoto() {
-        return new Picture(null, null, null,
+        return new Picture(null, IMAGE, null, null,
                 new File("New photo.jpg", "./picnest/content/pictures/100000/100011/New photo.jpg"), USER_ID, userAlbum1);
     }
 

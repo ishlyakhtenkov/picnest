@@ -22,6 +22,10 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class Picture extends BaseEntity implements HasId {
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private Type type;
 
     @Nullable
     @NoHtml
@@ -47,16 +51,17 @@ public class Picture extends BaseEntity implements HasId {
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
-    public Picture(Long id, String description, LocalDateTime created, File file, Long ownerId) {
+    public Picture(Long id, Type type, String description, LocalDateTime created, File file, Long ownerId) {
         super(id);
+        this.type = type;
         this.description = description;
         this.created = created;
         this.file = file;
         this.ownerId = ownerId;
     }
 
-    public Picture(Long id, String description, LocalDateTime created, File file, Long ownerId, Album album) {
-        this(id, description, created, file, ownerId);
+    public Picture(Long id, Type type, String description, LocalDateTime created, File file, Long ownerId, Album album) {
+        this(id, type, description, created, file, ownerId);
         this.album = album;
     }
 }
