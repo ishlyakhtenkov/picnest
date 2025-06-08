@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -89,9 +88,13 @@ public class PictureRestController {
         var baos = new ByteArrayOutputStream();
         try (var grabber = new FFmpegFrameGrabber(filePath.toString()); var converter = new Java2DFrameConverter()) {
             grabber.start();
-            BufferedImage image = converter.convert(grabber.grabImage());
-            if (image != null) {
-                ImageIO.write(image, "jpeg", baos);
+            BufferedImage image;
+            for (int i = 0; i < 50; i++) {
+                image = converter.convert(grabber.grabKeyFrame());
+                if (image != null) {
+                    ImageIO.write(image, "jpeg", baos);
+                    break;
+                }
             }
             grabber.stop();
         } catch (IOException e) {
