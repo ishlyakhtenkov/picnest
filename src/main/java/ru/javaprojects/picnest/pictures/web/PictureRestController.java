@@ -4,29 +4,24 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.bytedeco.javacv.Java2DFrameConverter;
+import org.springframework.http.HttpRange;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import ru.javaprojects.picnest.app.AuthUser;
-import ru.javaprojects.picnest.common.error.FileException;
 import ru.javaprojects.picnest.common.error.IllegalRequestDataException;
 import ru.javaprojects.picnest.common.validation.NoHtml;
 import ru.javaprojects.picnest.pictures.model.Album;
 import ru.javaprojects.picnest.pictures.model.Picture;
 import ru.javaprojects.picnest.pictures.service.PictureService;
+import ru.javaprojects.picnest.pictures.service.StreamBytesInfo;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.file.Path;
+
+import java.util.List;
 
 import static ru.javaprojects.picnest.pictures.web.PictureController.ALBUMS_URL;
 
@@ -85,47 +80,30 @@ public class PictureRestController {
     @GetMapping(value = "/pictures/{id}/preview", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> getPreview(@PathVariable long id) {
         log.info("get preview for picture with id={}", id);
-        Picture picture = service.getPicture(id, AuthUser.authId());
-        Path filePath = Path.of(picture.getFile().getFileLink());
-        var baos = new ByteArrayOutputStream();
-        try (var grabber = new FFmpegFrameGrabber(filePath.toString()); var converter = new Java2DFrameConverter()) {
-            grabber.start();
-            BufferedImage image;
-            for (int i = 0; i < 50; i++) {
-                image = converter.convert(grabber.grabKeyFrame());
-                if (image != null) {
-                    if (grabber.getDisplayRotation() != 0) {
-                        double rads = Math.toRadians(Math.abs(grabber.getDisplayRotation()));
-                        double sin = Math.abs(Math.sin(rads)), cos = Math.abs(Math.cos(rads));
-                        int w = image.getWidth();
-                        int h = image.getHeight();
-                        int newWidth = (int) Math.floor(w * cos + h * sin);
-                        int newHeight = (int) Math.floor(h * cos + w * sin);
+        byte[] previewBytes = service.getPicturePreview(id, AuthUser.authId());
+        return ResponseEntity.ok(previewBytes);
+    }
 
-                        BufferedImage rotated = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-                        Graphics2D g2d = rotated.createGraphics();
-                        AffineTransform at = new AffineTransform();
-                        at.translate((double) (newWidth - w) / 2, (double) (newHeight - h) / 2);
+    @GetMapping("/pictures/{id}/stream")
+    public ResponseEntity<StreamingResponseBody> streamVideo(@RequestHeader(value = "Range", required = false) String range,
+                                                             @PathVariable("id") Long id) {
+        log.info("Stream video for picture with id={}, range=[{}]", id, range);
 
-                        int x = w / 2;
-                        int y = h / 2;
+        List<HttpRange> httpRangeList = HttpRange.parseRanges(range);
+        StreamBytesInfo streamBytesInfo = service.getStreamBytes(id, AuthUser.authId(), !httpRangeList.isEmpty() ? httpRangeList.get(0) : null);
 
-                        at.rotate(rads, x, y);
-                        g2d.setTransform(at);
-                        g2d.drawImage(image, 0, 0, null);
-                        g2d.setColor(Color.RED);
-                        g2d.drawRect(0, 0, newWidth - 1, newHeight - 1);
-                        g2d.dispose();
-                        image = rotated;
-                    }
-                    ImageIO.write(image, "JPEG", baos);
-                    break;
-                }
-            }
-            grabber.stop();
-        } catch (IOException e) {
-            throw new FileException("Failed to get preview for picture with id=" + id, "picture.preview-failed", null);
+        long byteLength = streamBytesInfo.getRangeEnd() - streamBytesInfo.getRangeStart() + 1;
+        ResponseEntity.BodyBuilder builder = ResponseEntity.status(!httpRangeList.isEmpty() ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK)
+                .header("Content-Type", streamBytesInfo.getContentType())
+                .header("Accept-Ranges", "bytes")
+                .header("Content-Length", Long.toString(byteLength));
+
+        if (!httpRangeList.isEmpty()) {
+            builder.header("Content-Range",
+                    "bytes " + streamBytesInfo.getRangeStart() +
+                            "-" + streamBytesInfo.getRangeEnd() +
+                            "/" + streamBytesInfo.getFileSize());
         }
-        return ResponseEntity.ok(baos.toByteArray());
+        return builder.body(streamBytesInfo.getResponseBody());
     }
 }
