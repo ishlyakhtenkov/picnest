@@ -28,10 +28,8 @@
                              class="card-img-top" style="object-fit: cover" />
                         <img th:if="${lastPictureByAlbums.get(album.id) != null && lastPictureByAlbums.get(album.id).type == T(ru.javaprojects.picnest.pictures.model.Type).IMAGE}"
                              th:src="@{'/' + ${lastPictureByAlbums.get(album.id).file.fileLink}}" class="card-img-top" style="object-fit: cover" />
-                        <video th:if="${lastPictureByAlbums.get(album.id) != null && lastPictureByAlbums.get(album.id).type == T(ru.javaprojects.picnest.pictures.model.Type).VIDEO}"
-                               class="card-img-top" style="object-fit: cover">
-                            <source th:src="@{'/' + ${lastPictureByAlbums.get(album.id).file.fileLink}}" />
-                        </video>
+                        <img th:if="${lastPictureByAlbums.get(album.id) != null && lastPictureByAlbums.get(album.id).type == T(ru.javaprojects.picnest.pictures.model.Type).VIDEO}"
+                             th:src="@{/images/video.jpg}" class="card-img-top" style="object-fit: cover" />
                     </div>
                     <div class="card-body">
                         <span class="float-end px-3 pt-2 pb-1" style="margin-top: -14px; margin-right: -16px; position: relative; z-index: 2">
