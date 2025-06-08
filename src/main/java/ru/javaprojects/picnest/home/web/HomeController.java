@@ -24,7 +24,7 @@ public class HomeController {
             var albums = service.getAllAlbumsByOwner(AuthUser.authId(), Sort.by(DESC, "created"));
             model.addAttribute("albums", albums);
             model.addAttribute("countPicturesByAlbums", service.countPicturesByAlbums(albums));
-            model.addAttribute("lastPictureFileLinkByAlbums", service.getLastPictureFileLinkByAlbums(albums));
+            model.addAttribute("lastPictureByAlbums", service.getLastPictureByAlbums(albums));
         }
         return "home/index";
     }

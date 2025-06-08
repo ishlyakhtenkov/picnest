@@ -6,7 +6,6 @@ import ru.javaprojects.picnest.MatcherFactory;
 import ru.javaprojects.picnest.common.model.File;
 import ru.javaprojects.picnest.pictures.model.Album;
 import ru.javaprojects.picnest.pictures.model.Picture;
-import ru.javaprojects.picnest.pictures.model.Type;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -37,7 +36,7 @@ public class PictureTestData {
     public static final String ALBUM_ATTRIBUTE = "album";
     public static final String ALBUMS_ATTRIBUTE = "albums";
     public static final String COUNT_PICTURES_BY_ALBUMS_ATTRIBUTE = "countPicturesByAlbums";
-    public static final String LAST_PICTURE_FILE_LINK_BY_ALBUMS_ATTRIBUTE = "lastPictureFileLinkByAlbums";
+    public static final String LAST_PICTURE_BY_ALBUMS_ATTRIBUTE = "lastPictureByAlbums";
 
     public static final long USER_ALBUM1_PHOTO1_ID = 100014;
     public static final long USER_ALBUM1_PHOTO2_ID = 100015;
@@ -108,7 +107,7 @@ public class PictureTestData {
     public static final Map<Long, Integer> userCountPicturesByAlbums =
             Map.of(USER_ALBUM1_ID, userAlbum1.getPictures().size(), USER_ALBUM2_ID, userAlbum2.getPictures().size());
 
-    public static final Map<Long, String> userLastPictureFileLinkByAlbums =
-            Map.of(USER_ALBUM1_ID, USER_ALBUM_1_PICTURE_3.getFile().getFileLink(), USER_ALBUM2_ID, USER_ALBUM_2_PICTURE_1.getFile().getFileLink());
+    public static final Map<Long, Picture> userLastPictureFileLinkByAlbums =
+            Map.of(USER_ALBUM1_ID, USER_ALBUM_1_PICTURE_3, USER_ALBUM2_ID, USER_ALBUM_2_PICTURE_1);
 
 }

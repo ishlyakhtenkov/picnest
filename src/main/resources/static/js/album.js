@@ -86,7 +86,11 @@ function showPictureOnPage(image, emptyCol, picture) {
     pictureCol.append(actionsBtnSpan);
     pictureCol.append(image);
     emptyCol.remove();
-    $('.picture-col').first().before(pictureCol);
+    if ($('.picture-col').length) {
+        $('.picture-col').first().before(pictureCol);
+    } else {
+        $('#picturesArea').prepend(pictureCol);
+    }
 
     let carouselItem = $('<div></div>').addClass('carousel-item').attr('id', `carousel-item-${picture.id}`);
     let carouselItemImg = null;

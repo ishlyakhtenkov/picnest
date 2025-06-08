@@ -60,7 +60,7 @@
                                 <div class="carousel-item" th:each="picture : ${album.pictures}" th:id="${'carousel-item-' + picture.id}">
                                     <img th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).IMAGE}"
                                          th:src="@{'/' + ${picture.file.fileLink}}" class="img-fluid" style="max-height: 80vh;" />
-                                    <video th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).VIDEO}" controls class="img-fluid">
+                                    <video th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).VIDEO}" controls class="img-fluid" style="max-height: 80vh;">
                                         <source th:src="@{'/' + ${picture.file.fileLink}}" />
                                     </video>
                                 </div>

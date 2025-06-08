@@ -143,15 +143,15 @@ public class PictureService {
         return picturesCountByAlbums;
     }
 
-    public Map<Long, String> getLastPictureFileLinkByAlbums(List<Album> albums) {
+    public Map<Long, Picture> getLastPictureByAlbums(List<Album> albums) {
         List<Long> albumsIds = albums.stream()
                 .map(BaseEntity::getId)
                 .toList();
         List<AlbumLastPicture> lastPictureByAlbums = pictureRepository.findLastPictureByAlbums(albumsIds);
-        Map<Long, String> lastPictureByAlbumsMap = new HashMap<>();
+        Map<Long, Picture> lastPictureByAlbumsMap = new HashMap<>();
         lastPictureByAlbums.forEach(lastPictureByAlbum ->
                 lastPictureByAlbumsMap.computeIfAbsent(lastPictureByAlbum.getAlbumId(),
-                        _ -> lastPictureByAlbum.getPictures().get(0).getFile().getFileLink()));
+                        _ -> lastPictureByAlbum.getPictures().get(0)));
         return lastPictureByAlbumsMap;
     }
 }
