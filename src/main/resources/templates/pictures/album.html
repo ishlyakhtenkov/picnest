@@ -24,7 +24,7 @@
         <div th:if="${album.pictures != null}" class="row row-cols-1 row-cols-md-2 row-cols-lg-5 mt-2" id="picturesArea">
             <div th:each="picture : ${album.pictures}" class="col mb-4 picture-col" th:id="${'picture-col-' + picture.id}">
                 <span class="float-end pt-1" style="margin-bottom: -36px; margin-right: 4px; position: relative; z-index: 2">
-                    <button type="button" class="btn btn-sm btn-outline-light rounded-circle" th:title="#{actions}"
+                    <button type="button" class="btn btn-sm btn-outline-light rounded-circle opacity-25" th:title="#{actions}"
                             data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-ellipsis"></i>
                     </button>
@@ -55,7 +55,7 @@
                         <span id="carouselModalHeader"></span>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body text-center align-content-center">
+                    <div class="modal-body text-center align-content-center px-0">
                         <div id="pictureCarousel" class="carousel slide" data-bs-interval="500000" data-bs-touch="true" data-bs-ride="carousel">
                             <div class="carousel-inner" id="pictureCarouselInner">
                                 <div class="carousel-item" th:each="picture : ${album.pictures}" th:id="${'carousel-item-' + picture.id}">

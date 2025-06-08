@@ -63,7 +63,7 @@ function showPictureOnPage(image, emptyCol, picture) {
     pictureCol.attr('id', `picture-col-${picture.id}`);
     let actionsBtnSpan = $('<span></span>').addClass('float-end pt-1').css('margin-bottom', '-36px')
         .css('margin-right', '4px').css('position', 'relative').css('z-index', '2');
-    let actionsBtn = $('<button></button>').attr('type', 'button').addClass('btn btn-sm btn-outline-light rounded-circle')
+    let actionsBtn = $('<button></button>').attr('type', 'button').addClass('btn btn-sm btn-outline-light rounded-circle opacity-25')
         .attr('title', getMessage('actions')).attr('data-bs-toggle', 'dropdown')
         .attr('aria-expanded', 'false').append($('<i></i>').addClass('fa-solid fa-ellipsis'));
     let dropdownList = $('<ul></ul>').addClass('dropdown-menu');
