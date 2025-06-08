@@ -21,6 +21,8 @@ import ru.javaprojects.picnest.pictures.model.Picture;
 import ru.javaprojects.picnest.pictures.service.PictureService;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -92,7 +94,31 @@ public class PictureRestController {
             for (int i = 0; i < 50; i++) {
                 image = converter.convert(grabber.grabKeyFrame());
                 if (image != null) {
-                    ImageIO.write(image, "jpeg", baos);
+                    if (grabber.getDisplayRotation() != 0) {
+                        double rads = Math.toRadians(Math.abs(grabber.getDisplayRotation()));
+                        double sin = Math.abs(Math.sin(rads)), cos = Math.abs(Math.cos(rads));
+                        int w = image.getWidth();
+                        int h = image.getHeight();
+                        int newWidth = (int) Math.floor(w * cos + h * sin);
+                        int newHeight = (int) Math.floor(h * cos + w * sin);
+
+                        BufferedImage rotated = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+                        Graphics2D g2d = rotated.createGraphics();
+                        AffineTransform at = new AffineTransform();
+                        at.translate((double) (newWidth - w) / 2, (double) (newHeight - h) / 2);
+
+                        int x = w / 2;
+                        int y = h / 2;
+
+                        at.rotate(rads, x, y);
+                        g2d.setTransform(at);
+                        g2d.drawImage(image, 0, 0, null);
+                        g2d.setColor(Color.RED);
+                        g2d.drawRect(0, 0, newWidth - 1, newHeight - 1);
+                        g2d.dispose();
+                        image = rotated;
+                    }
+                    ImageIO.write(image, "JPEG", baos);
                     break;
                 }
             }
