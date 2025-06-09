@@ -4,7 +4,7 @@
 
 <th:block th:replace="~{fragments/main::page(title=${album.name},appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
-        <div class="row">
+        <div class="row sticky-top" style="padding-top: 70px;">
             <div class="col-8 h5 fw-bold" th:text="${album.name}">
                 Album name
             </div>
@@ -18,6 +18,9 @@
                 </button>
            </div>
         </div>
+<!--        <div class="sticky-top" style="padding-top: 50px;">-->
+<!--            <button class="btn btn-sm btn-primary">Check</button>-->
+<!--        </div>-->
         <div th:hidden="${album.pictures != null && !album.pictures.isEmpty()}" class="mt-2" id="noPicturesAlert">
             <h6 class="alert alert-warning p-2" th:text="#{album.no-pictures-found}">No pictures found.</h6>
         </div>
@@ -101,6 +104,7 @@
     <ownScript>
         <script>
             sessionStorage.removeItem('prevUrl');
+            $('.app-main').css('margin-top', '-8px')
         </script>
         <script th:src="@{/js/common.js?v=1}"></script>
         <script th:src="@{/js/album.js?v=1}"></script>

@@ -48,6 +48,7 @@ function createAlbum(name) {
         albumModal.modal('toggle');
         let albumCardCol = $('<div></div>').addClass('col mb-4 album-card-col').attr('id', `albumCardCol-${album.id}`);
         $('#albumsArea').prepend(albumCardCol.append(generateAlbumCard(album)));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         successToast(getMessage('album.created', [name]));
     }).fail(function (data) {
         handleError(data, getMessage('album.failed-to-create'));

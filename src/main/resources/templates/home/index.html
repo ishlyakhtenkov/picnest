@@ -4,7 +4,7 @@
 
 <th:block th:replace="~{fragments/main::page(title=#{home},appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
-        <div class="row">
+        <div class="row sticky-top" style="padding-top: 70px;">
             <div class="col-8 h5 fw-bold" th:text="#{album.my-albums}">
                 My albums
             </div>
@@ -106,6 +106,7 @@
     <ownScript>
         <script>
             sessionStorage.removeItem('prevUrl');
+            $('.app-main').css('margin-top', '-8px')
         </script>
         <script th:src="@{/js/common.js?v=1}"></script>
         <script th:src="@{/js/index.js?v=1}"></script>
