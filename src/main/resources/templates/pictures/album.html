@@ -40,7 +40,7 @@
                      th:id="${'img-' + picture.id}" onclick="zoomImageInCarousel($(this))" />
                 <video th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).VIDEO}" controls class="img-fluid" preload="none"
                        th:id="${'img-' + picture.id}" th:poster="@{'/pictures/' + ${picture.id} + '/preview'}">
-                    <source th:src="@{'/pictures/' + ${picture.id} + '/stream'}" />
+                    <source th:src="@{'/' + ${picture.file.fileLink}}" />
                 </video>
             </div>
         </div>
@@ -64,7 +64,7 @@
                                     <video th:if="${picture.type == T(ru.javaprojects.picnest.pictures.model.Type).VIDEO}"
                                            controls class="img-fluid" preload="none" style="max-height: 80vh;"
                                            th:poster="@{'/pictures/' + ${picture.id} + '/preview'}">
-                                        <source th:src="@{'/pictures/' + ${picture.id} + '/stream'}" />
+                                        <source th:src="@{'/' + ${picture.file.fileLink}}" />
                                     </video>
                                 </div>
                             </div>

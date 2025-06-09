@@ -41,7 +41,7 @@ function upload(file) {
                 .attr('src', `/${picture.file.fileLink}`).css('cursor', 'zoom-in');
         } else if (picture.type === 'VIDEO') {
             image = $('<video controls></video>').addClass('img-fluid').attr('id', `img-${picture.id}`)
-                .attr('src', `/pictures/${picture.id}/stream`).attr('preload', 'none').attr('poster', `/pictures/${picture.id}/preview`);
+                .attr('src', `/${picture.file.fileLink}`).attr('preload', 'none').attr('poster', `/pictures/${picture.id}/preview`);
         }
         showPictureOnPage(image, emptyCol, picture);
     }).fail(function (data) {
