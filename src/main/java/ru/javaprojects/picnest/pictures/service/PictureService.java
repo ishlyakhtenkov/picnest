@@ -227,8 +227,8 @@ public class PictureService {
         }
     }
 
-    private long calculateChunkSize(long fileSize) { //TODO
-        return fileSize / 5;
+    private long calculateChunkSize(long fileSize) {
+        return fileSize / 100;
     }
 
     public Map<Long, Integer> countPicturesByAlbums(List<Album> albums) {
