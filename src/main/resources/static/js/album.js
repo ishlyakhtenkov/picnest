@@ -41,7 +41,7 @@ function upload(file) {
                 .attr('src', `/${picture.file.fileLink}`).css('cursor', 'zoom-in');
         } else if (picture.type === 'VIDEO') {
             image = $('<video controls></video>').addClass('img-fluid').attr('id', `img-${picture.id}`)
-                .attr('src', `/pictures/${picture.id}/stream`).attr('poster', `/pictures/${picture.id}/preview`);
+                .attr('src', `/pictures/${picture.id}/stream`).attr('preload', 'none').attr('poster', `/pictures/${picture.id}/preview`);
         }
         showPictureOnPage(image, emptyCol, picture);
     }).fail(function (data) {
@@ -90,7 +90,7 @@ function showPictureOnPage(image, emptyCol, picture) {
     if (picture.type === 'IMAGE') {
         carouselItemImg = $('<img />').addClass('img-fluid').attr('src', image.attr('src')).css('max-height', '80vh');
     } else if (picture.type === 'VIDEO') {
-        carouselItemImg = $('<video controls></video>').addClass('img-fluid').attr('src', image.attr('src'))
+        carouselItemImg = $('<video controls></video>').addClass('img-fluid').attr('src', image.attr('src')).attr('preload', 'none')
             .css('max-height', '80vh').attr('poster', `/pictures/${picture.id}/preview`);
     }
     carouselItem.append(carouselItemImg);
