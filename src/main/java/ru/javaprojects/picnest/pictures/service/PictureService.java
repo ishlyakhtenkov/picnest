@@ -36,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import static org.bytedeco.ffmpeg.global.avutil.AV_LOG_PANIC;
+import static org.bytedeco.ffmpeg.global.avutil.av_log_set_level;
 
 import static ru.javaprojects.picnest.common.util.FileUtil.prepareFileNameToAvoidDuplicate;
 import static ru.javaprojects.picnest.pictures.model.Type.IMAGE;
@@ -149,6 +151,7 @@ public class PictureService {
                         "error.notfound.entity", new Object[]{id}));
         Path filePath = Path.of(picture.getFile().getFileLink());
         var baos = new ByteArrayOutputStream();
+        av_log_set_level(AV_LOG_PANIC);
         try (var grabber = new FFmpegFrameGrabber(filePath.toString()); var converter = new Java2DFrameConverter()) {
             grabber.start();
             BufferedImage image;
