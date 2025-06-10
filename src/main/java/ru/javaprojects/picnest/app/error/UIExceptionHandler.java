@@ -3,6 +3,7 @@ package ru.javaprojects.picnest.app.error;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import ru.javaprojects.picnest.app.AuthUser;
+import ru.javaprojects.picnest.common.error.IllegalRequestDataException;
 import ru.javaprojects.picnest.common.error.LocalizedException;
 import ru.javaprojects.picnest.common.util.AppUtil;
 
@@ -44,9 +46,17 @@ public class UIExceptionHandler {
         return createExceptionModelAndView(e, message, locale);
     }
 
+    @ExceptionHandler(ClientAbortException.class)
+    public void clientAbortExceptionHandler(HttpServletRequest req, Exception e) {
+        log.error("Exception at request {}: {}", req.getRequestURL(), e.toString());
+    }
+
     @ExceptionHandler(Exception.class)
     public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e, Locale locale) {
         log.error("Exception at request {}: {}", req.getRequestURL(), e.toString());
+        if (e instanceof ClientAbortException) {
+            throw new IllegalRequestDataException("client abort", "picture.stream-failed", null);
+        }
         String message = messageSource.getMessage("error.unable-to-process", null, locale);
         if (e.getClass().isAssignableFrom(DataIntegrityViolationException.class)) {
             Optional<String> messageCode = DbConstraintMessageCodes.getMessageCode(message);
