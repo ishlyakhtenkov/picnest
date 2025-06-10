@@ -49,7 +49,7 @@ public class UIExceptionHandler {
 
     @ExceptionHandler({ClientAbortException.class, CloseNowException.class})
     public void closedResponseExceptionHandler(HttpServletRequest req, Exception e) {
-        log.error("Exception at request {}: {}", req.getRequestURL(), e.toString());
+        //do nothing this exception throws when video streaming, and sometimes response is in closed state
     }
 
     @ExceptionHandler(Exception.class)

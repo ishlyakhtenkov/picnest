@@ -25,6 +25,7 @@ function upload(file) {
     emptySlot.append(spinner);
     emptyCol.append(emptySlot);
     $('#picturesArea').prepend(emptyCol);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     let formData = new FormData();
     formData.append('file', file);
@@ -84,7 +85,6 @@ function showPictureOnPage(image, emptyCol, picture) {
     } else {
         $('#picturesArea').prepend(pictureCol);
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     let carouselItem = $('<div></div>').addClass('carousel-item').attr('id', `carousel-item-${picture.id}`);
     let carouselItemImg = null;
